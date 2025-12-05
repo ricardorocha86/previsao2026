@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { MEDIA_MENTIONS } from '../constants';
 import { ExternalLink, Newspaper, TrendingUp, Calendar, PlayCircle, Tv, MonitorPlay } from 'lucide-react';
@@ -16,47 +17,60 @@ const MediaPage: React.FC = () => {
            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10"></div>
         </div>
 
-        <div className="max-w-4xl mx-auto px-6 w-full relative z-10 flex flex-col items-center text-center">
-           
-           <div className="inline-flex items-center gap-3 px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-full backdrop-blur-md mb-8">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-              </span>
-              <span className="text-xs font-bold text-red-400 uppercase tracking-widest flex items-center gap-2">
-                 <Tv className="w-3 h-3" />
-                 Destaque na TV
-              </span>
-           </div>
-
-           <h1 className="text-5xl md:text-6xl lg:text-7xl font-oswald font-bold leading-[0.9] tracking-tighter mb-8">
-              INTELIGÊNCIA ARTIFICIAL <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
-                 NA COPA DO MUNDO
-              </span>
-           </h1>
-
-           <p className="text-lg text-slate-400 leading-relaxed font-light max-w-2xl mb-8">
-              Pesquisadores da USP e UFSCar utilizam modelos matemáticos avançados para prever cenários do mundial. A equipe desenvolveu algoritmos capazes de simular milhares de partidas, com destaque em rede nacional.
-           </p>
-
-           <div className="flex flex-col sm:flex-row items-center gap-6">
-              <a 
-                href="https://g1.globo.com/sp/sao-paulo/bom-dia-sp/video/grupo-usa-inteligencia-artificial-para-simular-resultados-da-copa-11178283.ghtml" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="group relative px-8 py-4 bg-white hover:bg-slate-100 text-slate-900 font-oswald font-bold uppercase tracking-widest text-sm flex items-center justify-center gap-3 rounded-sm transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]"
-              >
-                 <PlayCircle className="w-5 h-5 group-hover:text-red-600 transition-colors" />
-                 Assistir Matéria Completa
-              </a>
+        <div className="max-w-6xl mx-auto px-6 w-full relative z-10">
+           {/* Grid Layout redistributing content */}
+           <div className="grid md:grid-cols-2 gap-12 items-center">
               
-              <div className="flex items-center gap-2 text-[10px] font-mono text-slate-600 uppercase tracking-widest">
-                 <MonitorPlay className="w-3 h-3" />
-                 TV Globo • G1
-              </div>
-           </div>
+              {/* Left Column: Headline */}
+              <div className="text-left space-y-6">
+                  <div className="inline-flex items-center gap-3 px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-full backdrop-blur-md">
+                     <span className="relative flex h-2 w-2">
+                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                       <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                     </span>
+                     <span className="text-xs font-bold text-red-400 uppercase tracking-widest flex items-center gap-2">
+                        <Tv className="w-3 h-3" />
+                        Destaque
+                     </span>
+                  </div>
 
+                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-oswald font-bold leading-[0.9] tracking-tighter">
+                     INTELIGÊNCIA <br />
+                     ARTIFICIAL NA <br />
+                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
+                        COPA DO MUNDO
+                     </span>
+                  </h1>
+              </div>
+
+              {/* Right Column: Content & Action */}
+              <div className="space-y-8 md:pl-8 md:border-l border-slate-800">
+                  <p className="text-lg text-slate-400 leading-relaxed font-light">
+                     Pesquisadores da USP e UFSCar utilizam modelos matemáticos avançados para prever cenários do mundial. A equipe desenvolveu algoritmos capazes de simular milhares de partidas.
+                  </p>
+                  <p className="text-slate-500 text-sm">
+                     Matéria completa exibida em rede nacional no Bom Dia SP, destacando a inovação tecnológica no esporte.
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row items-start gap-6 pt-4">
+                     <a 
+                       href="https://g1.globo.com/sp/sao-paulo/bom-dia-sp/video/grupo-usa-inteligencia-artificial-para-simular-resultados-da-copa-11178283.ghtml" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       className="group relative px-8 py-4 bg-white hover:bg-slate-100 text-slate-900 font-oswald font-bold uppercase tracking-widest text-sm flex items-center justify-center gap-3 rounded-sm transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+                     >
+                        <PlayCircle className="w-5 h-5 group-hover:text-red-600 transition-colors" />
+                        Assistir Matéria
+                     </a>
+                     
+                     <div className="flex items-center gap-2 py-4 text-[10px] font-mono text-slate-600 uppercase tracking-widest">
+                        <MonitorPlay className="w-3 h-3" />
+                        TV Globo • G1
+                     </div>
+                  </div>
+              </div>
+
+           </div>
         </div>
       </section>
 
