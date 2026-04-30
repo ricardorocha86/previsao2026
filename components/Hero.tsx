@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, BookOpen, GraduationCap } from 'lucide-react';
+import { Trophy, GraduationCap } from 'lucide-react';
 import bannerImage from '../assets/banner.png';
 import logoImage from '../assets/LogoMPrevisao.png';
 
@@ -42,24 +42,15 @@ const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
             reunindo resultados, metodologia, produção acadêmica e repercussão pública em um ambiente aberto.
           </p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-10 flex">
             <button
               type="button"
               onClick={() => onNavigate('copa')}
-              className="inline-flex items-center justify-center gap-3 bg-brand-green px-6 py-4 font-montserrat text-sm font-bold uppercase text-white transition hover:bg-brand-grad2"
-              style={{ borderRadius: 8 }}
+              className="inline-flex items-center justify-center gap-4 bg-brand-green px-8 py-5 font-montserrat text-base font-bold uppercase text-white transition hover:bg-brand-grad2 shadow-[0_20px_40px_-12px_rgba(32,153,39,0.35)]"
+              style={{ borderRadius: 12 }}
             >
-              Consultar resultados
-              <ArrowRight className="h-5 w-5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => onNavigate('methodology')}
-              className="inline-flex items-center justify-center gap-3 border border-white/24 bg-white/10 px-6 py-4 font-montserrat text-sm font-bold uppercase text-white backdrop-blur-md transition hover:bg-white hover:text-brand-dark"
-              style={{ borderRadius: 8 }}
-            >
-              Entender o estudo
-              <BookOpen className="h-5 w-5" />
+              Ver Previsões Copa 2026
+              <Trophy className="h-6 w-6" />
             </button>
           </div>
         </div>
