@@ -37,7 +37,7 @@ const MemberCard: React.FC<{ researcher: Researcher }> = ({ researcher }) => {
 
   return (
     <div className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-lg hover:border-brand-green transition-all duration-200 flex flex-col">
-      {/* Photo */}
+        {/* Photo */}
       <div
         className="relative w-full bg-gray-100 shrink-0 overflow-hidden"
         style={{ aspectRatio: '1 / 1' }}
@@ -63,13 +63,6 @@ const MemberCard: React.FC<{ researcher: Researcher }> = ({ researcher }) => {
           >
             {initials}
           </div>
-        )}
-
-        {/* Coord badge */}
-        {researcher.coord && (
-          <span className="absolute top-2 left-2 bg-brand-green text-white text-[10px] font-montserrat font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
-            Coordenação
-          </span>
         )}
       </div>
 
@@ -135,8 +128,6 @@ const TeamPage: React.FC = () => {
 
         {/* Coordenação */}
         <div className="mb-12">
-          <h3 className="font-exo-italic text-brand-green text-base mb-1 uppercase tracking-widest">Coordenação</h3>
-          <div className="w-10 h-0.5 bg-brand-green mb-6" />
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {coords.map((r) => <MemberCard key={r.id} researcher={r} />)}
           </div>
@@ -144,8 +135,6 @@ const TeamPage: React.FC = () => {
 
         {/* Membros */}
         <div className="mb-20">
-          <h3 className="font-exo-italic text-brand-green text-base mb-1 uppercase tracking-widest">Membros</h3>
-          <div className="w-10 h-0.5 bg-brand-green mb-6" />
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {members.map((r) => <MemberCard key={r.id} researcher={r} />)}
           </div>
