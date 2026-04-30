@@ -1,397 +1,309 @@
 
-import React, { useState, useMemo } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Activity, Calculator, TrendingUp, FlaskConical, Sigma, Database, BarChart3, Binary } from 'lucide-react';
-
-// Historical Data from Slide 8
-const HISTORICAL_GOALS = [
-  { year: '1950', goals: 4.00 },
-  { year: '1954', goals: 5.39 },
-  { year: '1958', goals: 3.60 },
-  { year: '1962', goals: 2.78 },
-  { year: '1966', goals: 2.78 },
-  { year: '1970', goals: 2.97 },
-  { year: '1974', goals: 2.55 },
-  { year: '1978', goals: 2.68 },
-  { year: '1982', goals: 2.81 },
-  { year: '1986', goals: 2.54 },
-  { year: '1990', goals: 2.21 },
-  { year: '1994', goals: 2.71 },
-  { year: '1998', goals: 2.67 },
-  { year: '2002', goals: 2.52 },
-  { year: '2006', goals: 2.30 },
-  { year: '2010', goals: 2.27 },
-  { year: '2014', goals: 2.67 },
-  { year: '2018', goals: 2.64 },
-  { year: '2022', goals: 2.69 }, // Updated
-];
-
-// Poisson Function
-const poisson = (lambda: number, k: number) => {
-  return (Math.pow(lambda, k) * Math.exp(-lambda)) / factorial(k);
-};
-
-const factorial = (n: number): number => {
-  if (n === 0 || n === 1) return 1;
-  let result = 1;
-  for (let i = 2; i <= n; i++) result *= i;
-  return result;
-};
+import React from 'react';
+import { FlaskConical, Sigma, Sliders, Zap, Shield } from 'lucide-react';
+import PageHeader from './PageHeader';
 
 const MethodologyPage: React.FC = () => {
-  // Interactive State
-  const [mTotal, setMTotal] = useState(2.75); // Slide 1: m = 2.75
-  const [f1, setF1] = useState(0.980); // Slide 4 Example (Brazil)
-  const [f2, setF2] = useState(0.779); // Slide 4 Example (France)
-
-  // Derived Calculations (Slide 3)
-  // m1 = m * f1 / (f1 + f2)
-  const m1 = useMemo(() => (mTotal * f1) / (f1 + f2), [mTotal, f1, f2]);
-  const m2 = useMemo(() => mTotal - m1, [mTotal, m1]);
-
-  // Probability Calculation (Slide 4/5 Sim)
-  const probabilities = useMemo(() => {
-    let probHome = 0;
-    let probDraw = 0;
-    let probAway = 0;
-
-    // Simulate scorelines up to 7-7
-    for (let i = 0; i <= 7; i++) {
-      for (let j = 0; j <= 7; j++) {
-        const p = poisson(m1, i) * poisson(m2, j);
-        if (i > j) probHome += p;
-        else if (i === j) probDraw += p;
-        else probAway += p;
-      }
-    }
-    return { 
-      home: (probHome * 100).toFixed(1), 
-      draw: (probDraw * 100).toFixed(1), 
-      away: (probAway * 100).toFixed(1) 
-    };
-  }, [m1, m2]);
-
   return (
-    <div className="bg-slate-50 min-h-screen py-24 px-4 font-inter text-slate-900">
-      <div className="max-w-5xl mx-auto">
-        
-        {/* Header */}
-        <div className="text-center mb-20">
-           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 border border-blue-200 rounded-full mb-6">
-             <FlaskConical className="w-4 h-4 text-blue-700" />
-             <span className="text-xs font-bold text-blue-700 uppercase tracking-widest">Laboratório Científico</span>
-           </div>
-           <h2 className="text-5xl font-oswald font-bold text-slate-900 uppercase tracking-tight">Metodologia <span className="text-blue-600">Poisson</span></h2>
-           <p className="text-slate-500 mt-6 text-lg max-w-2xl mx-auto leading-relaxed">
-             Desconstruindo a matemática por trás das previsões. Do histórico de gols à distribuição de forças.
-           </p>
-        </div>
+    <div className="bg-brand-light min-h-screen font-opensans text-brand-dark">
 
-        {/* SECTION 1: HISTORICAL DATA (Slide 8) */}
-        <section className="mb-24 bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
-           <div className="flex items-center gap-3 mb-8">
-              <div className="p-3 bg-slate-100 rounded-xl">
-                 <TrendingUp className="w-6 h-6 text-slate-700" />
+      <PageHeader
+        icon={FlaskConical}
+        eyebrow="Laboratório Científico"
+        title="Metodologia da"
+        accent="Simulação"
+        description="Como transformamos a força relativa das seleções em médias de gols, probabilidades de placar e simulações do torneio."
+      />
+
+      <div className="max-w-5xl mx-auto px-4 py-20 space-y-20">
+
+        {/* INTRODUÇÃO: Modelo Poisson e soma fixa de gols */}
+        <section>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-green/10 border border-brand-green/20 rounded-full mb-5">
+                <span className="text-[10px] font-black text-brand-green uppercase tracking-[0.15em]">Introdução</span>
               </div>
-              <div>
-                <h3 className="text-2xl font-oswald font-bold text-slate-800 uppercase">1. Médias de Gols na Copa</h3>
-                <p className="text-sm text-slate-500">Evolução histórica da variável <strong className="text-blue-600">m</strong> (gols por partida).</p>
+              <h3 className="text-3xl font-montserrat font-black text-brand-dark uppercase tracking-tight mb-5">
+                Do modelo aos gols simulados
+              </h3>
+              <p className="text-brand-dark/70 text-base leading-relaxed mb-4">
+                A base da simulação é um <strong className="text-brand-dark">modelo Poisson com médias independentes</strong>. Em cada confronto, a Seleção 1 tem uma média esperada de gols (<span className="font-black italic">m₁</span>) e a Seleção 2 tem outra média (<span className="font-black italic">m₂</span>).
+              </p>
+              <p className="text-brand-dark/70 text-base leading-relaxed mb-4">
+                Em vez de começar estimando essas médias separadamente, o modelo fixa primeiro a <strong className="text-brand-dark">soma esperada de gols da partida</strong> (<span className="font-black italic">m</span>). Depois, divide essa soma entre as equipes conforme a força relativa de cada uma.
+              </p>
+              <p className="text-brand-dark/70 text-base leading-relaxed mb-6">
+                Assim, o objetivo da modelagem é simples: dado um total esperado de gols para o jogo, repartir esse total entre os dois times de acordo com o potencial competitivo de cada seleção.
+              </p>
+              <div className="space-y-3 font-mono text-sm bg-white p-6 rounded-2xl border border-brand-dark/10 shadow-sm text-brand-dark/70">
+                <div className="flex items-center gap-3">
+                  <span className="bg-brand-green/10 text-brand-green font-black px-2 py-1 rounded-lg">m</span>
+                  <span>=</span>
+                  <span>Total esperado de gols da partida</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="bg-brand-green/10 text-brand-green font-black px-2 py-1 rounded-lg">m₁, m₂</span>
+                  <span>=</span>
+                  <span>Médias de gols de cada seleção</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="bg-brand-green/10 text-brand-green font-black px-2 py-1 rounded-lg">f₁, f₂</span>
+                  <span>=</span>
+                  <span>Forças usadas para dividir a soma fixa</span>
+                </div>
+                <div className="w-full h-px bg-brand-dark/10 my-1"></div>
+                <div className="text-[10px] text-brand-dark/40 uppercase tracking-widest font-bold">Premissa de Independência</div>
+                <div className="text-brand-green font-bold">S₁ ~ Poisson(m₁)</div>
+                <div className="text-brand-green font-bold">S₂ ~ Poisson(m₂)</div>
               </div>
-           </div>
+            </div>
 
-           <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={HISTORICAL_GOALS}>
-                  <defs>
-                    <linearGradient id="colorGoals" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                  <XAxis dataKey="year" tick={{fontSize: 12}} stroke="#94a3b8" />
-                  <YAxis domain={[0, 6]} tick={{fontSize: 12}} stroke="#94a3b8" />
-                  <Tooltip 
-                    contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}}
-                    labelStyle={{color: '#64748b', fontWeight: 'bold'}}
-                  />
-                  <Area type="monotone" dataKey="goals" stroke="#2563eb" strokeWidth={3} fillOpacity={1} fill="url(#colorGoals)" />
-                </AreaChart>
-              </ResponsiveContainer>
-           </div>
-           <div className="mt-4 text-center">
-              <span className="inline-block bg-slate-900 text-white px-4 py-1 rounded text-sm font-bold font-mono">
-                 m = 2.75 (Expectativa Atual)
-              </span>
-           </div>
-        </section>
-
-        {/* SECTION 2: THE FORMULA (Slides 1, 3, 6) */}
-        <section className="mb-24">
-           <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                 <h3 className="text-3xl font-oswald font-bold text-slate-800 mb-6 uppercase">2. O Algoritmo das Forças</h3>
-                 <p className="text-slate-600 text-lg leading-relaxed mb-6">
-                    A expectativa de gols de uma partida (<span className="font-serif italic font-bold">m</span>) é a soma das expectativas individuais das duas equipes (<span className="font-serif italic font-bold">m₁ + m₂</span>).
-                 </p>
-                 <p className="text-slate-600 text-lg leading-relaxed mb-6">
-                    Para distribuir esses gols, utilizamos a "Força" (<span className="font-serif italic font-bold">f</span>) de cada seleção. O modelo assume que os gols seguem uma distribuição de Poisson independente.
-                 </p>
-                 
-                 <div className="space-y-4 font-mono text-sm bg-slate-100 p-6 rounded-xl border border-slate-200 text-slate-700">
-                    <div className="flex items-center gap-4">
-                       <span className="bg-white px-2 py-1 rounded shadow-sm">m₁</span>
-                       <span>=</span>
-                       <span>Média de gols da Seleção 1</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                       <span className="bg-white px-2 py-1 rounded shadow-sm">f₁</span>
-                       <span>=</span>
-                       <span>Força da Seleção 1</span>
-                    </div>
-                    <div className="w-full h-px bg-slate-300 my-2"></div>
-                    <div className="text-xs text-slate-500 uppercase tracking-widest">Premissa de Independência</div>
-                    <div>S₁ ~ Poisson(m₁)</div>
-                    <div>S₂ ~ Poisson(m₂)</div>
-                 </div>
+            {/* Formula Card */}
+            <div className="bg-brand-dark text-white p-8 rounded-3xl shadow-2xl relative overflow-hidden group">
+              <div className="absolute -right-8 -top-8 opacity-[0.06] transform rotate-12 group-hover:rotate-0 transition-transform duration-700">
+                <Sigma className="w-56 h-56 text-brand-neon" />
               </div>
-
-              {/* Formula Card */}
-              <div className="bg-[#0f172a] text-white p-8 rounded-3xl shadow-2xl relative overflow-hidden group">
-                  <div className="absolute -right-10 -top-10 text-slate-800 opacity-20 transform rotate-12 group-hover:rotate-0 transition-transform duration-700">
-                     <Sigma className="w-64 h-64" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-green/20 rounded-full mb-6">
+                <span className="text-[10px] font-black text-brand-neon uppercase tracking-widest">Modelo de soma fixa</span>
+              </div>
+              <div className="space-y-8 relative z-10">
+                <div className="text-center">
+                  <div className="text-4xl md:text-5xl font-black font-montserrat mb-2 tracking-tight text-white">
+                    m = m₁ + m₂
                   </div>
-                  
-                  <h4 className="font-oswald text-slate-400 uppercase tracking-widest text-sm mb-8 border-b border-slate-700 pb-4">Cálculo das Médias Poisson</h4>
-                  
-                  <div className="space-y-8 relative z-10">
-                     <div className="text-center">
-                        <div className="text-4xl md:text-5xl font-serif font-bold mb-2 tracking-wide">
-                           m = m₁ + m₂
-                        </div>
-                        <p className="text-slate-400 text-xs uppercase">Lei da Expectativa Total</p>
-                     </div>
-
-                     <div className="bg-blue-900/30 p-6 rounded-xl border border-blue-500/30 backdrop-blur-sm">
-                        <div className="flex items-center justify-center gap-4 text-2xl md:text-3xl font-serif">
-                           <span>m₁ =</span>
-                           <div className="flex flex-col items-center text-center">
-                              <span>m • f₁</span>
-                              <div className="h-0.5 w-full bg-white my-1"></div>
-                              <span>(f₁ + f₂)</span>
-                           </div>
-                        </div>
-                     </div>
-                     
-                     <div className="text-center opacity-70">
-                        <div className="text-2xl font-serif">m₂ = m - m₁</div>
-                     </div>
+                  <p className="text-white/30 text-[10px] uppercase tracking-widest font-bold">Total de gols esperado no confronto</p>
+                </div>
+                <div className="bg-brand-green/10 p-6 rounded-2xl border border-brand-green/20">
+                  <div className="flex items-center justify-center gap-4 text-2xl md:text-3xl font-black font-montserrat">
+                    <span>m₁ =</span>
+                    <div className="flex flex-col items-center text-center">
+                      <span className="text-brand-neon">m • f₁</span>
+                      <div className="h-0.5 w-full bg-white/30 my-1"></div>
+                      <span className="text-white/70">(f₁ + f₂)</span>
+                    </div>
                   </div>
+                </div>
+                <div className="text-center opacity-50">
+                  <div className="text-2xl font-montserrat font-black">m₂ = m - m₁</div>
+                </div>
+                <p className="text-white/45 text-sm leading-relaxed text-center">
+                  Se as forças forem iguais, cada equipe recebe metade do total esperado. Quanto maior a força relativa de uma seleção, maior a parcela de gols esperados atribuída a ela.
+                </p>
               </div>
-           </div>
+            </div>
+          </div>
         </section>
 
-        {/* SECTION 3: ORIGIN OF FORCES (NEW SECTION) */}
-        <section className="mb-24 relative overflow-hidden">
-           {/* Background Mesh */}
-           <div className="absolute inset-0 bg-slate-100 rounded-3xl -z-10 bg-[url('https://www.transparenttextures.com/patterns/grid-me.png')] opacity-50"></div>
-           
-           <div className="p-8 md:p-12 rounded-3xl border border-slate-200">
-              <div className="text-center mb-12">
-                 <div className="inline-flex items-center justify-center p-3 bg-white rounded-xl shadow-sm mb-6">
-                    <Database className="w-8 h-8 text-blue-600" />
-                 </div>
-                 <h3 className="text-3xl font-oswald font-bold text-slate-800 uppercase mb-4">3. Como Calcular a "Força"?</h3>
-                 <p className="text-slate-600 max-w-2xl mx-auto">
-                    O parâmetro <span className="font-serif italic font-bold">f</span> (força) não é um número mágico. Ele é derivado de dados robustos. Existem duas abordagens principais para encontrá-lo:
-                 </p>
-              </div>
+        {/* SECTION 1: FORÇA RESULTANTE — 6 PILARES */}
+        <section className="bg-white rounded-3xl shadow-sm border border-brand-dark/5 overflow-hidden">
+          {/* Section header stripe */}
+          <div className="bg-brand-dark px-8 py-5 flex items-center gap-4">
+            <div className="p-2 bg-brand-green/20 rounded-xl">
+              <Sigma className="w-5 h-5 text-brand-neon" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-brand-neon uppercase tracking-[0.2em]">Seção 01</p>
+              <h3 className="text-xl font-montserrat font-black text-white uppercase tracking-tight">Força Resultante — Os 6 Pilares</h3>
+            </div>
+          </div>
 
-              <div className="grid md:grid-cols-2 gap-8">
-                 {/* Method A: Rankings */}
-                 <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:border-blue-300 transition-colors">
-                    <div className="flex items-start gap-4 mb-4">
-                       <div className="p-2 bg-yellow-100 text-yellow-700 rounded-lg">
-                          <BarChart3 className="w-6 h-6" />
-                       </div>
-                       <div>
-                          <h4 className="font-oswald font-bold text-lg uppercase text-slate-800">Método 1: Normalização de Ranking</h4>
-                          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Abordagem Simplificada</span>
-                       </div>
-                    </div>
-                    <p className="text-slate-600 text-sm leading-relaxed mb-6">
-                       Podemos utilizar os pontos do Ranking da FIFA para estimar a força relativa. Se o Brasil tem 1800 pontos e a média das seleções na Copa é 1500, a força do Brasil seria:
-                    </p>
-                    <div className="bg-slate-50 p-4 rounded-lg font-mono text-sm text-center border border-slate-200 text-slate-700">
-                       f = Pontos_Seleção / Média_Copa
-                       <div className="text-xs text-slate-400 mt-2">Ex: f = 1800 / 1500 = 1.20</div>
-                    </div>
-                 </div>
+          <div className="p-8 md:p-10">
+            <p className="text-brand-dark/70 leading-relaxed mb-8">
+              A força usada na divisão da média de gols não vem de um único indicador. Ela resume seis dimensões complementares: qualidade do elenco, histórico competitivo, rating atual, momento recente, vantagem de sede e pontuação institucional. Cada dimensão é normalizada para a mesma escala e combinada por pesos.
+            </p>
 
-                 {/* Method B: Regression */}
-                 <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:border-blue-300 transition-colors">
-                    <div className="flex items-start gap-4 mb-4">
-                       <div className="p-2 bg-purple-100 text-purple-700 rounded-lg">
-                          <Binary className="w-6 h-6" />
-                       </div>
-                       <div>
-                          <h4 className="font-oswald font-bold text-lg uppercase text-slate-800">Método 2: Regressão Estatística</h4>
-                          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Abordagem Científica</span>
-                       </div>
-                    </div>
-                    <p className="text-slate-600 text-sm leading-relaxed mb-6">
-                       A forma mais precisa envolve modelos de <strong>Regressão de Poisson Bivariada</strong>. Analisamos milhares de jogos passados para isolar variáveis:
-                    </p>
-                    <ul className="space-y-2 text-sm text-slate-600 list-disc list-inside bg-slate-50 p-4 rounded-lg border border-slate-200">
-                       <li>Capacidade de Ataque (Gols Feitos)</li>
-                       <li>Capacidade de Defesa (Gols Sofridos)</li>
-                       <li>Fator Casa / Campo Neutro</li>
-                    </ul>
-                 </div>
+            {/* Formula */}
+            <div className="bg-brand-dark rounded-2xl p-6 mb-8 overflow-x-auto">
+              <p className="text-brand-neon text-[10px] uppercase tracking-[0.2em] font-black mb-3">Fórmula da Força Resultante</p>
+              <div className="font-mono text-sm md:text-base text-center leading-loose">
+                <span className="text-brand-neon font-black">F<sub>res</sub></span>
+                <span className="text-white/50"> = </span>
+                <span className="text-white">
+                  (w<sub>FIFA</sub>·x<sub>FIFA</sub>) + (w<sub>ELO</sub>·x<sub>ELO</sub>) + (w<sub>Mom</sub>·x<sub>Mom</sub>) + (w<sub>Mkt</sub>·x<sub>Mkt</sub>) + (w<sub>Hist</sub>·x<sub>Hist</sub>) + (w<sub>Anf</sub>·x<sub>Anf</sub>)
+                </span>
+                <br />
+                <span className="text-white/30 text-xs">onde cada </span>
+                <span className="text-white/60 text-xs font-mono">w</span>
+                <span className="text-white/30 text-xs"> é o peso do componente e cada </span>
+                <span className="text-white/60 text-xs font-mono">x</span>
+                <span className="text-white/30 text-xs"> o valor normalizado [0, 1]</span>
               </div>
-           </div>
+            </div>
+
+            {/* Pillars */}
+            <div className="overflow-x-auto rounded-2xl border border-brand-dark/10">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-brand-dark/5">
+                    <th className="text-left px-5 py-4 font-montserrat font-black uppercase tracking-widest text-xs text-brand-dark">Componente</th>
+                    <th className="text-center px-5 py-4 font-montserrat font-black uppercase tracking-widest text-xs text-brand-dark">Impacto</th>
+                    <th className="text-left px-5 py-4 font-montserrat font-black uppercase tracking-widest text-xs text-brand-dark hidden md:table-cell">Origem</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { label: 'Valor de Mercado', pct: '32.8%', pctNum: 32.8, origin: 'Valor agregado do elenco (Milhões de EUR)' },
+                    { label: 'Histórico Copas',  pct: '29.5%', pctNum: 29.5, origin: 'Score ponderado de participações e melhor resultado histórico' },
+                    { label: 'ELO Rating',       pct: '23.0%', pctNum: 23.0, origin: 'Rating competitivo atual (eloratings.net)' },
+                    { label: 'Momento',          pct: '9.8%',  pctNum: 9.8,  origin: 'Variação do ELO nos últimos 12 meses' },
+                    { label: 'Anfitrião',        pct: '3.3%',  pctNum: 3.3,  origin: 'Flag binária — vantagem para USA, MEX e CAN' },
+                    { label: 'FIFA',             pct: '1.6%',  pctNum: 1.6,  origin: 'Pontuação institucional oficial (FIFA_Current_Points)' },
+                  ].map((row, i) => (
+                    <tr key={i} className="border-t border-brand-dark/5 hover:bg-brand-green/5 transition-colors">
+                      <td className="px-5 py-4 font-black text-brand-dark">{row.label}</td>
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex-1 bg-brand-dark/10 rounded-full h-2 hidden sm:block">
+                            <div className="bg-brand-green h-2 rounded-full transition-all" style={{ width: `${(row.pctNum / 33) * 100}%` }}></div>
+                          </div>
+                          <span className="font-black text-brand-green font-mono text-sm whitespace-nowrap">{row.pct}</span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-4 text-brand-dark/50 text-xs hidden md:table-cell">{row.origin}</td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr className="border-t-2 border-brand-dark/10 bg-brand-dark/5">
+                    <td className="px-5 py-3 font-montserrat font-black text-xs uppercase tracking-widest text-brand-dark">Total</td>
+                    <td className="px-5 py-3 text-center font-black text-brand-green font-mono">100%</td>
+                    <td className="hidden md:table-cell"></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
         </section>
 
-        {/* SECTION 4: INTERACTIVE LAB (Slides 2, 4, 5) */}
-        <section className="relative">
-           {/* Visual anchor for the lab */}
-           <div className="absolute -inset-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-[3rem] -z-10 transform -rotate-1"></div>
+        {/* SECTION 2: PARÂMETROS DE AJUSTE */}
+        <section>
+          <div className="flex items-center gap-4 mb-8">
+            <div className="p-2 bg-brand-yellow/20 rounded-xl">
+              <Sliders className="w-5 h-5 text-brand-yellow" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-brand-yellow uppercase tracking-[0.2em]">Seção 02</p>
+              <h3 className="text-2xl font-montserrat font-black text-brand-dark uppercase tracking-tight">Parâmetros de Ajuste</h3>
+            </div>
+          </div>
 
-           <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
-              <div className="bg-[#1e293b] text-white p-6 md:p-10 flex flex-col md:flex-row justify-between items-center gap-6">
-                 <div>
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-bold uppercase tracking-wider mb-3">
-                       <Calculator className="w-3 h-3" />
-                       Interativo
-                    </div>
-                    <h3 className="text-3xl font-oswald font-bold uppercase">Laboratório de Forças</h3>
-                    <p className="text-slate-400 mt-2 max-w-lg">
-                       Ajuste as variáveis <span className="text-white font-serif italic">m</span>, <span className="text-white font-serif italic">f₁</span> e <span className="text-white font-serif italic">f₂</span> para simular as probabilidades de um confronto, como nos exemplos dos slides.
-                    </p>
-                 </div>
-                 
-                 {/* Preset Buttons */}
-                 <div className="flex gap-3">
-                    <button 
-                       onClick={() => { setF1(0.980); setF2(0.779); setMTotal(2.75); }}
-                       className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs font-bold uppercase transition border border-slate-600"
-                    >
-                       Ex: Brasil x França
-                    </button>
-                    <button 
-                       onClick={() => { setF1(0.980); setF2(0.161); setMTotal(2.75); }}
-                       className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs font-bold uppercase transition border border-slate-600"
-                    >
-                       Ex: Brasil x Gana
-                    </button>
-                 </div>
+          <p className="text-brand-dark/70 leading-relaxed mb-8">
+            Depois de calcular a força resultante, aplicamos ajustes calibrados para transformar esse indicador em uma força final utilizável na simulação. Esses parâmetros controlam o quanto o modelo separa favoritos e azarões antes de repartir a média fixa de gols.
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Formula span full */}
+            <div className="md:col-span-2 bg-brand-dark rounded-2xl p-6 text-center font-mono">
+              <p className="text-brand-neon text-[10px] uppercase tracking-[0.2em] font-black mb-3">Transformação Final</p>
+              <p className="text-2xl md:text-3xl font-black font-montserrat text-white">
+                Força Final = <span className="text-brand-yellow">Offset</span> + (F<sub>res</sub>)<sup className="text-brand-neon">Elasticidade</sup>
+              </p>
+            </div>
+
+            {/* Elasticidade */}
+            <div className="bg-white border border-brand-dark/10 rounded-2xl p-8 shadow-sm hover:border-brand-green/40 transition-colors">
+              <div className="flex items-start gap-4 mb-5">
+                <div className="p-2 bg-brand-green/10 rounded-xl">
+                  <Zap className="w-6 h-6 text-brand-green" />
+                </div>
+                <div>
+                  <h4 className="font-montserrat font-black text-base uppercase tracking-tight text-brand-dark">Elasticidade</h4>
+                  <span className="font-mono font-black text-brand-green text-3xl">1.15</span>
+                </div>
+              </div>
+              <p className="text-brand-dark/70 text-sm leading-relaxed">
+                Age como um <strong className="text-brand-dark">potenciador de elite</strong>. Valores acima de 1.00 amplificam as pequenas diferenças no topo da tabela, transformando vantagens marginais em ganhos competitivos reais.
+              </p>
+              <div className="mt-4 bg-brand-green/5 border border-brand-green/20 rounded-xl p-3 text-xs text-brand-green font-mono font-bold">
+                f &gt; 1.0 ⟹ vantagem amplificada exponencialmente
+              </div>
+            </div>
+
+            {/* Offset */}
+            <div className="bg-white border border-brand-dark/10 rounded-2xl p-8 shadow-sm hover:border-brand-yellow/40 transition-colors">
+              <div className="flex items-start gap-4 mb-5">
+                <div className="p-2 bg-brand-yellow/10 rounded-xl">
+                  <Sliders className="w-6 h-6 text-brand-yellow" />
+                </div>
+                <div>
+                  <h4 className="font-montserrat font-black text-base uppercase tracking-tight text-brand-dark">Offset</h4>
+                  <span className="font-mono font-black text-brand-yellow text-3xl">0.13</span>
+                </div>
+              </div>
+              <p className="text-brand-dark/70 text-sm leading-relaxed">
+                É o <strong className="text-brand-dark">parâmetro de balanceamento</strong>. Reduz a distância relativa entre potências e azarões, garantindo que nenhum time seja "nulo" e que o fator sorte opere sobre uma base mínima.
+              </p>
+              <div className="mt-4 bg-brand-yellow/5 border border-brand-yellow/20 rounded-xl p-3 text-xs text-brand-dark/60 font-mono font-bold">
+                gap = Forte − Offset / Fraco − Offset → mais equilibrado
+              </div>
+            </div>
+
+            {/* Média de Gols */}
+            <div className="md:col-span-2 bg-brand-dark rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-6">
+              <div className="text-center sm:text-left shrink-0">
+                <p className="text-white/30 text-[10px] uppercase tracking-[0.2em] font-black mb-1">Média de Gols</p>
+                <p className="font-mono font-black text-5xl text-brand-neon">3.00</p>
+              </div>
+              <div className="h-px sm:h-14 sm:w-px bg-white/10 w-full sm:w-auto"></div>
+              <p className="text-white/50 text-sm leading-relaxed font-opensans">
+                Define a <strong className="text-white">intensidade ofensiva geral</strong> do torneio. No modelo, este é o total esperado de gols da partida (<strong className="text-white">m</strong>), que depois é dividido entre as seleções conforme suas forças finais.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 3: CORREÇÃO DIXON-COLES */}
+        <section className="bg-white rounded-3xl shadow-sm border border-brand-dark/5 overflow-hidden">
+          <div className="bg-brand-dark px-8 py-5 flex items-center gap-4">
+            <div className="p-2 bg-brand-neon/20 rounded-xl">
+              <Shield className="w-5 h-5 text-brand-neon" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-brand-neon uppercase tracking-[0.2em]">Seção 03</p>
+              <h3 className="text-xl font-montserrat font-black text-white uppercase tracking-tight">Correção Dixon-Coles</h3>
+            </div>
+          </div>
+
+          <div className="p-8 md:p-10 grid md:grid-cols-2 gap-10 items-start">
+            <div>
+              <p className="text-brand-dark/70 leading-relaxed mb-5">
+                Com as médias <strong className="text-brand-dark">m₁</strong> e <strong className="text-brand-dark">m₂</strong> definidas, o modelo calcula a probabilidade de cada placar possível pela <strong className="text-brand-dark">Distribuição de Poisson</strong>. Essa matriz de placares é a base para estimar vitória, empate, derrota e avanço no torneio.
+              </p>
+              <p className="text-brand-dark/70 leading-relaxed mb-5">
+                No entanto, modelos Poisson puros tendem a subestimar placares baixos — como <strong className="text-brand-dark">0-0</strong> e <strong className="text-brand-dark">1-1</strong> — extremamente comuns no futebol.
+              </p>
+              <p className="text-brand-dark/70 leading-relaxed">
+                A correção de <strong className="text-brand-dark">Dixon-Coles</strong> ajusta a probabilidade conjunta dos gols quando os placares esperados são baixos, tornando o modelo muito mais realista em torneios de tiro curto como a Copa do Mundo.
+              </p>
+            </div>
+
+            <div className="space-y-5">
+              <div className="bg-brand-dark rounded-2xl p-6">
+                <p className="text-white/30 text-[10px] uppercase tracking-[0.2em] font-black mb-3">Parâmetro de Correlação</p>
+                <div className="flex items-baseline gap-3">
+                  <span className="font-mono font-black text-6xl text-brand-neon">ρ</span>
+                  <span className="font-mono font-black text-3xl text-white">= −0.13</span>
+                </div>
               </div>
 
-              <div className="p-8 md:p-12 grid lg:grid-cols-2 gap-16">
-                 
-                 {/* CONTROLS */}
-                 <div className="space-y-10">
-                    {/* M Total Slider */}
-                    <div>
-                       <div className="flex justify-between mb-2">
-                          <label className="text-sm font-bold text-slate-700 uppercase tracking-wider">m (Expectativa da Copa)</label>
-                          <span className="font-mono font-bold text-blue-600 bg-blue-50 px-2 rounded">{mTotal.toFixed(2)}</span>
-                       </div>
-                       <input 
-                         type="range" min="1.5" max="4.0" step="0.05"
-                         value={mTotal} onChange={(e) => setMTotal(parseFloat(e.target.value))}
-                         className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                       />
-                       <p className="text-xs text-slate-400 mt-2">Média histórica de gols (Slide 8)</p>
-                    </div>
-
-                    <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 space-y-8">
-                       {/* F1 Slider */}
-                       <div>
-                          <div className="flex justify-between mb-2">
-                             <label className="text-sm font-bold text-red-600 uppercase tracking-wider">f₁ (Força Seleção 1)</label>
-                             <span className="font-mono font-bold text-red-600">{f1.toFixed(3)}</span>
-                          </div>
-                          <input 
-                            type="range" min="0.1" max="2.0" step="0.001"
-                            value={f1} onChange={(e) => setF1(parseFloat(e.target.value))}
-                            className="w-full h-2 bg-red-100 rounded-lg appearance-none cursor-pointer accent-red-600"
-                          />
-                       </div>
-
-                       {/* F2 Slider */}
-                       <div>
-                          <div className="flex justify-between mb-2">
-                             <label className="text-sm font-bold text-slate-800 uppercase tracking-wider">f₂ (Força Seleção 2)</label>
-                             <span className="font-mono font-bold text-slate-800">{f2.toFixed(3)}</span>
-                          </div>
-                          <input 
-                            type="range" min="0.1" max="2.0" step="0.001"
-                            value={f2} onChange={(e) => setF2(parseFloat(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-800"
-                          />
-                       </div>
-                    </div>
-                 </div>
-
-                 {/* VISUALIZATION */}
-                 <div className="flex flex-col justify-center space-y-8">
-                    
-                    {/* Slide 2: Visual Representation of Means */}
-                    <div>
-                       <h4 className="font-oswald font-bold text-slate-400 uppercase tracking-widest text-xs mb-4">Visualização das Médias (Slide 2)</h4>
-                       <div className="relative h-24 w-full rounded-lg overflow-hidden flex shadow-inner">
-                          {/* m1 Bar */}
-                          <div 
-                             style={{ width: `${(m1 / mTotal) * 100}%` }} 
-                             className="bg-red-600 h-full flex flex-col items-center justify-center text-white transition-all duration-300 relative group"
-                          >
-                             <span className="font-serif italic font-bold text-2xl">m₁</span>
-                             <span className="font-mono text-sm opacity-80">{m1.toFixed(2)}</span>
-                             <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
-                          </div>
-                          
-                          {/* m2 Bar */}
-                          <div 
-                             style={{ width: `${(m2 / mTotal) * 100}%` }} 
-                             className="bg-[#2c1810] h-full flex flex-col items-center justify-center text-white transition-all duration-300 relative group"
-                          >
-                             <span className="font-serif italic font-bold text-2xl">m₂</span>
-                             <span className="font-mono text-sm opacity-80">{m2.toFixed(2)}</span>
-                             <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
-                          </div>
-                       </div>
-                       
-                       {/* Total Arrow */}
-                       <div className="flex items-center justify-center mt-3 text-slate-500 font-mono text-sm font-bold">
-                          <div className="flex-1 h-px bg-slate-300"></div>
-                          <span className="px-3">m = {mTotal.toFixed(2)}</span>
-                          <div className="flex-1 h-px bg-slate-300"></div>
-                       </div>
-                    </div>
-
-                    {/* Calculated Probabilities (Slide 4/5 Results) */}
-                    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                       <h4 className="font-oswald font-bold text-slate-400 uppercase tracking-widest text-xs mb-4">Probabilidades Resultantes</h4>
-                       <div className="flex justify-between items-end text-center">
-                          <div className="w-1/3">
-                             <div className="text-3xl font-bold text-red-600 mb-1">{probabilities.home}%</div>
-                             <div className="text-[10px] uppercase font-bold text-slate-400">Vitória S1</div>
-                          </div>
-                          <div className="w-1/3 border-x border-slate-100">
-                             <div className="text-xl font-bold text-slate-500 mb-1">{probabilities.draw}%</div>
-                             <div className="text-[10px] uppercase font-bold text-slate-400">Empate</div>
-                          </div>
-                          <div className="w-1/3">
-                             <div className="text-3xl font-bold text-slate-800 mb-1">{probabilities.away}%</div>
-                             <div className="text-[10px] uppercase font-bold text-slate-400">Vitória S2</div>
-                          </div>
-                       </div>
-                    </div>
-
-                 </div>
+              <div className="bg-brand-green/5 border border-brand-green/20 rounded-2xl p-5">
+                <p className="text-brand-green text-[10px] font-black uppercase tracking-[0.15em] mb-2">Por que −0.13?</p>
+                <p className="text-brand-dark/70 text-sm leading-relaxed">
+                  Ajuste empírico clássico da literatura de modelagem de futebol. Um ρ <strong className="text-brand-dark">negativo</strong> corrige a dependência entre ataques e defesas em situações de poucos gols, evitando que o modelo ignore confrontos defensivos.
+                </p>
               </div>
-           </div>
+
+              <div>
+                <p className="text-[10px] text-brand-dark/40 uppercase tracking-[0.15em] font-black mb-3">Placares corrigidos</p>
+                <div className="flex gap-3 flex-wrap">
+                  {['0 × 0', '0 × 1', '1 × 0', '1 × 1'].map(s => (
+                    <span key={s} className="font-mono font-black text-sm bg-brand-dark text-brand-neon px-4 py-2 rounded-xl">{s}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
       </div>

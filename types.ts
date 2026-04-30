@@ -39,11 +39,13 @@ export enum SimulationStatus {
 export interface Researcher {
   id: string;
   name: string;
-  role: string;
   affiliation: string;
   image: string;
-  bio: string;
-  link: string;
+  coord?: boolean;
+  linkedin?: string;
+  lattes?: string;
+  /** @deprecated use linkedin */
+  link?: string;
 }
 
 export interface Publication {

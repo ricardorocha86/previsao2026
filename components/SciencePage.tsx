@@ -1,82 +1,88 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { PUBLICATIONS } from '../constants';
-import { FileText, Download, Bookmark, ArrowUpRight, GraduationCap } from 'lucide-react';
+import { ArrowUpRight, BookOpen, FileText } from 'lucide-react';
+import PageHeader from './PageHeader';
 
 const SciencePage: React.FC = () => {
+  const [hovered, setHovered] = useState<string | null>(null);
+
   return (
-    <div className="bg-[#f8fafc] min-h-screen py-24 px-4 font-inter text-slate-900">
-      {/* Background decoration */}
-      <div className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none" 
-        style={{ 
-          backgroundImage: 'radial-gradient(#1e3a8a 1px, transparent 1px)', 
-          backgroundSize: '30px 30px' 
-        }}>
-      </div>
+    <div className="bg-brand-light min-h-screen font-opensans text-brand-dark">
 
-      <div className="max-w-5xl mx-auto relative z-10">
-        <div className="mb-20 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white border border-slate-200 rounded-full mb-6 shadow-sm">
-             <Bookmark className="w-3 h-3 text-blue-800" />
-             <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Biblioteca Acadêmica</span>
-          </div>
-          <h2 className="text-4xl md:text-5xl font-oswald font-bold text-slate-900 uppercase tracking-tight mb-4">
-            Produção <span className="text-blue-700">Científica</span>
-          </h2>
-          <p className="text-slate-500 text-lg max-w-2xl mx-auto font-light">
-             Publicações fundamentais para a metodologia estatística utilizada.
+      <PageHeader
+        icon={BookOpen}
+        eyebrow="Biblioteca Acadêmica"
+        title="Produção"
+        accent="Científica"
+        description="Publicações que fundamentam a metodologia estatística do projeto."
+      />
+
+      {/* LIST */}
+      <div className="max-w-5xl mx-auto px-4">
+
+        {PUBLICATIONS.map((pub, i) => {
+          const isHovered = hovered === pub.id;
+          const idx = String(i + 1).padStart(2, '0');
+
+          return (
+            <a
+              key={pub.id}
+              href={pub.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              onMouseEnter={() => setHovered(pub.id)}
+              onMouseLeave={() => setHovered(null)}
+              className="group relative block border-b border-brand-dark/10 py-10 transition-all duration-300"
+            >
+              {/* Left green accent on hover */}
+              <div className={`absolute left-0 top-0 bottom-0 w-1 bg-brand-green transition-all duration-300 rounded-full ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
+
+              <div className="pl-6 grid grid-cols-[auto_1fr] gap-x-6 md:gap-x-10 items-start">
+
+                {/* Article icon */}
+                <div className={`mt-1 p-3 rounded-xl border transition-all duration-300 ${isHovered ? 'bg-brand-green border-brand-green text-white' : 'bg-white border-brand-dark/10 text-brand-dark/30'}`}>
+                  <FileText className="w-5 h-5" />
+                </div>
+
+                {/* Content */}
+                <div className="min-w-0">
+
+                  {/* Journal — destaque */}
+                  <p className={`text-xs font-black uppercase tracking-[0.15em] mb-1 transition-colors duration-200 ${isHovered ? 'text-brand-green' : 'text-brand-dark/50'}`}>
+                    {pub.journal}
+                  </p>
+
+                  {/* Title */}
+                  <h3 className={`font-montserrat font-black text-lg md:text-xl leading-snug tracking-tight transition-colors duration-200 ${isHovered ? 'text-brand-green' : 'text-brand-dark'}`}>
+                    {pub.title}
+                  </h3>
+
+                  {/* Authors — destaque */}
+                  <p className="text-brand-dark/60 text-sm mt-2 font-opensans font-semibold">
+                    {pub.authors}
+                  </p>
+
+                  {/* Year + CTA */}
+                  <div className="flex items-center gap-4 mt-3">
+                    <span className="font-mono font-black text-xs text-brand-dark/30">{pub.year}</span>
+                    <div className={`flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-brand-green transition-all duration-300 ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}`}>
+                      <span>Acessar artigo</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </a>
+          );
+        })}
+
+        {/* Footer */}
+        <div className="py-12 text-center">
+          <p className="text-[10px] text-brand-dark/20 uppercase tracking-[0.3em] font-black">
+            DOI System · Digital Object Identifier
           </p>
-        </div>
-
-        <div className="grid gap-6">
-           {PUBLICATIONS.map((pub) => (
-             <div key={pub.id} className="group bg-white rounded-2xl p-0 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200 overflow-hidden flex flex-col md:flex-row">
-                
-                {/* Visual Strip */}
-                <div className="bg-slate-50 border-r border-slate-100 p-6 flex flex-col items-center justify-center md:w-32 gap-2 group-hover:bg-blue-50 transition-colors">
-                   <GraduationCap className="w-8 h-8 text-slate-300 group-hover:text-blue-500 transition-colors" />
-                   <span className="text-xl font-bold font-oswald text-slate-700 group-hover:text-blue-600 transition-colors">{pub.year}</span>
-                </div>
-                
-                <div className="p-6 md:p-8 flex-1 flex flex-col justify-between">
-                   <div>
-                      {/* Tags */}
-                      <div className="flex flex-wrap items-center gap-3 mb-4">
-                          <span className="px-3 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-widest rounded-full group-hover:bg-blue-100 group-hover:text-blue-700 transition-colors">
-                             {pub.journal}
-                          </span>
-                      </div>
-
-                      {/* Title */}
-                      <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-3 font-serif leading-snug group-hover:text-blue-800 transition-colors">
-                          {pub.title}
-                      </h3>
-
-                      {/* Authors */}
-                      <p className="text-sm text-slate-500 font-medium">
-                        {pub.authors}
-                      </p>
-                   </div>
-                   
-                   <div className="mt-6 flex items-center gap-4">
-                      <a 
-                        href={pub.link} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors uppercase tracking-wider"
-                      >
-                         Acessar Artigo <ArrowUpRight className="w-4 h-4" />
-                      </a>
-                   </div>
-                </div>
-             </div>
-           ))}
-        </div>
-
-        <div className="mt-16 text-center border-t border-slate-200 pt-8">
-            <p className="text-[10px] text-slate-400 uppercase tracking-widest font-mono">
-               DOI System • Digital Object Identifier
-            </p>
         </div>
       </div>
     </div>

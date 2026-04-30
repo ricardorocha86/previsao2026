@@ -11,23 +11,19 @@ const DifficultyVisualizer: React.FC = () => {
   const cumulativeProb = Math.pow(winRate / 100, knockoutStages) * 100;
 
   return (
-    <section className="bg-slate-900 py-24 px-4 relative overflow-hidden text-white">
+    <section className="bg-brand-dark py-24 px-4 relative overflow-hidden text-white">
       {/* Background patterns */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
-        <div className="absolute top-10 left-10 w-64 h-64 bg-blue-600 rounded-full mix-blend-screen filter blur-[80px]"></div>
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-600 rounded-full mix-blend-screen filter blur-[100px]"></div>
+        <div className="absolute top-10 left-10 w-64 h-64 bg-brand-green rounded-full mix-blend-screen filter blur-[80px]"></div>
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-brand-yellow rounded-full mix-blend-screen filter blur-[100px]"></div>
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-900/30 border border-purple-500/30 rounded-full mb-6">
-             <BrainIcon className="w-4 h-4 text-purple-400" />
-             <span className="text-xs font-bold text-purple-300 uppercase tracking-widest">Educação Estatística</span>
-          </div>
-          <h2 className="text-4xl md:text-6xl font-oswald font-bold uppercase mb-4">
-            A Ilusão da <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Certeza</span>
+          <h2 className="text-4xl md:text-6xl font-montserrat font-bold uppercase mb-4">
+            A Ilusão da <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-neon via-brand-green to-brand-grad1">Certeza</span>
           </h2>
-          <p className="text-slate-400 max-w-2xl mx-auto text-lg font-light leading-relaxed">
+          <p className="text-white/40 max-w-2xl mx-auto text-lg font-opensans leading-relaxed">
             Entender que 15% de chance de título é, na verdade, um status de "Favorito", exige reajustar nossa intuição. Visualizamos aqui a brutalidade matemática do mata-mata.
           </p>
         </div>
@@ -36,17 +32,14 @@ const DifficultyVisualizer: React.FC = () => {
           
           {/* VISUALIZATION 1: THE MULTIVERSE GRID */}
           <div className="space-y-8">
-            <div className="bg-slate-800/50 border border-slate-700 p-8 rounded-3xl backdrop-blur-sm">
-               <h3 className="font-oswald text-2xl mb-6 flex items-center gap-3">
-                 <div className="p-2 bg-blue-500/20 rounded-lg">
-                    <GridIcon className="w-5 h-5 text-blue-400" />
-                 </div>
-                 O Multiverso (100 Cenários)
-               </h3>
+            <div className="bg-white/5 border border-white/10 p-10 rounded-[2.5rem] backdrop-blur-md">
+                <h3 className="font-montserrat font-bold text-2xl mb-8 flex items-center gap-4 uppercase tracking-tighter">
+                   Probabilidades
+                </h3>
                
-               <div className="mb-8">
-                  <label className="flex justify-between text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">
-                     <span>Probabilidade Estimada: <span className="text-white text-lg">{selectedProb}%</span></span>
+               <div className="mb-10">
+                  <label className="flex justify-between text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-6">
+                     <span>Probabilidade Estimada: <span className="text-brand-neon text-xl ml-2">{selectedProb}%</span></span>
                   </label>
                   <input 
                     type="range" 
@@ -54,30 +47,30 @@ const DifficultyVisualizer: React.FC = () => {
                     max="99" 
                     value={selectedProb} 
                     onChange={(e) => setSelectedProb(parseInt(e.target.value))}
-                    className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                    className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-brand-green"
                   />
-                  <div className="flex justify-between text-xs text-slate-500 mt-2 font-mono">
-                     <span>1% (Zebra Histórica)</span>
+                  <div className="flex justify-between text-[9px] text-white/20 mt-4 font-bold uppercase tracking-widest">
+                     <span>1% (Zebra)</span>
                      <span>50% (Moeda)</span>
                      <span>99% (Certeza)</span>
                   </div>
                </div>
 
                {/* The Grid */}
-               <div className="grid grid-cols-10 gap-1.5 aspect-square max-w-md mx-auto mb-6">
+               <div className="grid grid-cols-10 gap-2 aspect-square max-w-md mx-auto mb-10">
                   {Array.from({ length: 100 }).map((_, i) => {
                     const isWin = i < selectedProb;
                     return (
                       <div 
                         key={i}
-                        className={`rounded-sm transition-all duration-300 ${isWin ? 'bg-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.5)] scale-110 z-10' : 'bg-slate-700/50 scale-100'}`}
+                        className={`rounded-md transition-all duration-500 ${isWin ? 'bg-brand-neon shadow-[0_0_15px_rgba(104,231,15,0.4)] scale-110 z-10' : 'bg-white/5 scale-100'}`}
                       ></div>
                     );
                   })}
                </div>
 
-               <div className="bg-slate-900/80 p-4 rounded-xl border-l-4 border-yellow-500">
-                  <p className="text-sm text-slate-300 leading-relaxed">
+               <div className="bg-white/5 p-6 rounded-2xl border-l-4 border-brand-neon">
+                  <p className="text-sm text-white/60 leading-relaxed font-opensans italic">
                      Se o Brasil tem <strong>{selectedProb}%</strong> de chance de ganhar a Copa, isso significa que em <strong>{100 - selectedProb}</strong> universos paralelos, outra seleção levanta a taça. Mesmo favoritos perdem na grande maioria das vezes.
                   </p>
                </div>
@@ -86,106 +79,102 @@ const DifficultyVisualizer: React.FC = () => {
 
           {/* VISUALIZATION 2: THE GAUNTLET */}
           <div className="space-y-8">
-             <div className="bg-slate-800/50 border border-slate-700 p-8 rounded-3xl backdrop-blur-sm h-full flex flex-col">
-                <h3 className="font-oswald text-2xl mb-6 flex items-center gap-3">
-                 <div className="p-2 bg-red-500/20 rounded-lg">
-                    <TrendingDown className="w-5 h-5 text-red-400" />
-                 </div>
-                 O "Corredor da Morte"
-               </h3>
+             <div className="bg-white/5 border border-white/10 p-10 rounded-[2.5rem] backdrop-blur-md h-full flex flex-col">
+                <h3 className="font-montserrat font-bold text-2xl mb-8 flex items-center gap-4 uppercase tracking-tighter">
+                   Simulação de Mata-mata
+                </h3>
                
-               <p className="text-slate-400 text-sm mb-8">
+               <p className="text-white/40 text-sm mb-10 font-opensans">
                   Para ser campeão em 2026, um time precisará vencer 5 jogos de mata-mata (32-avos até a Final). Veja como a probabilidade colapsa a cada fase.
                </p>
 
-               <div className="mb-8 bg-slate-900 p-6 rounded-2xl border border-slate-700">
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">
-                     Força do Time (Chance de Vitória por Jogo)
+               <div className="mb-10 bg-brand-dark/50 p-8 rounded-3xl border border-white/5">
+                  <label className="block text-[9px] font-black text-white/30 uppercase tracking-[0.2em] mb-4">
+                     Força do Time (Chance por Jogo)
                   </label>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-6">
                      <input 
                        type="range" 
                        min="50" 
                        max="95" 
                        value={winRate} 
                        onChange={(e) => setWinRate(parseInt(e.target.value))}
-                       className="flex-1 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-red-500"
+                       className="flex-1 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-brand-red"
                      />
-                     <span className="text-2xl font-oswald font-bold text-white w-16 text-right">{winRate}%</span>
+                     <span className="text-3xl font-montserrat font-black text-brand-red w-20 text-right">{winRate}%</span>
                   </div>
-                  <p className="text-xs text-slate-500 mt-2">
+                  <p className="text-[9px] text-white/20 mt-4 uppercase font-bold tracking-widest">
                      *Um time "Dominante" tem cerca de 65-70% contra oponentes variados.
                   </p>
                </div>
 
                {/* The Funnel Visualization */}
-               <div className="flex-1 flex flex-col justify-between space-y-2 relative">
+               <div className="flex-1 flex flex-col justify-between space-y-3 relative">
                   {/* Phase 1 */}
-                  <div className="flex items-center gap-4 group">
-                     <div className="w-24 text-right text-xs font-bold text-slate-400 uppercase">32-Avos</div>
-                     <div className="flex-1 h-3 bg-slate-700 rounded-full overflow-hidden">
-                        <div style={{ width: '100%' }} className="h-full bg-slate-500"></div>
+                  <div className="flex items-center gap-6 group">
+                     <div className="w-24 text-right text-[10px] font-black text-white/30 uppercase tracking-widest">32-Avos</div>
+                     <div className="flex-1 h-2.5 bg-white/5 rounded-full overflow-hidden">
+                        <div style={{ width: '100%' }} className="h-full bg-white/20"></div>
                      </div>
-                     <div className="w-16 font-mono text-xs text-slate-500">100%</div>
+                     <div className="w-16 font-montserrat text-xs font-bold text-white/20">100%</div>
                   </div>
                   
                   {/* Arrow */}
-                  <div className="pl-28 opacity-20"><ArrowDownIcon /></div>
+                  <div className="pl-32 opacity-10"><ArrowDownIcon /></div>
 
                   {/* Phase 2: R16 */}
-                  <div className="flex items-center gap-4">
-                     <div className="w-24 text-right text-xs font-bold text-slate-400 uppercase">Oitavas</div>
-                     <div className="flex-1 h-3 bg-slate-700 rounded-full overflow-hidden">
-                        <div style={{ width: `${winRate}%` }} className="h-full bg-red-400 transition-all duration-500"></div>
+                  <div className="flex items-center gap-6">
+                     <div className="w-24 text-right text-[10px] font-black text-white/30 uppercase tracking-widest">Oitavas</div>
+                     <div className="flex-1 h-2.5 bg-white/5 rounded-full overflow-hidden">
+                        <div style={{ width: `${winRate}%` }} className="h-full bg-brand-red/40 transition-all duration-500 shadow-[0_0_10px_rgba(191,26,31,0.3)]"></div>
                      </div>
-                     <div className="w-16 font-mono text-sm font-bold text-white">{winRate.toFixed(1)}%</div>
+                     <div className="w-16 font-montserrat text-xs font-bold text-white/60">{winRate.toFixed(1)}%</div>
                   </div>
 
                   {/* Arrow */}
-                  <div className="pl-28 opacity-20"><ArrowDownIcon /></div>
+                  <div className="pl-32 opacity-10"><ArrowDownIcon /></div>
 
                   {/* Phase 3: QF */}
-                  <div className="flex items-center gap-4">
-                     <div className="w-24 text-right text-xs font-bold text-slate-400 uppercase">Quartas</div>
-                     <div className="flex-1 h-3 bg-slate-700 rounded-full overflow-hidden">
-                        <div style={{ width: `${Math.pow(winRate/100, 2)*100}%` }} className="h-full bg-red-500 transition-all duration-500"></div>
+                  <div className="flex items-center gap-6">
+                     <div className="w-24 text-right text-[10px] font-black text-white/30 uppercase tracking-widest">Quartas</div>
+                     <div className="flex-1 h-2.5 bg-white/5 rounded-full overflow-hidden">
+                        <div style={{ width: `${Math.pow(winRate/100, 2)*100}%` }} className="h-full bg-brand-red/60 transition-all duration-500 shadow-[0_0_10px_rgba(191,26,31,0.4)]"></div>
                      </div>
-                     <div className="w-16 font-mono text-sm font-bold text-white">{(Math.pow(winRate/100, 2)*100).toFixed(1)}%</div>
+                     <div className="w-16 font-montserrat text-xs font-bold text-white/80">{(Math.pow(winRate/100, 2)*100).toFixed(1)}%</div>
                   </div>
 
                    {/* Arrow */}
-                   <div className="pl-28 opacity-20"><ArrowDownIcon /></div>
-
+                   <div className="pl-32 opacity-10"><ArrowDownIcon /></div>
 
                   {/* Phase 4: SF */}
-                  <div className="flex items-center gap-4">
-                     <div className="w-24 text-right text-xs font-bold text-slate-400 uppercase">Semi</div>
-                     <div className="flex-1 h-3 bg-slate-700 rounded-full overflow-hidden">
-                        <div style={{ width: `${Math.pow(winRate/100, 3)*100}%` }} className="h-full bg-red-600 transition-all duration-500"></div>
+                  <div className="flex items-center gap-6">
+                     <div className="w-24 text-right text-[10px] font-black text-white/30 uppercase tracking-widest">Semi</div>
+                     <div className="flex-1 h-2.5 bg-white/5 rounded-full overflow-hidden">
+                        <div style={{ width: `${Math.pow(winRate/100, 3)*100}%` }} className="h-full bg-brand-red/80 transition-all duration-500 shadow-[0_0_10px_rgba(191,26,31,0.5)]"></div>
                      </div>
-                     <div className="w-16 font-mono text-sm font-bold text-white">{(Math.pow(winRate/100, 3)*100).toFixed(1)}%</div>
+                     <div className="w-16 font-montserrat text-xs font-bold text-white">{(Math.pow(winRate/100, 3)*100).toFixed(1)}%</div>
                   </div>
 
                    {/* Arrow */}
-                   <div className="pl-28 opacity-20"><ArrowDownIcon /></div>
+                   <div className="pl-32 opacity-10"><ArrowDownIcon /></div>
 
                   {/* Phase 5: Final */}
-                  <div className="flex items-center gap-4">
-                     <div className="w-24 text-right text-xs font-bold text-slate-400 uppercase">Final</div>
-                     <div className="flex-1 h-3 bg-slate-700 rounded-full overflow-hidden">
-                        <div style={{ width: `${Math.pow(winRate/100, 4)*100}%` }} className="h-full bg-red-700 transition-all duration-500"></div>
+                  <div className="flex items-center gap-6">
+                     <div className="w-24 text-right text-[10px] font-black text-white/30 uppercase tracking-widest">Final</div>
+                     <div className="flex-1 h-2.5 bg-white/5 rounded-full overflow-hidden">
+                        <div style={{ width: `${Math.pow(winRate/100, 4)*100}%` }} className="h-full bg-brand-red transition-all duration-500 shadow-[0_0_15px_rgba(191,26,31,0.6)]"></div>
                      </div>
-                     <div className="w-16 font-mono text-sm font-bold text-white">{(Math.pow(winRate/100, 4)*100).toFixed(1)}%</div>
+                     <div className="w-16 font-montserrat text-sm font-black text-brand-red">{(Math.pow(winRate/100, 4)*100).toFixed(1)}%</div>
                   </div>
 
                    {/* Arrow */}
-                   <div className="pl-28 opacity-20"><ArrowDownIcon /></div>
+                   <div className="pl-32 opacity-10"><ArrowDownIcon /></div>
 
                    {/* CHAMPION */}
-                   <div className="flex items-center gap-4 p-4 bg-yellow-500/10 border border-yellow-500/50 rounded-xl mt-2">
-                     <div className="w-24 text-right text-xs font-bold text-yellow-500 uppercase flex justify-end"><Trophy className="w-5 h-5" /></div>
-                     <div className="flex-1 text-xs text-yellow-200 uppercase tracking-wider">Probabilidade Final de Título</div>
-                     <div className="w-16 font-mono text-2xl font-bold text-yellow-400">{(Math.pow(winRate/100, 5)*100).toFixed(1)}%</div>
+                   <div className="flex items-center gap-6 p-6 bg-brand-yellow/10 border border-brand-yellow/30 rounded-2xl mt-4">
+                     <div className="w-24 text-right text-[10px] font-black text-brand-yellow uppercase flex justify-end tracking-widest"><Trophy className="w-6 h-6" /></div>
+                     <div className="flex-1 text-[10px] text-brand-yellow/70 font-black uppercase tracking-[0.2em]">Probabilidade Final de Título</div>
+                     <div className="w-16 font-montserrat text-3xl font-black text-brand-yellow">{(Math.pow(winRate/100, 5)*100).toFixed(1)}%</div>
                   </div>
                </div>
 
@@ -196,6 +185,7 @@ const DifficultyVisualizer: React.FC = () => {
     </section>
   );
 };
+
 
 // Icons components
 const GridIcon = ({ className }: { className?: string }) => (

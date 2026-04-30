@@ -50,89 +50,89 @@ const OddsCalculator: React.FC = () => {
     const [data] = await Promise.all([dataPromise, minTimePromise]);
     setResult(data);
     setStatus(SimulationStatus.SUCCESS);
-  };
-
-  return (
-    <section id="simulator" className="py-24 bg-slate-50 relative overflow-hidden">
+  };  return (
+    <section id="simulator" className="py-24 bg-brand-light relative overflow-hidden">
         {/* Background Decorative Pattern */}
-        <div className="absolute inset-0 z-0 opacity-[0.05]" 
+        <div className="absolute inset-0 z-0 opacity-[0.03]" 
              style={{ 
-                backgroundImage: 'radial-gradient(#1e3a8a 1px, transparent 1px)', 
-                backgroundSize: '24px 24px' 
+                backgroundImage: 'radial-gradient(#209927 1px, transparent 1px)', 
+                backgroundSize: '32px 32px' 
              }}>
         </div>
         
         <div className="max-w-6xl mx-auto px-4 relative z-10">
-          <div className="text-center mb-16 space-y-4">
-            <span className="text-blue-600 font-bold tracking-widest text-xs uppercase border-b-2 border-blue-600 pb-1">Simulador Oficial</span>
-            <h2 className="text-5xl md:text-6xl font-oswald font-bold text-slate-900 uppercase">
-              Laboratório de <span className="text-blue-800">Probabilidades</span>
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-6xl font-montserrat font-bold text-brand-dark uppercase tracking-tighter leading-none mb-4">
+              Laboratório de <span className="text-brand-green">Probabilidades</span>
             </h2>
+            <p className="text-brand-dark/50 max-w-2xl mx-auto text-lg font-opensans">
+              Projete resultados baseados em dados históricos e performance técnica das seleções.
+            </p>
           </div>
 
-          <div className="bg-white rounded-3xl shadow-2xl shadow-slate-200/50 overflow-hidden border border-slate-100">
+          <div className="bg-white rounded-[3rem] shadow-2xl shadow-brand-dark/5 overflow-hidden border border-brand-dark/5">
              {/* Header Strip */}
-             <div className="h-2 bg-gradient-to-r from-blue-600 via-blue-400 to-blue-900"></div>
+             <div className="h-2 bg-gradient-to-r from-brand-green via-brand-neon to-brand-yellow"></div>
 
-             <div className="grid lg:grid-cols-12 min-h-[600px]">
+             <div className="grid lg:grid-cols-12 min-h-[650px]">
                 
                 {/* LEFT: Controls */}
-                <div className="lg:col-span-4 bg-slate-50 p-8 lg:p-10 border-r border-slate-200 flex flex-col justify-between">
-                   <div className="space-y-10">
+                <div className="lg:col-span-4 bg-brand-light/20 p-8 lg:p-12 border-r border-brand-dark/5 flex flex-col justify-between">
+                   <div className="space-y-12">
                       <div>
-                        <h3 className="font-oswald text-2xl text-slate-800 mb-6 flex items-center gap-2">
-                           <Activity className="w-5 h-5 text-blue-600" /> SETUP DA PARTIDA
+                        <h3 className="font-montserrat font-bold text-xl text-brand-dark mb-6 flex items-center gap-3 uppercase tracking-tighter">
+                           Confronto
                         </h3>
-                        <p className="text-slate-500 text-sm mb-8 leading-relaxed">
-                           Configure o confronto para iniciar a modelagem preditiva baseada em dados históricos e momento atual.
+                        <p className="text-brand-dark/40 text-xs font-opensans leading-relaxed">
+                           Selecione as equipes para iniciar a simulação baseada em histórico, momento atual e tática.
                         </p>
                       </div>
 
                       {/* Team A Selector */}
-                      <div className="space-y-3">
-                         <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Mandante</label>
+                      <div className="space-y-4">
+                         <label className="text-[10px] font-black text-brand-dark/30 uppercase tracking-[0.2em]">Mandante</label>
                          <div className="relative group">
                             <select 
                               value={teamA} 
                               onChange={(e) => setTeamA(e.target.value)}
-                              className="w-full p-4 pl-14 bg-white border border-slate-200 rounded-xl font-bold text-slate-800 shadow-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all appearance-none cursor-pointer hover:border-blue-300"
+                              className="w-full p-5 pl-16 bg-white border border-brand-dark/10 rounded-2xl font-montserrat font-bold text-brand-dark shadow-sm outline-none focus:ring-4 focus:ring-brand-green/10 focus:border-brand-green transition-all appearance-none cursor-pointer"
                             >
                                {WC_TEAMS.map(t => (
                                   <option key={`A-${t.id}`} value={t.id}>{t.name}</option>
                                ))}
                             </select>
-                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl filter grayscale group-hover:grayscale-0 transition-all">
+                            <div className="absolute left-5 top-1/2 -translate-y-1/2 text-3xl transition-transform group-hover:scale-110">
                                {getTeam(teamA)?.flag}
                             </div>
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                               <ArrowRight className="w-4 h-4 text-slate-300 rotate-90" />
+                            <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none opacity-20">
+                               <ArrowRight className="w-4 h-4 rotate-90" />
                             </div>
                          </div>
                       </div>
 
                       {/* VS Badge */}
-                      <div className="flex justify-center -my-2 relative z-10">
-                         <div className="bg-slate-200 text-slate-500 font-black text-xs px-3 py-1 rounded-full border-4 border-slate-50">VS</div>
+                      <div className="flex justify-center -my-4 relative z-10">
+                         <div className="bg-brand-dark text-white font-exo font-bold text-xs italic px-5 py-2 rounded-full border-4 border-white shadow-lg pr-6">VS</div>
                       </div>
 
                       {/* Team B Selector */}
-                      <div className="space-y-3">
-                         <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Visitante</label>
+                      <div className="space-y-4">
+                         <label className="text-[10px] font-black text-brand-dark/30 uppercase tracking-[0.2em]">Visitante</label>
                          <div className="relative group">
                             <select 
                               value={teamB} 
                               onChange={(e) => setTeamB(e.target.value)}
-                              className="w-full p-4 pl-14 bg-white border border-slate-200 rounded-xl font-bold text-slate-800 shadow-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all appearance-none cursor-pointer hover:border-blue-300"
+                              className="w-full p-5 pl-16 bg-white border border-brand-dark/10 rounded-2xl font-montserrat font-bold text-brand-dark shadow-sm outline-none focus:ring-4 focus:ring-brand-green/10 focus:border-brand-green transition-all appearance-none cursor-pointer"
                             >
                                {WC_TEAMS.map(t => (
                                   <option key={`B-${t.id}`} value={t.id}>{t.name}</option>
                                ))}
                             </select>
-                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl filter grayscale group-hover:grayscale-0 transition-all">
+                            <div className="absolute left-5 top-1/2 -translate-y-1/2 text-3xl transition-transform group-hover:scale-110">
                                {getTeam(teamB)?.flag}
                             </div>
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                               <ArrowRight className="w-4 h-4 text-slate-300 rotate-90" />
+                            <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none opacity-20">
+                               <ArrowRight className="w-4 h-4 rotate-90" />
                             </div>
                          </div>
                       </div>
@@ -141,14 +141,14 @@ const OddsCalculator: React.FC = () => {
                    <button 
                       onClick={handleSimulate}
                       disabled={status === SimulationStatus.LOADING}
-                      className="mt-8 w-full bg-slate-900 text-white font-oswald font-bold text-lg py-5 rounded-xl shadow-xl shadow-slate-900/10 hover:bg-blue-900 transition-all transform hover:scale-[1.02] disabled:opacity-80 disabled:cursor-wait flex items-center justify-center gap-3"
+                      className="mt-12 w-full bg-brand-dark hover:bg-brand-green text-white font-montserrat font-bold text-sm py-6 rounded-2xl shadow-xl shadow-brand-dark/20 transition-all transform hover:scale-[1.02] disabled:opacity-80 disabled:cursor-wait flex items-center justify-center gap-3 uppercase tracking-widest"
                    >
                       {status === SimulationStatus.LOADING ? (
-                        <Activity className="w-5 h-5 animate-spin text-blue-400" />
+                        <Activity className="w-5 h-5 animate-spin text-brand-neon" />
                       ) : (
-                        <Calculator className="w-5 h-5 text-blue-400" />
+                        <Calculator className="w-5 h-5 text-brand-neon" />
                       )}
-                      {status === SimulationStatus.LOADING ? "PROCESSANDO..." : "CALCULAR PROBABILIDADE"}
+                      {status === SimulationStatus.LOADING ? "Analizando..." : "Iniciar Simulação"}
                    </button>
                 </div>
 
@@ -157,20 +157,29 @@ const OddsCalculator: React.FC = () => {
                    
                    {/* Idle State */}
                    {status === SimulationStatus.IDLE && (
-                      <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-300 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
-                         <BrainCircuit className="w-32 h-32 mb-6 opacity-20" />
-                         <p className="font-oswald text-2xl text-slate-400 uppercase tracking-widest">Aguardando Input</p>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-brand-dark/5">
+                         <div className="relative">
+                            <BrainCircuit className="w-40 h-40 mb-8 opacity-10" />
+                            <div className="absolute inset-0 animate-pulse bg-brand-green/5 blur-3xl rounded-full"></div>
+                         </div>
+                         <p className="font-montserrat font-black text-2xl uppercase tracking-[0.4em] text-brand-dark/10">Pronto</p>
+                         <p className="text-[10px] font-bold uppercase tracking-widest mt-2 text-brand-dark/20">Aguardando Seleções</p>
                       </div>
                    )}
 
                    {/* Loading State */}
                    {status === SimulationStatus.LOADING && (
-                      <div className="absolute inset-0 bg-slate-900 z-20 flex flex-col items-center justify-center text-white">
-                         <div className="w-64 h-1 bg-slate-800 rounded-full mb-8 overflow-hidden">
-                            <div className="h-full bg-blue-500 animate-progress"></div>
+                      <div className="absolute inset-0 bg-brand-dark z-20 flex flex-col items-center justify-center text-white p-12 text-center">
+                         <div className="w-72 h-1.5 bg-white/10 rounded-full mb-10 overflow-hidden">
+                            <div className="h-full bg-brand-green animate-progress shadow-[0_0_15px_rgba(32,153,39,0.5)]"></div>
                          </div>
-                         <div className="font-mono text-blue-400 text-sm tracking-widest animate-pulse">
+                         <div className="font-montserrat font-black text-brand-green text-xs tracking-[0.3em] animate-pulse uppercase max-w-sm leading-loose">
                             {loadingMessages[loadingStep]}
+                         </div>
+                         <div className="mt-20 flex gap-4 opacity-20">
+                            <div className="w-2 h-2 rounded-full bg-white animate-bounce" style={{ animationDelay: '0s' }}></div>
+                            <div className="w-2 h-2 rounded-full bg-white animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                            <div className="w-2 h-2 rounded-full bg-white animate-bounce" style={{ animationDelay: '0.4s' }}></div>
                          </div>
                       </div>
                    )}
@@ -179,95 +188,86 @@ const OddsCalculator: React.FC = () => {
                    {status === SimulationStatus.SUCCESS && result && (
                       <div className="flex-1 flex flex-col animate-fadeIn">
                          {/* Match Score Header */}
-                         <div className="bg-[#0B1120] text-white p-8 lg:p-12 flex justify-between items-center relative overflow-hidden">
+                         <div className="bg-brand-dark text-white p-10 lg:p-16 flex justify-between items-center relative overflow-hidden">
                             {/* Abstract Glow */}
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-blue-900/20 blur-3xl pointer-events-none"></div>
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-brand-green/10 blur-3xl pointer-events-none"></div>
 
                             {/* Team A */}
                             <div className="text-center relative z-10 w-1/3">
-                               <div className="text-5xl lg:text-7xl mb-2">{getTeam(teamA)?.flag}</div>
-                               <h2 className="font-oswald font-bold text-xl lg:text-3xl uppercase tracking-wider">{getTeam(teamA)?.name}</h2>
+                               <div className="text-6xl lg:text-8xl mb-4 drop-shadow-2xl">{getTeam(teamA)?.flag}</div>
+                               <h2 className="font-montserrat font-black text-xl lg:text-3xl uppercase tracking-tighter">{getTeam(teamA)?.name}</h2>
                             </div>
 
                             {/* Score */}
                             <div className="text-center relative z-10 w-1/3">
-                               <div className="bg-slate-800/80 backdrop-blur border border-slate-700 rounded-2xl px-8 py-4 inline-block shadow-2xl">
-                                  <span className="font-oswald font-bold text-5xl lg:text-6xl text-white tracking-widest">{result.predictedScore}</span>
+                               <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2rem] px-10 py-6 inline-block shadow-2xl">
+                                  <span className="font-montserrat font-black text-6xl lg:text-8xl text-brand-green tracking-tighter">{result.predictedScore}</span>
                                </div>
-                               <div className="mt-2 text-[10px] text-slate-500 font-bold uppercase tracking-widest">Placar Estimado</div>
+                               <div className="mt-4 text-[10px] text-white/30 font-black uppercase tracking-[0.4em]">Placar Provável</div>
                             </div>
 
                             {/* Team B */}
                             <div className="text-center relative z-10 w-1/3">
-                               <div className="text-5xl lg:text-7xl mb-2">{getTeam(teamB)?.flag}</div>
-                               <h2 className="font-oswald font-bold text-xl lg:text-3xl uppercase tracking-wider">{getTeam(teamB)?.name}</h2>
+                               <div className="text-6xl lg:text-8xl mb-4 drop-shadow-2xl">{getTeam(teamB)?.flag}</div>
+                               <h2 className="font-montserrat font-black text-xl lg:text-3xl uppercase tracking-tighter">{getTeam(teamB)?.name}</h2>
                             </div>
                          </div>
 
                          {/* Probabilities Bar (Tug of War) */}
-                         <div className="bg-slate-100 p-8 border-b border-slate-200">
-                             <div className="flex justify-between text-xs font-bold text-slate-500 uppercase mb-3 tracking-wider">
+                         <div className="bg-brand-light/50 p-10 border-b border-brand-dark/5">
+                             <div className="flex justify-between text-[10px] font-black text-brand-dark/40 uppercase mb-4 tracking-[0.2em]">
                                 <span>Vitória {getTeam(teamA)?.name}</span>
-                                <span>Empate</span>
+                                <span className="text-brand-dark/20">Empate</span>
                                 <span>Vitória {getTeam(teamB)?.name}</span>
                              </div>
-                             <div className="h-4 lg:h-6 flex rounded-full overflow-hidden shadow-inner bg-slate-200">
+                             <div className="h-6 lg:h-10 flex rounded-2xl overflow-hidden shadow-inner bg-brand-dark/5 p-1">
                                 <div 
-                                  style={{ width: `${result.homeWinProbability}%`, backgroundColor: getTeam(teamA)?.color || '#1e40af' }} 
-                                  className="h-full relative group"
+                                  style={{ width: `${result.homeWinProbability}%`, backgroundColor: getTeam(teamA)?.color || '#209927' }} 
+                                  className="h-full relative group rounded-l-xl transition-all duration-1000"
                                 >
-                                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                                    {result.homeWinProbability}%
-                                  </div>
                                 </div>
                                 <div 
                                   style={{ width: `${result.drawProbability}%` }} 
-                                  className="h-full bg-slate-400 relative group"
+                                  className="h-full bg-brand-dark/10 relative group transition-all duration-1000"
                                 >
-                                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                                    {result.drawProbability}%
-                                  </div>
                                 </div>
                                 <div 
-                                  style={{ width: `${result.awayWinProbability}%`, backgroundColor: getTeam(teamB)?.color || '#dc2626' }} 
-                                  className="h-full relative group"
+                                  style={{ width: `${result.awayWinProbability}%`, backgroundColor: getTeam(teamB)?.color || '#BF1A1F' }} 
+                                  className="h-full relative group rounded-r-xl transition-all duration-1000"
                                 >
-                                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                                    {result.awayWinProbability}%
-                                  </div>
                                 </div>
                              </div>
-                             <div className="flex justify-between mt-2 font-mono text-sm font-bold text-slate-700">
+                             <div className="flex justify-between mt-4 font-montserrat text-lg font-black text-brand-dark">
                                 <span>{result.homeWinProbability}%</span>
-                                <span className="text-slate-400">{result.drawProbability}%</span>
+                                <span className="text-brand-dark/20">{result.drawProbability}%</span>
                                 <span>{result.awayWinProbability}%</span>
                              </div>
                          </div>
 
                          {/* Analysis Content */}
-                         <div className="p-8 lg:p-10 flex-1 bg-slate-50/50">
-                            <div className="flex items-start gap-4 mb-6">
-                               <div className="p-2 bg-yellow-100 rounded-lg">
-                                  <Trophy className="w-6 h-6 text-yellow-600" />
+                         <div className="p-10 lg:p-14 flex-1 bg-white">
+                            <div className="flex items-start gap-6 mb-10">
+                               <div className="p-4 bg-brand-yellow/10 rounded-2xl">
+                                  <Trophy className="w-8 h-8 text-brand-yellow" />
                                </div>
                                <div>
-                                  <h4 className="font-oswald font-bold text-lg text-slate-800 uppercase">Análise do Especialista</h4>
-                                  <p className="text-slate-600 text-sm mt-1 leading-relaxed">
+                                  <h4 className="font-montserrat font-black text-xl text-brand-dark uppercase tracking-tighter mb-2">Análise</h4>
+                                  <p className="text-brand-dark/60 text-base leading-relaxed font-opensans italic">
                                     "{result.reasoning}"
                                   </p>
                                </div>
                             </div>
 
                             <div>
-                               <h4 className="font-bold text-slate-400 text-xs uppercase tracking-wider mb-3">Fatores Chave</h4>
-                               <div className="flex flex-wrap gap-2">
+                               <h4 className="font-black text-brand-dark/20 text-[10px] uppercase tracking-[0.3em] mb-6">Fatores Analisados</h4>
+                               <div className="flex flex-wrap gap-3">
                                   {result.keyFactors.map((factor, i) => (
-                                     <span key={i} className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-700 text-sm font-semibold shadow-sm flex items-center gap-2">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                     <span key={i} className="px-6 py-3 bg-brand-light/50 border border-brand-dark/5 rounded-xl text-brand-dark text-xs font-bold shadow-sm flex items-center gap-3">
+                                        <div className="w-2 h-2 rounded-full bg-brand-green shadow-[0_0_8px_rgba(32,153,39,0.5)]"></div>
                                         {factor}
                                      </span>
                                   ))}
-                               </div>
+                                </div>
                             </div>
                          </div>
                       </div>
@@ -280,15 +280,24 @@ const OddsCalculator: React.FC = () => {
         <style>{`
           @keyframes progress {
             0% { width: 0%; }
-            50% { width: 70%; }
+            20% { width: 30%; }
+            70% { width: 60%; }
             100% { width: 100%; }
           }
           .animate-progress {
-            animation: progress 4s ease-in-out infinite;
+            animation: progress 4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+          }
+          .animate-fadeIn {
+            animation: fadeIn 0.8s ease-out forwards;
+          }
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
           }
         `}</style>
     </section>
   );
 };
+
 
 export default OddsCalculator;

@@ -5,27 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Previsão Esportiva - Modelos Científicos</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Exo+2:ital,wght@1,700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                green: '#209927',
+                neon: '#68E70F',
+                yellow: '#FFCF26',
+                red: '#BF1A1F',
+                blue: '#035C88',
+                light: '#F1F1F1',
+                dark: '#2E2E2E',
+                grad1: '#7AB802',
+                grad2: '#00621A'
+              }
+            },
+            fontFamily: {
+              montserrat: ['Montserrat', 'sans-serif'],
+              exo: ['"Exo 2"', 'sans-serif'],
+              opensans: ['"Open Sans"', 'sans-serif']
+            }
+          }
+        }
+      }
+    </script>
     <style>
       body {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Open Sans', sans-serif;
+        background-color: #F1F1F1;
+        color: #2E2E2E;
       }
-      h1, h2, h3, h4, h5, h6 {
-        font-family: 'Oswald', sans-serif;
+      h1, h2, h3 {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
       }
-      /* Custom scrollbar for sleek look */
+      .font-exo-italic {
+        font-family: 'Exo 2', sans-serif;
+        font-weight: 700;
+        font-style: italic;
+      }
+      /* Custom scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
       }
       ::-webkit-scrollbar-track {
-        background: #f1f5f9;
+        background: #F1F1F1;
       }
       ::-webkit-scrollbar-thumb {
-        background: #1e3a8a;
+        background: #209927;
         border-radius: 4px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #1e40af;
+        background: #00621A;
       }
     </style>
 <script type="importmap">
@@ -43,7 +78,7 @@
 }
 </script>
 </head>
-  <body class="bg-slate-50 text-slate-900 antialiased">
+  <body class="bg-brand-light text-brand-dark antialiased">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

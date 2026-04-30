@@ -7,7 +7,7 @@ import TeamPage from './components/TeamPage';
 import SciencePage from './components/SciencePage';
 import MediaPage from './components/MediaPage';
 import MethodologyPage from './components/MethodologyPage';
-import { Menu, X, Github, Twitter, Trophy, LayoutDashboard, Microscope, Globe, BookOpen, ArrowUpRight } from 'lucide-react';
+import { Menu, X, Instagram, Mail, ArrowUpRight } from 'lucide-react';
 
 type ViewState = 'home' | 'copa' | 'team' | 'science' | 'media' | 'methodology';
 
@@ -24,23 +24,23 @@ export default function App() {
   const NavItem: React.FC<{ view: ViewState; label: string }> = ({ view, label }) => (
     <button 
       onClick={() => navigateTo(view)}
-      className={`font-oswald font-medium text-sm uppercase tracking-widest transition-colors pb-1 ${currentView === view ? 'text-white border-b-2 border-blue-500' : 'text-slate-400 hover:text-white'}`}
+      className={`font-montserrat font-bold text-sm uppercase tracking-widest transition-colors pb-1 ${currentView === view ? 'text-brand-green border-b-2 border-brand-green' : 'text-brand-dark/40 hover:text-brand-green'}`}
     >
       {label}
     </button>
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 font-inter selection:bg-blue-500 selection:text-white flex flex-col">
+    <div className="min-h-screen bg-brand-light font-opensans selection:bg-brand-green selection:text-white flex flex-col text-brand-dark">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-[#050B14]/95 backdrop-blur-md border-b border-slate-800/50 shadow-lg">
+      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-brand-dark/10 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
             <div 
               className="flex-shrink-0 flex items-center gap-2 cursor-pointer group"
               onClick={() => navigateTo('home')}
             >
-              <Logo className="h-10 md:h-12 brightness-0 invert group-hover:opacity-80 transition-opacity" />
+              <Logo className="h-10 md:h-12 group-hover:opacity-80 transition-opacity" />
             </div>
             
             {/* Desktop Menu */}
@@ -52,14 +52,11 @@ export default function App() {
               <NavItem view="media" label="Na Mídia" />
               <NavItem view="team" label="Equipe" />
               
-              <button className="bg-blue-600 text-white px-6 py-2 rounded-sm font-oswald font-bold text-sm uppercase tracking-wider hover:bg-blue-500 transition shadow-[0_0_15px_rgba(37,99,235,0.3)] flex items-center gap-2">
-                <Trophy className="w-4 h-4" /> Pro Login
-              </button>
             </div>
 
             {/* Mobile Menu Button */}
             <div className="md:hidden">
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-white p-2">
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-brand-dark p-2">
                 {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </div>
@@ -68,80 +65,86 @@ export default function App() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden bg-[#050B14] border-t border-slate-800 absolute w-full shadow-2xl h-screen z-50">
+          <div className="md:hidden bg-white border-t border-brand-dark/10 absolute w-full shadow-2xl h-screen z-50">
             <div className="px-4 pt-4 pb-8 space-y-2">
-              <button onClick={() => navigateTo('home')} className="block w-full text-left px-3 py-4 text-lg font-oswald font-bold text-white border-b border-slate-800 hover:text-blue-500">Início</button>
-              <button onClick={() => navigateTo('copa')} className="block w-full text-left px-3 py-4 text-lg font-oswald font-bold text-white border-b border-slate-800 hover:text-blue-500">Copa 2026</button>
-              <button onClick={() => navigateTo('methodology')} className="block w-full text-left px-3 py-4 text-lg font-oswald font-bold text-white border-b border-slate-800 hover:text-blue-500">Metodologia</button>
-              <button onClick={() => navigateTo('science')} className="block w-full text-left px-3 py-4 text-lg font-oswald font-bold text-white border-b border-slate-800 hover:text-blue-500">Produção Científica</button>
-              <button onClick={() => navigateTo('media')} className="block w-full text-left px-3 py-4 text-lg font-oswald font-bold text-white border-b border-slate-800 hover:text-blue-500">Na Mídia</button>
-              <button onClick={() => navigateTo('team')} className="block w-full text-left px-3 py-4 text-lg font-oswald font-bold text-white border-b border-slate-800 hover:text-blue-500">Equipe</button>
+              <button onClick={() => navigateTo('home')} className={`block w-full text-left px-3 py-6 text-xl font-montserrat font-bold border-b border-brand-dark/5 transition-colors ${currentView === 'home' ? 'text-brand-green bg-brand-green/5' : 'text-brand-dark'}`}>Início</button>
+              <button onClick={() => navigateTo('copa')} className={`block w-full text-left px-3 py-6 text-xl font-montserrat font-bold border-b border-brand-dark/5 transition-colors ${currentView === 'copa' ? 'text-brand-green bg-brand-green/5' : 'text-brand-dark'}`}>Copa 2026</button>
+              <button onClick={() => navigateTo('methodology')} className={`block w-full text-left px-3 py-6 text-xl font-montserrat font-bold border-b border-brand-dark/5 transition-colors ${currentView === 'methodology' ? 'text-brand-green bg-brand-green/5' : 'text-brand-dark'}`}>Metodologia</button>
+              <button onClick={() => navigateTo('science')} className={`block w-full text-left px-3 py-6 text-xl font-montserrat font-bold border-b border-brand-dark/5 transition-colors ${currentView === 'science' ? 'text-brand-green bg-brand-green/5' : 'text-brand-dark'}`}>Produção Científica</button>
+              <button onClick={() => navigateTo('media')} className={`block w-full text-left px-3 py-6 text-xl font-montserrat font-bold border-b border-brand-dark/5 transition-colors ${currentView === 'media' ? 'text-brand-green bg-brand-green/5' : 'text-brand-dark'}`}>Na Mídia</button>
+              <button onClick={() => navigateTo('team')} className={`block w-full text-left px-3 py-6 text-xl font-montserrat font-bold border-b border-brand-dark/5 transition-colors ${currentView === 'team' ? 'text-brand-green bg-brand-green/5' : 'text-brand-dark'}`}>Equipe</button>
             </div>
           </div>
         )}
       </nav>
 
-      <main className="flex-grow bg-[#0f172a]">
+      <main className="flex-grow">
         {currentView === 'home' && (
           <>
-            <Hero />
-            
-            {/* Modules Grid - "The Hub" */}
-            <div id="hub" className="py-24 px-4 bg-slate-900 border-t border-slate-800">
-               <div className="max-w-7xl mx-auto">
-                  <div className="text-center mb-16">
-                     <h2 className="text-slate-400 font-mono text-sm uppercase tracking-widest mb-2">Painel de Controle</h2>
-                     <h3 className="text-3xl md:text-4xl font-oswald font-bold text-white uppercase">Selecione um <span className="text-blue-500">Módulo</span></h3>
-                  </div>
+            <Hero onNavigate={(view) => navigateTo(view)} />
 
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                     {/* Card 1 */}
-                     <div onClick={() => navigateTo('copa')} className="group cursor-pointer bg-slate-800/50 hover:bg-slate-800 border border-slate-700 hover:border-blue-500/50 p-8 rounded-xl transition-all duration-300 relative overflow-hidden">
-                        <div className="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                           <LayoutDashboard className="w-24 h-24 text-blue-500" />
-                        </div>
-                        <LayoutDashboard className="w-10 h-10 text-blue-500 mb-6" />
-                        <h4 className="text-xl font-oswald font-bold text-white mb-2 uppercase">Simulador de Odds</h4>
-                        <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                           Motor de inferência estatística para prever resultados entre seleções com base em dados históricos e táticos.
-                        </p>
-                        <div className="flex items-center text-blue-400 text-xs font-bold uppercase tracking-wider gap-2">
-                           Acessar Ferramenta <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                     </div>
+            <section className="bg-white px-4 py-20 border-t border-brand-dark/10">
+              <div className="max-w-7xl mx-auto grid gap-12 lg:grid-cols-[0.82fr_1.18fr]">
+                <div>
+                  <p className="mb-4 font-montserrat text-sm font-bold uppercase text-brand-green">
+                    Explore o site
+                  </p>
+                  <h2 className="text-3xl md:text-5xl font-montserrat font-black uppercase leading-tight text-brand-dark">
+                    O projeto em cinco frentes.
+                  </h2>
+                  <p className="mt-6 max-w-md text-lg leading-relaxed text-brand-dark/64">
+                    Resultados, método, produção científica, imprensa e equipe reunidos para consulta pública.
+                  </p>
+                </div>
 
-                     {/* Card 2 */}
-                     <div onClick={() => navigateTo('science')} className="group cursor-pointer bg-slate-800/50 hover:bg-slate-800 border border-slate-700 hover:border-purple-500/50 p-8 rounded-xl transition-all duration-300 relative overflow-hidden">
-                         <div className="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                           <Microscope className="w-24 h-24 text-purple-500" />
-                        </div>
-                        <Microscope className="w-10 h-10 text-purple-500 mb-6" />
-                        <h4 className="text-xl font-oswald font-bold text-white mb-2 uppercase">Laboratório de Pesquisa</h4>
-                        <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                           Acesso a papers acadêmicos, modelos matemáticos e metodologia científica por trás do projeto.
-                        </p>
-                        <div className="flex items-center text-purple-400 text-xs font-bold uppercase tracking-wider gap-2">
-                           Ler Publicações <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                     </div>
-
-                     {/* Card 3 */}
-                     <div onClick={() => navigateTo('media')} className="group cursor-pointer bg-slate-800/50 hover:bg-slate-800 border border-slate-700 hover:border-emerald-500/50 p-8 rounded-xl transition-all duration-300 relative overflow-hidden">
-                         <div className="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                           <Globe className="w-24 h-24 text-emerald-500" />
-                        </div>
-                        <Globe className="w-10 h-10 text-emerald-500 mb-6" />
-                        <h4 className="text-xl font-oswald font-bold text-white mb-2 uppercase">Na Mídia</h4>
-                        <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                           Acompanhe a repercussão das nossas previsões científicas em grandes portais de notícias e na academia.
-                        </p>
-                        <div className="flex items-center text-emerald-400 text-xs font-bold uppercase tracking-wider gap-2">
-                           Ver Repercussão <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
+                <div className="border-t border-brand-dark/10">
+                  {[
+                    {
+                      title: 'Copa 2026',
+                      description: 'Probabilidades, confrontos e sínteses do torneio.',
+                      view: 'copa' as ViewState,
+                    },
+                    {
+                      title: 'Metodologia',
+                      description: 'Como as estimativas são construídas e interpretadas.',
+                      view: 'methodology' as ViewState,
+                    },
+                    {
+                      title: 'Pesquisa',
+                      description: 'Publicações e referências acadêmicas do grupo.',
+                      view: 'science' as ViewState,
+                    },
+                    {
+                      title: 'Na mídia',
+                      description: 'Reportagens e registros de divulgação científica.',
+                      view: 'media' as ViewState,
+                    },
+                    {
+                      title: 'Equipe',
+                      description: 'Pesquisadores e instituições envolvidas.',
+                      view: 'team' as ViewState,
+                    },
+                  ].map((item) => (
+                    <button
+                      key={item.title}
+                      type="button"
+                      onClick={() => navigateTo(item.view)}
+                      className="group grid w-full gap-3 border-b border-brand-dark/10 py-6 text-left transition hover:bg-brand-light/70 sm:grid-cols-[220px_1fr_auto] sm:items-center sm:px-5"
+                    >
+                      <span className="font-montserrat text-xl font-bold uppercase text-brand-dark">
+                        {item.title}
+                      </span>
+                      <span className="text-sm leading-relaxed text-brand-dark/60">
+                        {item.description}
+                      </span>
+                      <span className="inline-flex h-10 w-10 items-center justify-center border border-brand-dark/10 text-brand-green transition group-hover:border-brand-green group-hover:bg-brand-green group-hover:text-white" style={{ borderRadius: 8 }}>
+                        <ArrowUpRight className="h-4 w-4" />
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </section>
           </>
         )}
         {currentView === 'copa' && <WorldCupHub />}
@@ -151,39 +154,77 @@ export default function App() {
         {currentView === 'methodology' && <MethodologyPage />}
       </main>
 
-      <footer className="bg-[#050B14] text-slate-500 py-16 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-12">
-          <div className="col-span-1 md:col-span-2">
-            <div onClick={() => navigateTo('home')} className="cursor-pointer inline-block">
-               <Logo className="mb-6 brightness-0 invert opacity-60 scale-90 origin-left" />
+      <footer className="bg-white text-brand-dark border-t border-brand-dark/10">
+        <div className="bg-brand-dark text-white">
+          <div className="max-w-7xl mx-auto px-4 py-10 md:flex md:items-center md:justify-between md:gap-8">
+            <div>
+              <p className="font-montserrat text-sm font-bold uppercase text-brand-yellow">Acompanhe o projeto</p>
+              <h2 className="mt-2 text-3xl font-montserrat font-black uppercase md:text-4xl">
+                Previsão Esportiva no Instagram
+              </h2>
             </div>
-            <p className="max-w-md text-sm leading-relaxed mb-8 font-light text-slate-400">
-              Plataforma independente de análise preditiva para a Copa do Mundo FIFA 2026™. Modelagem estatística avançada para entusiastas e profissionais.
-            </p>
-            <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 hover:text-white transition"><Twitter className="w-4 h-4" /></a>
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-white hover:text-black transition"><Github className="w-4 h-4" /></a>
-            </div>
+            <a
+              href="https://www.instagram.com/previsaoesportiva/"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 inline-flex items-center gap-3 bg-brand-green px-6 py-4 font-montserrat text-sm font-bold uppercase text-white transition hover:bg-brand-grad2 md:mt-0"
+              style={{ borderRadius: 8 }}
+            >
+              <Instagram className="h-5 w-5" />
+              @previsaoesportiva
+              <ArrowUpRight className="h-4 w-4" />
+            </a>
           </div>
-          
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 py-14 grid gap-12 lg:grid-cols-[1.25fr_0.85fr_0.9fr]">
           <div>
-            <h4 className="text-white font-oswald font-bold uppercase tracking-wider mb-6 text-sm">Navegação</h4>
-            <ul className="space-y-3 text-sm">
-              <li><button onClick={() => navigateTo('methodology')} className="hover:text-blue-500 transition flex items-center gap-2">Metodologia</button></li>
-              <li><button onClick={() => navigateTo('team')} className="hover:text-blue-500 transition flex items-center gap-2">Pesquisadores</button></li>
-              <li><button onClick={() => navigateTo('media')} className="hover:text-blue-500 transition flex items-center gap-2">Na Mídia</button></li>
-            </ul>
+            <button onClick={() => navigateTo('home')} className="inline-block text-left">
+              <Logo className="h-16 mb-5 origin-left" />
+            </button>
+            <p className="max-w-lg text-sm leading-relaxed text-brand-dark/68">
+              Projeto acadêmico dedicado à pesquisa, análise probabilística e divulgação científica no futebol.
+              As informações são apresentadas para fins de estudo, comunicação pública e acompanhamento esportivo.
+            </p>
+          </div>
+
+          <div className="border-l-4 border-brand-green pl-5">
+            <h4 className="text-brand-dark font-montserrat font-bold uppercase tracking-wider mb-5 text-sm">Contato</h4>
+            <a
+              href="mailto:equipeprevisaoesportiva@gmail.com"
+              className="flex items-center gap-3 text-sm text-brand-dark/72 transition hover:text-brand-green"
+            >
+              <Mail className="h-5 w-5 text-brand-green" />
+              equipeprevisaoesportiva@gmail.com
+            </a>
+            <a
+              href="https://www.instagram.com/previsaoesportiva/"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-4 flex items-center gap-3 text-sm font-bold text-brand-dark transition hover:text-brand-green"
+            >
+              <Instagram className="h-5 w-5 text-brand-green" />
+              @previsaoesportiva
+            </a>
           </div>
 
           <div>
-             <h4 className="text-white font-oswald font-bold uppercase tracking-wider mb-6 text-sm">Legal</h4>
-             <p className="text-xs leading-relaxed text-slate-500">
-               Projeto acadêmico sem afiliação direta com a FIFA. Dados fornecidos "como estão" para fins de pesquisa e entretenimento.
-             </p>
+            <h4 className="text-brand-dark font-montserrat font-bold uppercase tracking-wider mb-5 text-sm">Navegação</h4>
+            <div className="grid grid-cols-2 gap-3 text-sm text-brand-dark/68">
+              <button onClick={() => navigateTo('copa')} className="text-left hover:text-brand-green transition">Resultados</button>
+              <button onClick={() => navigateTo('methodology')} className="text-left hover:text-brand-green transition">Metodologia</button>
+              <button onClick={() => navigateTo('science')} className="text-left hover:text-brand-green transition">Pesquisa</button>
+              <button onClick={() => navigateTo('media')} className="text-left hover:text-brand-green transition">Na mídia</button>
+              <button onClick={() => navigateTo('team')} className="text-left hover:text-brand-green transition">Equipe</button>
+            </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 mt-16 pt-8 border-t border-slate-900 text-center text-xs tracking-widest uppercase opacity-40 font-mono">
-          © 2025 Scientific Sports Forecasting Group • Built with React & Gemini AI
+
+        <div className="border-t border-brand-dark/10 bg-brand-light">
+          <div className="max-w-7xl mx-auto px-4 py-5 flex flex-col gap-2 text-xs text-brand-dark/55 md:flex-row md:items-center md:justify-between">
+            <span>© 2026 Previsão Esportiva</span>
+            <span>Projeto acadêmico sem afiliação direta com a FIFA.</span>
+          </div>
         </div>
       </footer>
     </div>

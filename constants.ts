@@ -114,114 +114,120 @@ export const MOCK_NEWS: NewsItem[] = [
 ];
 
 export const RESEARCHERS: Researcher[] = [
-  { 
-    id: '1', 
-    name: 'Francisco Louzada', 
-    role: 'Pesquisador Sênior', 
-    affiliation: 'ICMC - USP', 
-    image: 'https://randomuser.me/api/portraits/men/50.jpg', 
-    bio: 'Liderança em ciência de dados e modelagem estatística aplicada a grandes eventos.', 
-    link: '#' 
+  // Coordenação
+  {
+    id: '2', name: 'Ricardo Rocha', coord: true,
+    affiliation: 'UFBA', image: '/assets/fotos/ricardo-rocha.png',
+    linkedin: 'https://www.linkedin.com/in/ricardorocha86/',
+    lattes: 'http://lattes.cnpq.br/0676420269735630',
   },
-  { 
-    id: '2', 
-    name: 'Adriano Suzuki', 
-    role: 'Pesquisador', 
-    affiliation: 'ICMC - USP', 
-    image: 'https://randomuser.me/api/portraits/men/32.jpg', 
-    bio: 'Especialista em análise de risco, confiabilidade e inferência estatística.', 
-    link: '#' 
+  {
+    id: '3', name: 'Paulo Henrique Ferreira da Silva', coord: true,
+    affiliation: 'UFBA', image: '/assets/fotos/paulo-henrique.jpg',
+    linkedin: 'https://www.linkedin.com/in/paulo-henrique-3294658a',
+    lattes: 'http://lattes.cnpq.br/8538524597034643',
   },
-  { 
-    id: '3', 
-    name: 'Anderson Ara', 
-    role: 'Pesquisador', 
-    affiliation: 'UFPR', 
-    image: 'https://randomuser.me/api/portraits/men/11.jpg', 
-    bio: 'Focado em métodos estatísticos computacionais e séries temporais.', 
-    link: '#' 
+  {
+    id: '4', name: 'Lilia Carolina Carneiro da Costa', coord: true,
+    affiliation: 'UFBA', image: '/assets/fotos/lilia-costa.jpg',
+    linkedin: 'https://www.linkedin.com/in/lilia-costa-76513b212/',
+    lattes: 'http://lattes.cnpq.br/7905206547630006',
   },
-  { 
-    id: '4', 
-    name: 'Caroline Godoy', 
-    role: 'Pesquisadora', 
-    affiliation: 'ICMC - USP', 
-    image: 'https://randomuser.me/api/portraits/women/44.jpg', 
-    bio: 'Especialista em metodologia de pesquisa e análise de dados complexos.', 
-    link: '#' 
+  // Membros
+  {
+    id: '1', name: 'Fernando Humberto de Almeida Moraes Neto',
+    affiliation: 'UFMT', image: '/assets/fotos/fernando-humberto.webp',
+    linkedin: 'https://www.linkedin.com/in/fernandomoraesds/',
+    lattes: 'http://lattes.cnpq.br/5446300739482164',
   },
-  { 
-    id: '5', 
-    name: 'Luis Ernesto Salazar', 
-    role: 'Pesquisador', 
-    affiliation: 'UFSCAR / ICMC - USP', 
-    image: 'https://randomuser.me/api/portraits/men/22.jpg', 
-    bio: 'Modelagem estatística avançada e teoria das probabilidades.', 
-    link: '#' 
+  {
+    id: '5', name: 'David Franco Regalado',
+    affiliation: 'UFBA / Senai-Cimatec', image: '/assets/fotos/david-franco.jpg',
+    linkedin: 'https://br.linkedin.com/in/davidfrancoregalado/pt',
+    lattes: 'http://lattes.cnpq.br/3531775633812851',
   },
-  { 
-    id: '6', 
-    name: 'Paulo Henrique Silva', 
-    role: 'Pesquisador', 
-    affiliation: 'IME - UFBA / CEMEaI', 
-    image: 'https://randomuser.me/api/portraits/men/45.jpg', 
-    bio: 'Pesquisa aplicada em estatística esportiva e modelos preditivos.', 
-    link: '#' 
+  {
+    id: '6', name: 'Hugo Ribeiro Santana',
+    affiliation: 'UFRJ', image: '/assets/fotos/hugo-santana.png',
+    lattes: 'http://lattes.cnpq.br/4875747507272694',
   },
-  { 
-    id: '7', 
-    name: 'Ricardo Rocha', 
-    role: 'Pesquisador', 
-    affiliation: 'IME - UFBA / FLAI', 
-    image: 'https://randomuser.me/api/portraits/men/68.jpg', 
-    bio: 'Cientista de dados focado em Inteligência Artificial e Analytics.', 
-    link: '#' 
+  {
+    id: '7', name: 'Joice Chaves dos Santos',
+    affiliation: 'UFBA', image: '/assets/fotos/joice-chaves.jpg',
+    linkedin: 'https://www.linkedin.com/in/joice-chaves-3bb314194',
+    lattes: 'https://wwws.cnpq.br/cvlattesweb/PKG_MENU.menu?f_cod=3E7AB3CAE43F946656BE6076373563BA',
   },
-  { 
-    id: '8', 
-    name: 'Diego Nascimento', 
-    role: 'Pesquisador', 
-    affiliation: 'Universidad de Atacama', 
-    image: 'https://randomuser.me/api/portraits/men/85.jpg', 
-    bio: 'Colaboração internacional em estatística matemática e computacional.', 
-    link: '#' 
+  {
+    id: '8', name: 'Gabriel Gomes Ribeiro',
+    affiliation: 'Horus CDA', image: '/assets/fotos/gabriel-gomes.jpg',
+    linkedin: 'https://www.linkedin.com/in/gabriel-gomes-ribeiro-a1375a269',
+    lattes: 'https://wwws.cnpq.br/cvlattesweb/PKG_MENU.menu?f_cod=55B4DADA7AF347C9CDA618D5A89F39A9',
   },
-  { 
-    id: '9', 
-    name: 'Lilia Carolina', 
-    role: 'Pesquisadora', 
-    affiliation: 'UFBA', 
-    image: 'https://randomuser.me/api/portraits/women/65.jpg', 
-    bio: 'Especialista em estatística aplicada e ciência de dados.', 
-    link: '#' 
+  {
+    id: '9', name: 'Juliano Bortolini',
+    affiliation: 'UFMT', image: '/assets/fotos/juliano-bortolini.jpg',
+    lattes: 'http://lattes.cnpq.br/6210909768845403',
   },
-  { 
-    id: '10', 
-    name: 'Anderson Fonseca', 
-    role: 'Estudante', 
-    affiliation: 'UFBA', 
-    image: 'https://randomuser.me/api/portraits/men/15.jpg', 
-    bio: 'Desenvolvimento de algoritmos e processamento de dados esportivos.', 
-    link: '#' 
+  {
+    id: '10', name: 'João Paulo Sardo Madi',
+    affiliation: 'UFMT', image: '/assets/fotos/joao-paulo.jpg',
+    lattes: 'http://lattes.cnpq.br/8850927226945171',
   },
-  { 
-    id: '11', 
-    name: 'Gustavo Peixoto', 
-    role: 'Estudante', 
-    affiliation: 'UFBA', 
-    image: 'https://randomuser.me/api/portraits/men/76.jpg', 
-    bio: 'Pesquisa em Machine Learning e automação de modelos preditivos.', 
-    link: '#' 
+  {
+    id: '11', name: 'Hudson José da Silva Macedo',
+    affiliation: 'UFMT', image: '/assets/fotos/hudson-macedo.jpg',
+    linkedin: 'https://www.linkedin.com/in/hudson-macedo41',
+    lattes: 'http://lattes.cnpq.br/9046947078043148',
   },
-  { 
-    id: '12', 
-    name: 'Luciano Santana', 
-    role: 'Estudante', 
-    affiliation: 'UFBA', 
-    image: 'https://randomuser.me/api/portraits/men/54.jpg', 
-    bio: 'Análise de dados e visualização de estatísticas complexas.', 
-    link: '#' 
-  }
+  {
+    id: '12', name: 'Caio Vinicius Costa dos Anjos',
+    affiliation: 'UFBA', image: '/assets/fotos/caio-vinicius.jpg',
+    linkedin: 'https://www.linkedin.com/in/caioviniciusanjos',
+  },
+  {
+    id: '13', name: 'Nailton Santos dos Prazeres',
+    affiliation: 'UFBA', image: '/assets/fotos/nailton-santos.jpg',
+    linkedin: 'https://www.linkedin.com/in/nailton-santos-5420a3355/',
+    lattes: 'http://lattes.cnpq.br/2356216890935968',
+  },
+  {
+    id: '14', name: 'Amanda Mota Passos',
+    affiliation: 'UFBA', image: '/assets/fotos/amanda-passos.jpg',
+    linkedin: 'https://www.linkedin.com/in/amanda-mota-passos/',
+    lattes: 'http://lattes.cnpq.br/0574903512327729',
+  },
+  {
+    id: '15', name: 'Victor Alessandry Sousa dos Santos',
+    affiliation: 'UFBA', image: '/assets/fotos/victor-alessandry.jpg',
+    linkedin: 'https://www.linkedin.com/in/victor-alessandry-7b36b62ba',
+    lattes: 'http://lattes.cnpq.br/6554265104646709',
+  },
+  {
+    id: '16', name: 'Tainara Vitória Santos da Costa',
+    affiliation: 'UFBA', image: '/assets/fotos/tainara-vitoria.jpg',
+    linkedin: 'https://www.linkedin.com/in/tainara-costa-270403209',
+    lattes: 'http://lattes.cnpq.br/4434417633702996',
+  },
+  {
+    id: '17', name: 'Isabel de Lima Santos da Silva',
+    affiliation: 'UFBA', image: '/assets/fotos/isabel-lima.jpg',
+    linkedin: 'https://www.linkedin.com/in/isabel-de-lima-a63b74234/',
+    lattes: 'http://lattes.cnpq.br/4098121796970711',
+  },
+  {
+    id: '18', name: 'Thiago de Almeida Silva',
+    affiliation: 'UFBA', image: '/assets/fotos/thiago-silva.jpg',
+  },
+  {
+    id: '19', name: 'Matheus Conceição dos Santos',
+    affiliation: 'UFBA', image: '/assets/fotos/matheus-conceicao.jpg',
+    linkedin: 'https://www.linkedin.com/in/matheusconceicao1/',
+    lattes: 'http://lattes.cnpq.br/3655440095066898',
+  },
+  {
+    id: '20', name: 'Leonardo Rodrigues',
+    affiliation: 'UFBA', image: '/assets/fotos/leonardo-rodrigues.jpg',
+  },
 ];
 
 export const PUBLICATIONS: Publication[] = [
