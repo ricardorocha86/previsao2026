@@ -121,6 +121,7 @@ const TeamPage: React.FC = () => {
         eyebrow="Conheça os integrantes"
         title="Nossa"
         accent="Equipe"
+        noBreak
         description="Profissionais dedicados à modelagem estatística e ciência de dados aplicada ao esporte."
       />
 

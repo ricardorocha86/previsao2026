@@ -7,6 +7,7 @@ interface PageHeaderProps {
   title: string;
   accent?: string;
   description?: string;
+  noBreak?: boolean;
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({
@@ -15,6 +16,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   title,
   accent,
   description,
+  noBreak = false,
 }) => {
   return (
     <header className="bg-brand-dark py-20 px-4 text-center relative overflow-hidden">
@@ -30,7 +32,12 @@ const PageHeader: React.FC<PageHeaderProps> = ({
         </div>
 
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-montserrat font-black text-white uppercase tracking-tighter mb-6 leading-[0.95]">
-          {title}{accent && <><br /> <span className="text-brand-green italic">{accent}</span></>}
+          {title}{accent && (
+            <>
+              {noBreak ? ' ' : <br />}
+              <span className="text-brand-green italic">{accent}</span>
+            </>
+          )}
         </h1>
 
         {description && (
