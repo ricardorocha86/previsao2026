@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, BookOpen, GraduationCap } from 'lucide-react';
 import bannerImage from '../assets/banner.png';
+import logoImage from '../assets/LogoMPrevisao.png';
 
 type HomeViewTarget = 'copa' | 'methodology' | 'science' | 'media' | 'team';
 
@@ -28,9 +29,13 @@ const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
             Projeto acadêmico de previsão esportiva
           </div>
 
-          <h1 className="text-5xl font-black leading-none text-white md:text-7xl">
-            Previsão Esportiva
-          </h1>
+          <div className="flex items-center mb-6">
+            <img 
+              src={logoImage} 
+              alt="Previsão Esportiva" 
+              className="h-16 md:h-24 w-auto object-contain"
+            />
+          </div>
 
           <p className="mt-7 max-w-2xl text-lg leading-relaxed text-white/80 md:text-xl">
             Uma iniciativa de pesquisa e divulgação científica dedicada à análise probabilística do futebol,

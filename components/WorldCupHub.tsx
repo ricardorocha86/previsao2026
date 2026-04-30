@@ -146,7 +146,7 @@ const WorldCupHub: React.FC = () => {
       />
 
       {/* CAROUSEL SECTION */}
-      <div className="max-w-7xl mx-auto px-4 -mt-16 relative z-20">
+      <div className="max-w-7xl mx-auto px-4 mt-12 relative z-20">
         <div className="relative overflow-hidden rounded-[1.75rem] md:rounded-[3.5rem] bg-brand-dark shadow-2xl border border-white/20 p-3 md:p-6">
           <div className="absolute inset-0 overflow-hidden">
             <img
@@ -282,111 +282,127 @@ const WorldCupHub: React.FC = () => {
 
         {/* GAMES LIST - COMPACT GROUPED DISPLAY */}
         <section>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-8">
-            <div className="max-w-xl">
-              <h2 className="text-5xl font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none mb-4">Agenda de <span className="text-brand-green italic">Confrontos</span></h2>
-              <p className="text-brand-dark/50 font-light text-lg font-opensans">Partidas agrupadas por chave, com probabilidades em leitura compacta.</p>
+          <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+            <div className="flex-shrink-0">
+              <h2 className="text-3xl md:text-5xl font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none whitespace-nowrap">
+                Agenda de <span className="text-brand-green italic">Confrontos</span>
+              </h2>
             </div>
-            <div className="relative w-full md:w-96">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-dark/30" />
-              <input type="text" placeholder="Buscar grupo ou seleção..." className="w-full pl-14 pr-8 py-5 bg-white border-2 border-brand-dark/5 rounded-3xl text-sm outline-none focus:border-brand-green transition-all shadow-sm font-opensans" value={searchTermJogos} onChange={(e) => setSearchTermJogos(e.target.value)} />
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-2 mb-8">
-            <button
-              onClick={() => setSelectedGroup('Todos')}
-              className={`px-4 py-2 rounded-full text-[11px] font-black uppercase tracking-widest border transition-all ${selectedGroup === 'Todos' ? 'bg-brand-dark text-white border-brand-dark' : 'bg-white text-brand-dark/50 border-brand-dark/10 hover:border-brand-green/40'}`}
-            >
-              Todos
-            </button>
-            {groupOptions.map((group: any) => {
-              return (
+            
+            <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+              <div className="flex flex-wrap justify-center md:justify-start gap-2">
                 <button
-                  key={group}
-                  onClick={() => setSelectedGroup(group)}
-                  className="px-3 py-2 rounded-full text-[11px] font-black uppercase tracking-widest border transition-all bg-white hover:-translate-y-0.5"
-                  style={{
-                    borderColor: selectedGroup === group ? GROUP_STYLE.bg : GROUP_STYLE.border,
-                    color: selectedGroup === group ? GROUP_STYLE.fg : GROUP_STYLE.bg,
-                    backgroundColor: selectedGroup === group ? GROUP_STYLE.bg : '#ffffff',
-                  }}
+                  onClick={() => setSelectedGroup('Todos')}
+                  className={`px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${selectedGroup === 'Todos' ? 'bg-brand-dark text-white border-brand-dark' : 'bg-white text-brand-dark/50 border-brand-dark/10 hover:border-brand-green/40'}`}
                 >
-                  {getGroupLetter(group)}
+                  Todos
                 </button>
-              );
-            })}
+                {groupOptions.map((group: any) => (
+                  <button
+                    key={group}
+                    onClick={() => setSelectedGroup(group)}
+                    className="px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all bg-white hover:-translate-y-0.5"
+                    style={{
+                      borderColor: selectedGroup === group ? GROUP_STYLE.bg : GROUP_STYLE.border,
+                      color: selectedGroup === group ? GROUP_STYLE.fg : GROUP_STYLE.bg,
+                      backgroundColor: selectedGroup === group ? GROUP_STYLE.bg : '#ffffff',
+                    }}
+                  >
+                    {getGroupLetter(group)}
+                  </button>
+                ))}
+              </div>
+              
+              <div className="relative w-full md:w-64">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-dark/30" />
+                <input 
+                  type="text" 
+                  placeholder="Buscar seleção..." 
+                  className="w-full pl-11 pr-4 py-2.5 bg-white border border-brand-dark/10 rounded-xl text-xs outline-none focus:border-brand-green transition-all shadow-sm font-opensans" 
+                  value={searchTermJogos} 
+                  onChange={(e) => setSearchTermJogos(e.target.value)} 
+                />
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-8">
+          <div className="space-y-10">
              {Object.entries(jogosPorGrupo).map(([group, jogos]) => {
                return (
-                 <div key={group} className="bg-white border shadow-sm overflow-hidden" style={{ borderColor: GROUP_STYLE.border, borderRadius: 8 }}>
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-5 md:px-6 py-4 border-b border-brand-dark/5 bg-gradient-to-r from-brand-green/15 via-white to-brand-grad1/10">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 flex items-center justify-center font-montserrat font-black text-2xl text-white bg-gradient-to-br from-brand-grad1 to-brand-grad2 shadow-sm" style={{ borderRadius: 8 }}>
+                 <div key={group} className="bg-white border-2 shadow-md overflow-hidden" style={{ borderColor: GROUP_STYLE.bg, borderRadius: 16 }}>
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-6 py-5 border-b-2" style={{ backgroundColor: GROUP_STYLE.bg, borderColor: GROUP_STYLE.bg }}>
+                      <div className="flex items-center gap-5">
+                        <div className="w-14 h-14 flex items-center justify-center font-montserrat font-black text-3xl text-brand-green bg-white shadow-inner" style={{ borderRadius: 12 }}>
                           {getGroupLetter(group)}
                         </div>
                         <div>
-                          <h3 className="text-2xl font-montserrat font-black text-brand-dark leading-none">{group}</h3>
-                          <p className="text-[10px] uppercase tracking-widest font-black text-brand-dark/35 mt-1">{jogos.length} confrontos da chave</p>
+                          <h3 className="text-3xl font-montserrat font-black text-white leading-none uppercase tracking-tight">{group}</h3>
+                          <p className="text-[11px] uppercase tracking-[0.2em] font-black text-white/70 mt-1.5">{jogos.length} confrontos da chave</p>
                         </div>
                       </div>
-                      <div className="hidden md:flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-brand-dark/40">
-                        <span className="w-3 h-3 rounded-sm bg-gradient-to-r from-brand-grad1 to-brand-grad2" />
-                        Vitória A
-                        <span className="w-3 h-3 rounded-sm bg-brand-dark/25 ml-3" />
-                        Empate
-                        <span className="w-3 h-3 rounded-sm bg-brand-blue ml-3" />
-                        Vitória B
+                      <div className="hidden md:flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/80">
+                        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-white" /> Vitória A</span>
+                        <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-white/40" /> Empate</span>
+                        <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-brand-blue border border-white/20" /> Vitória B</span>
                       </div>
                     </div>
 
-                    <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-4 p-4 md:p-5 bg-brand-light/35">
+                    <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-5 p-5 md:p-6 bg-brand-light/20">
                       {(jogos as any[]).map((jogo: any, idx: number) => (
-                        <div key={`${group}-${idx}`} className="bg-white border border-brand-dark/10 p-4 shadow-sm hover:shadow-md transition-shadow" style={{ borderRadius: 8 }}>
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 text-[11px] font-bold text-brand-dark/45">
-                            <span className="flex items-center gap-1.5 min-w-0">
-                              <CalendarDays className="w-3.5 h-3.5 flex-shrink-0" />
-                              <span className="truncate">{jogo['Data']}</span>
+                        <div key={`${group}-${idx}`} className="bg-white border border-brand-dark/5 p-5 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 group/card">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5 text-[10px] font-black uppercase tracking-wider text-brand-dark/40">
+                            <span className="flex items-center gap-2">
+                              <CalendarDays className="w-3.5 h-3.5" />
+                              {jogo['Data']}
                             </span>
-                            <span className="flex items-center gap-1.5 flex-shrink-0">
+                            <span className="flex items-center gap-2">
                               <Clock className="w-3.5 h-3.5" />
                               {getShortBrasiliaTime(jogo['Horário Brasília'])}
                             </span>
                           </div>
 
-                          <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3">
-                            <div className="flex items-center gap-3 min-w-0">
-                              <div className="w-10 h-7 rounded-sm border border-brand-dark/5 overflow-hidden flex-shrink-0 shadow-sm">
+                          <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 mb-6">
+                            <div className="flex flex-col items-center gap-2 min-w-0">
+                              <div className="w-14 h-9 rounded-md border border-brand-dark/10 overflow-hidden flex-shrink-0 shadow-md group-hover/card:scale-110 transition-transform">
                                 <img src={getFlag(jogo['Seleção A'])} className="w-full h-full object-cover" alt="" />
                               </div>
-                              <span className="font-montserrat font-black text-brand-dark uppercase text-sm md:text-base leading-tight line-clamp-2">{jogo['Seleção A']}</span>
+                              <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] md:text-xs text-center leading-tight h-8 flex items-center">{jogo['Seleção A']}</span>
                             </div>
-                            <div className="px-2 py-1 bg-brand-light rounded text-[10px] font-black text-brand-dark/35">vs</div>
-                            <div className="flex items-center justify-end gap-3 min-w-0">
-                              <span className="font-montserrat font-black text-brand-dark uppercase text-sm md:text-base leading-tight text-right line-clamp-2">{jogo['Seleção B']}</span>
-                              <div className="w-10 h-7 rounded-sm border border-brand-dark/5 overflow-hidden flex-shrink-0 shadow-sm">
+                            <div className="flex flex-col items-center">
+                              <div className="px-2 py-1 bg-brand-light rounded-lg text-[9px] font-black text-brand-dark/30 mb-2">VS</div>
+                            </div>
+                            <div className="flex flex-col items-center gap-2 min-w-0">
+                              <div className="w-14 h-9 rounded-md border border-brand-dark/10 overflow-hidden flex-shrink-0 shadow-md group-hover/card:scale-110 transition-transform">
                                 <img src={getFlag(jogo['Seleção B'])} className="w-full h-full object-cover" alt="" />
+                              </div>
+                              <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] md:text-xs text-center leading-tight h-8 flex items-center">{jogo['Seleção B']}</span>
+                            </div>
+                          </div>
+
+                          <div className="space-y-4">
+                            <div className="flex h-1.5 overflow-hidden bg-brand-light rounded-full">
+                              <div style={{ width: jogo['Vitória A'] }} className="bg-brand-green shadow-[0_0_8px_rgba(32,153,39,0.4)]" />
+                              <div style={{ width: jogo['Empate'] }} className="bg-brand-dark/15" />
+                              <div style={{ width: jogo['Vitória B'] }} className="bg-brand-blue shadow-[0_0_8px_rgba(3,92,136,0.4)]" />
+                            </div>
+                            <div className="grid grid-cols-3 gap-1 items-end font-exo text-lg md:text-xl font-bold italic tracking-tight">
+                              <div className="flex flex-col">
+                                <span className="text-[9px] not-italic font-montserrat uppercase tracking-widest text-brand-dark/30 mb-0.5">Vitória A</span>
+                                <span className="text-brand-green leading-none">{jogo['Vitória A']}</span>
+                              </div>
+                              <div className="flex flex-col items-center opacity-30 scale-75 origin-bottom">
+                                <span className="text-[9px] not-italic font-montserrat uppercase tracking-widest mb-0.5">Empate</span>
+                                <span className="text-brand-dark leading-none">{jogo['Empate']}</span>
+                              </div>
+                              <div className="flex flex-col items-end">
+                                <span className="text-[9px] not-italic font-montserrat uppercase tracking-widest text-brand-dark/30 mb-0.5">Vitória B</span>
+                                <span className="text-brand-blue leading-none">{jogo['Vitória B']}</span>
                               </div>
                             </div>
                           </div>
 
-                          <div className="mt-4">
-                            <div className="flex h-3 overflow-hidden bg-brand-light rounded-full border border-brand-dark/5">
-                              <div style={{ width: jogo['Vitória A'] }} className="bg-gradient-to-r from-brand-grad2 to-brand-green" />
-                              <div style={{ width: jogo['Empate'] }} className="bg-brand-dark/25" />
-                              <div style={{ width: jogo['Vitória B'] }} className="bg-brand-blue" />
-                            </div>
-                            <div className="grid grid-cols-3 gap-2 mt-2 text-xs md:text-sm font-montserrat font-black tabular-nums">
-                              <span className="text-brand-green">{jogo['Vitória A']}</span>
-                              <span className="text-center text-brand-dark/55">{jogo['Empate']}</span>
-                              <span className="text-right text-brand-blue">{jogo['Vitória B']}</span>
-                            </div>
-                          </div>
-
-                          <div className="mt-3 flex items-center gap-1.5 text-[11px] font-semibold text-brand-dark/35 min-w-0">
-                            <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+                          <div className="mt-5 pt-4 border-t border-brand-dark/5 flex items-center gap-2 text-[10px] font-bold text-brand-dark/30">
+                            <MapPin className="w-3.5 h-3.5" />
                             <span className="truncate">{getShortVenue(jogo['Horário/Local'])}</span>
                           </div>
                         </div>
@@ -396,8 +412,8 @@ const WorldCupHub: React.FC = () => {
                );
              })}
              {filteredJogos.length === 0 && (
-               <div className="bg-white border border-brand-dark/10 p-8 text-center" style={{ borderRadius: 8 }}>
-                 <p className="font-montserrat font-black uppercase text-brand-dark">Nenhum confronto encontrado</p>
+               <div className="bg-white border-2 border-dashed border-brand-dark/10 p-16 text-center rounded-[2rem]">
+                 <p className="font-montserrat font-black uppercase text-brand-dark text-xl">Nenhum confronto encontrado</p>
                  <p className="text-sm text-brand-dark/45 mt-2">Ajuste o filtro de grupo ou a busca por seleção.</p>
                </div>
              )}

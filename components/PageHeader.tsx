@@ -30,7 +30,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
         </div>
 
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-montserrat font-black text-white uppercase tracking-tighter mb-6 leading-[0.95]">
-          {title}{accent && <> <span className="text-brand-green italic">{accent}</span></>}
+          {title}{accent && <><br /> <span className="text-brand-green italic">{accent}</span></>}
         </h1>
 
         {description && (
