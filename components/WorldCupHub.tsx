@@ -233,8 +233,8 @@ const WorldCupHub: React.FC = () => {
         <section>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-8">
             <div className="max-w-xl">
-              <h2 className="text-5xl font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none mb-4">Simulação <span className="text-brand-green">Global</span></h2>
-              <p className="text-brand-dark/50 font-light text-lg font-opensans">Ranking probabilístico detalhado do torneio.</p>
+              <h2 className="text-5xl font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none mb-4">Simulação <span className="text-brand-green">Pré-Torneio</span></h2>
+              <p className="text-brand-dark/50 font-light text-lg font-opensans">Simulação realizada em 30/04/2026. O torneio foi simulado 1 milhão de vezes e as probabilidades representam a frequência dos acontecimentos.</p>
             </div>
             <div className="relative w-full md:w-96">
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-dark/30" />
