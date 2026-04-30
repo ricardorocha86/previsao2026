@@ -233,7 +233,9 @@ const WorldCupHub: React.FC = () => {
         <section>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-8">
             <div className="max-w-4xl">
-              <h2 className="text-5xl font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none mb-4">Simulação <span className="text-brand-green whitespace-nowrap">Pré-Torneio</span></h2>
+              <h2 className="text-4xl md:text-6xl font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none mb-4">
+                Simulação <span className="text-brand-green italic whitespace-nowrap">Pré-Torneio</span>
+              </h2>
               <p className="text-brand-dark/50 font-light text-lg font-opensans">Simulação realizada em 30/04/2026. O torneio foi simulado 1 milhão de vezes e as probabilidades representam a frequência dos acontecimentos.</p>
             </div>
             <div className="relative w-full md:w-96">
@@ -283,8 +285,8 @@ const WorldCupHub: React.FC = () => {
         {/* GAMES LIST - COMPACT GROUPED DISPLAY */}
         <section>
           <div className="mb-10 space-y-6">
-            <h2 className="text-4xl md:text-6xl font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none">
-              Agenda de <span className="text-brand-green italic">Confrontos</span>
+            <h2 className="text-4xl md:text-6xl font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none mb-4">
+              Agenda de <span className="text-brand-green italic whitespace-nowrap">Confrontos</span>
             </h2>
             
             <div className="flex flex-col md:flex-row justify-between items-center gap-6 pb-6 border-b border-brand-dark/5">
