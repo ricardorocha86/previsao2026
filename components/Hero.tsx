@@ -16,10 +16,9 @@ const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
         <img
           src={bannerImage}
           alt=""
-          className="h-full w-full object-cover object-center opacity-70"
+          className="h-full w-full object-cover object-center opacity-90"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(241,241,241,0.96)_0%,rgba(241,241,241,0.88)_34%,rgba(241,241,241,0.45)_62%,rgba(241,241,241,0.20)_100%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(241,241,241,0.05)_0%,rgba(241,241,241,0.65)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(241,241,241,0.92)_0%,rgba(241,241,241,0.75)_35%,rgba(241,241,241,0.3)_60%,rgba(241,241,241,0)_80%)]" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-14 lg:px-8">
