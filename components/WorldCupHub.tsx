@@ -282,18 +282,16 @@ const WorldCupHub: React.FC = () => {
 
         {/* GAMES LIST - COMPACT GROUPED DISPLAY */}
         <section>
-          <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
-            <div className="flex-shrink-0">
-              <h2 className="text-3xl md:text-5xl font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none whitespace-nowrap">
-                Agenda de <span className="text-brand-green italic">Confrontos</span>
-              </h2>
-            </div>
+          <div className="mb-10 space-y-6">
+            <h2 className="text-4xl md:text-6xl font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none">
+              Agenda de <span className="text-brand-green italic">Confrontos</span>
+            </h2>
             
-            <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6 pb-6 border-b border-brand-dark/5">
               <div className="flex flex-wrap justify-center md:justify-start gap-2">
                 <button
                   onClick={() => setSelectedGroup('Todos')}
-                  className={`px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${selectedGroup === 'Todos' ? 'bg-brand-dark text-white border-brand-dark' : 'bg-white text-brand-dark/50 border-brand-dark/10 hover:border-brand-green/40'}`}
+                  className={`px-6 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest border transition-all ${selectedGroup === 'Todos' ? 'bg-brand-dark text-white border-brand-dark shadow-lg scale-105' : 'bg-white text-brand-dark/50 border-brand-dark/10 hover:border-brand-green/40 shadow-sm'}`}
                 >
                   Todos
                 </button>
@@ -301,11 +299,13 @@ const WorldCupHub: React.FC = () => {
                   <button
                     key={group}
                     onClick={() => setSelectedGroup(group)}
-                    className="px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all bg-white hover:-translate-y-0.5"
+                    className="px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest border transition-all bg-white hover:-translate-y-0.5 shadow-sm"
                     style={{
                       borderColor: selectedGroup === group ? GROUP_STYLE.bg : GROUP_STYLE.border,
                       color: selectedGroup === group ? GROUP_STYLE.fg : GROUP_STYLE.bg,
                       backgroundColor: selectedGroup === group ? GROUP_STYLE.bg : '#ffffff',
+                      transform: selectedGroup === group ? 'scale(1.05)' : 'none',
+                      boxShadow: selectedGroup === group ? `0 10px 15px -3px ${GROUP_STYLE.soft}` : 'none'
                     }}
                   >
                     {getGroupLetter(group)}
@@ -313,12 +313,12 @@ const WorldCupHub: React.FC = () => {
                 ))}
               </div>
               
-              <div className="relative w-full md:w-64">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-dark/30" />
+              <div className="relative w-full md:w-80">
+                <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-dark/30" />
                 <input 
                   type="text" 
-                  placeholder="Buscar seleção..." 
-                  className="w-full pl-11 pr-4 py-2.5 bg-white border border-brand-dark/10 rounded-xl text-xs outline-none focus:border-brand-green transition-all shadow-sm font-opensans" 
+                  placeholder="Buscar seleção no calendário..." 
+                  className="w-full pl-14 pr-6 py-4 bg-white border-2 border-brand-dark/5 rounded-2xl text-sm outline-none focus:border-brand-green transition-all shadow-md font-opensans" 
                   value={searchTermJogos} 
                   onChange={(e) => setSearchTermJogos(e.target.value)} 
                 />
@@ -337,7 +337,6 @@ const WorldCupHub: React.FC = () => {
                         </div>
                         <div>
                           <h3 className="text-3xl font-montserrat font-black text-white leading-none uppercase tracking-tight">{group}</h3>
-                          <p className="text-[11px] uppercase tracking-[0.2em] font-black text-white/70 mt-1.5">{jogos.length} confrontos da chave</p>
                         </div>
                       </div>
                       <div className="hidden md:flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/80">
@@ -349,61 +348,59 @@ const WorldCupHub: React.FC = () => {
 
                     <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-5 p-5 md:p-6 bg-brand-light/20">
                       {(jogos as any[]).map((jogo: any, idx: number) => (
-                        <div key={`${group}-${idx}`} className="bg-white border border-brand-dark/5 p-5 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 group/card">
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5 text-[10px] font-black uppercase tracking-wider text-brand-dark/40">
-                            <span className="flex items-center gap-2">
-                              <CalendarDays className="w-3.5 h-3.5" />
-                              {jogo['Data']}
-                            </span>
-                            <span className="flex items-center gap-2">
-                              <Clock className="w-3.5 h-3.5" />
-                              {getShortBrasiliaTime(jogo['Horário Brasília'])}
-                            </span>
+                        <div key={`${group}-${idx}`} className="bg-white border border-brand-dark/5 p-5 rounded-3xl shadow-md hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] transition-all duration-500 group/card relative overflow-hidden">
+                          {/* 3-COLUMN INFO HEADER */}
+                          <div className="grid grid-cols-3 gap-2 mb-6 pb-4 border-b border-brand-dark/5 text-[9px] font-black uppercase tracking-tight text-brand-dark/35">
+                            <div className="flex items-center gap-1.5 min-w-0">
+                              <CalendarDays className="w-3 h-3 flex-shrink-0 text-brand-green" />
+                              <span className="truncate">{jogo['Data']?.split(',')[1] || jogo['Data']}</span>
+                            </div>
+                            <div className="flex items-center justify-center gap-1.5">
+                              <Clock className="w-3 h-3 flex-shrink-0 text-brand-green" />
+                              <span>{getShortBrasiliaTime(jogo['Horário Brasília'])}</span>
+                            </div>
+                            <div className="flex items-center justify-end gap-1.5 min-w-0">
+                              <MapPin className="w-3 h-3 flex-shrink-0 text-brand-green" />
+                              <span className="truncate text-right">{getShortVenue(jogo['Horário/Local'])}</span>
+                            </div>
                           </div>
 
-                          <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 mb-6">
-                            <div className="flex flex-col items-center gap-2 min-w-0">
-                              <div className="w-14 h-9 rounded-md border border-brand-dark/10 overflow-hidden flex-shrink-0 shadow-md group-hover/card:scale-110 transition-transform">
+                          {/* TEAMS AND PROBABILITIES GRID */}
+                          <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-2 mb-4">
+                            <div className="flex flex-col items-center text-center gap-2">
+                              <div className="w-16 h-10 rounded-xl border border-brand-dark/10 overflow-hidden shadow-sm group-hover/card:scale-110 transition-transform duration-500">
                                 <img src={getFlag(jogo['Seleção A'])} className="w-full h-full object-cover" alt="" />
                               </div>
-                              <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] md:text-xs text-center leading-tight h-8 flex items-center">{jogo['Seleção A']}</span>
+                              <div className="space-y-1">
+                                <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block h-7 flex items-center justify-center">{jogo['Seleção A']}</span>
+                                <span className="font-exo text-lg font-bold italic text-brand-green block">{jogo['Vitória A']}</span>
+                              </div>
                             </div>
-                            <div className="flex flex-col items-center">
-                              <div className="px-2 py-1 bg-brand-light rounded-lg text-[9px] font-black text-brand-dark/30 mb-2">VS</div>
+
+                            <div className="flex flex-col items-center pt-2">
+                              <div className="px-2.5 py-1 bg-brand-light rounded-full text-[9px] font-black text-brand-dark/25 mb-4">VS</div>
+                              <div className="flex flex-col items-center opacity-40">
+                                <span className="text-[8px] font-montserrat font-black uppercase tracking-widest mb-0.5">Empate</span>
+                                <span className="font-exo text-sm font-bold italic text-brand-dark">{jogo['Empate']}</span>
+                              </div>
                             </div>
-                            <div className="flex flex-col items-center gap-2 min-w-0">
-                              <div className="w-14 h-9 rounded-md border border-brand-dark/10 overflow-hidden flex-shrink-0 shadow-md group-hover/card:scale-110 transition-transform">
+
+                            <div className="flex flex-col items-center text-center gap-2">
+                              <div className="w-16 h-10 rounded-xl border border-brand-dark/10 overflow-hidden shadow-sm group-hover/card:scale-110 transition-transform duration-500">
                                 <img src={getFlag(jogo['Seleção B'])} className="w-full h-full object-cover" alt="" />
                               </div>
-                              <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] md:text-xs text-center leading-tight h-8 flex items-center">{jogo['Seleção B']}</span>
-                            </div>
-                          </div>
-
-                          <div className="space-y-4">
-                            <div className="flex h-1.5 overflow-hidden bg-brand-light rounded-full">
-                              <div style={{ width: jogo['Vitória A'] }} className="bg-brand-green shadow-[0_0_8px_rgba(32,153,39,0.4)]" />
-                              <div style={{ width: jogo['Empate'] }} className="bg-brand-dark/15" />
-                              <div style={{ width: jogo['Vitória B'] }} className="bg-brand-blue shadow-[0_0_8px_rgba(3,92,136,0.4)]" />
-                            </div>
-                            <div className="grid grid-cols-3 gap-1 items-end font-exo text-lg md:text-xl font-bold italic tracking-tight">
-                              <div className="flex flex-col">
-                                <span className="text-[9px] not-italic font-montserrat uppercase tracking-widest text-brand-dark/30 mb-0.5">Vitória A</span>
-                                <span className="text-brand-green leading-none">{jogo['Vitória A']}</span>
-                              </div>
-                              <div className="flex flex-col items-center opacity-30 scale-75 origin-bottom">
-                                <span className="text-[9px] not-italic font-montserrat uppercase tracking-widest mb-0.5">Empate</span>
-                                <span className="text-brand-dark leading-none">{jogo['Empate']}</span>
-                              </div>
-                              <div className="flex flex-col items-end">
-                                <span className="text-[9px] not-italic font-montserrat uppercase tracking-widest text-brand-dark/30 mb-0.5">Vitória B</span>
-                                <span className="text-brand-blue leading-none">{jogo['Vitória B']}</span>
+                              <div className="space-y-1">
+                                <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block h-7 flex items-center justify-center">{jogo['Seleção B']}</span>
+                                <span className="font-exo text-lg font-bold italic text-brand-blue block">{jogo['Vitória B']}</span>
                               </div>
                             </div>
                           </div>
 
-                          <div className="mt-5 pt-4 border-t border-brand-dark/5 flex items-center gap-2 text-[10px] font-bold text-brand-dark/30">
-                            <MapPin className="w-3.5 h-3.5" />
-                            <span className="truncate">{getShortVenue(jogo['Horário/Local'])}</span>
+                          {/* MINIMALIST BAR */}
+                          <div className="flex h-1 overflow-hidden bg-brand-light rounded-full">
+                            <div style={{ width: jogo['Vitória A'] }} className="bg-brand-green" />
+                            <div style={{ width: jogo['Empate'] }} className="bg-brand-dark/10" />
+                            <div style={{ width: jogo['Vitória B'] }} className="bg-brand-blue" />
                           </div>
                         </div>
                       ))}

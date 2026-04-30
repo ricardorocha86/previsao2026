@@ -33,7 +33,7 @@ const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
             <img 
               src={logoImage} 
               alt="Previsão Esportiva" 
-              className="h-16 md:h-24 w-auto object-contain"
+              className="h-40 md:h-60 w-auto object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.35)]"
             />
           </div>
 
