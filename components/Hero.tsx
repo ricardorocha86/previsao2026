@@ -21,7 +21,7 @@ const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(241,241,241,0.92)_0%,rgba(241,241,241,0.75)_35%,rgba(241,241,241,0.3)_60%,rgba(241,241,241,0)_80%)]" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-14 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-[1080px] px-4 py-12 sm:px-6 md:py-14 lg:px-8">
         <div className="max-w-3xl">
           <div className="mb-4 inline-flex items-center gap-3 border border-brand-dark/10 bg-white/60 px-4 py-2 text-[11px] font-bold uppercase text-brand-dark/70 backdrop-blur-md">
             <GraduationCap className="h-4 w-4 text-brand-yellow" />

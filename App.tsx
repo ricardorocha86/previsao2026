@@ -34,7 +34,7 @@ export default function App() {
     <div className="min-h-screen bg-brand-light font-opensans selection:bg-brand-green selection:text-white flex flex-col text-brand-dark">
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-brand-dark/10 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
             <div 
               className="flex-shrink-0 flex items-center gap-2 cursor-pointer group"
@@ -84,7 +84,7 @@ export default function App() {
             <Hero onNavigate={(view) => navigateTo(view)} />
 
             <section className="bg-white px-4 py-20 border-t border-brand-dark/10">
-              <div className="max-w-7xl mx-auto grid gap-12 lg:grid-cols-[0.82fr_1.18fr]">
+              <div className="max-w-[1080px] mx-auto grid gap-12 lg:grid-cols-[0.82fr_1.18fr]">
                 <div>
                   <p className="mb-4 font-montserrat text-sm font-bold uppercase text-brand-green">
                     Explore o site
@@ -156,7 +156,7 @@ export default function App() {
 
       <footer className="bg-white text-brand-dark border-t border-brand-dark/10">
         <div className="bg-brand-dark text-white">
-          <div className="max-w-7xl mx-auto px-4 py-10 md:flex md:items-center md:justify-between md:gap-8">
+          <div className="max-w-[1080px] mx-auto px-4 py-10 md:flex md:items-center md:justify-between md:gap-8">
             <div>
               <p className="font-montserrat text-sm font-bold uppercase text-brand-yellow">Acompanhe o projeto</p>
               <h2 className="mt-2 text-3xl font-montserrat font-black uppercase md:text-4xl">
@@ -177,7 +177,7 @@ export default function App() {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 py-14 grid gap-12 lg:grid-cols-[1.25fr_0.85fr_0.9fr]">
+        <div className="max-w-[1080px] mx-auto px-4 py-14 grid gap-12 lg:grid-cols-[1.25fr_0.85fr_0.9fr]">
           <div>
             <button onClick={() => navigateTo('home')} className="inline-block text-left">
               <Logo className="h-16 mb-5 origin-left" />
@@ -221,7 +221,7 @@ export default function App() {
         </div>
 
         <div className="border-t border-brand-dark/10 bg-brand-light">
-          <div className="max-w-7xl mx-auto px-4 py-5 flex flex-col gap-2 text-xs text-brand-dark/55 md:flex-row md:items-center md:justify-between">
+          <div className="max-w-[1080px] mx-auto px-4 py-5 flex flex-col gap-2 text-xs text-brand-dark/55 md:flex-row md:items-center md:justify-between">
             <span>© 2026 Previsão Esportiva</span>
             <span>Projeto acadêmico sem afiliação direta com a FIFA.</span>
           </div>
