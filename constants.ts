@@ -139,6 +139,17 @@ export const RESEARCHERS: Researcher[] = [
     linkedin: 'https://www.linkedin.com/in/francisco-louzada-639048b7',
     lattes: 'http://lattes.cnpq.br/0994050156415890',
   },
+  {
+    id: '24', name: 'Adriano Kamimura Suzuki', coord: true,
+    affiliation: 'USP', image: '/assets/fotos/adriano-suzuki.webp',
+    linkedin: 'https://br.linkedin.com/in/adriano-kamimura-suzuki-04b248a6',
+    lattes: 'http://lattes.cnpq.br/4579497412852854',
+  },
+  {
+    id: '25', name: 'Luis Ernesto Bueno Salasar', coord: true,
+    affiliation: 'UFSCar', image: '/assets/fotos/luis-ernesto-salasar.webp',
+    lattes: 'http://lattes.cnpq.br/5464564215528609',
+  },
   // Membros
   {
     id: '1', name: 'Fernando Humberto de Almeida Moraes Neto',
