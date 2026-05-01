@@ -6,11 +6,13 @@ import { Users } from 'lucide-react';
 import PageHeader from './PageHeader';
 
 const INSTITUTIONS = [
+  { abbr: 'USP', name: 'Universidade de São Paulo' },
   { abbr: 'UFBA', name: 'Universidade Federal da Bahia' },
+  { abbr: 'UFSCar', name: 'Universidade Federal de São Carlos' },
   { abbr: 'UFMT', name: 'Universidade Federal de Mato Grosso' },
   { abbr: 'UFRJ', name: 'Universidade Federal do Rio de Janeiro' },
   { abbr: 'UFPR', name: 'Universidade Federal do Paraná' },
-  { abbr: 'USP', name: 'Universidade de São Paulo' },
+  { abbr: 'NEOMA', name: 'NEOMA Business School' },
 ];
 
 const LinkedinIcon = () => (
@@ -150,11 +152,11 @@ const TeamPage: React.FC = () => {
           <div className="w-full h-px bg-gray-200 mb-10" />
           <p className="font-exo-italic text-brand-green text-base mb-1 uppercase tracking-widest">Parceiros</p>
           <div className="w-10 h-0.5 bg-brand-green mb-8" />
-          <div className="flex flex-wrap items-center gap-6">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">
             {INSTITUTIONS.map((inst) => (
               <div
                 key={inst.abbr}
-                className="flex flex-col items-center gap-1 px-6 py-4 bg-white border border-gray-100 rounded-xl hover:border-brand-green transition-colors"
+                className="flex min-h-[118px] flex-col items-center justify-center gap-1 bg-white px-3 py-4 text-center border border-gray-100 rounded-xl hover:border-brand-green transition-colors"
               >
                 <span className="font-montserrat font-bold text-brand-dark text-lg uppercase">
                   {inst.abbr}
