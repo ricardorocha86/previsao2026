@@ -1,41 +1,49 @@
 import React from 'react';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 
 const weights = [
   {
-    component: 'Valor de mercado',
-    weight: '1,00',
-    impact: '32,8%',
-    description: 'Aproxima a qualidade agregada do elenco pelo valor econômico dos jogadores.',
-  },
-  {
-    component: 'Histórico em Copas',
-    weight: '0,90',
-    impact: '29,5%',
-    description: 'Resume tradição, participações e melhor desempenho histórico no torneio.',
+    component: 'Pontuação FIFA',
+    variable: 'FIFA',
+    impact: '1,6%',
+    coefficient: '0,016',
+    description: 'Pontuação institucional oficial da seleção.',
   },
   {
     component: 'Rating ELO',
-    weight: '0,70',
+    variable: 'ELO',
     impact: '23,0%',
+    coefficient: '0,230',
     description: 'Mede a força competitiva atual a partir de resultados internacionais.',
   },
   {
     component: 'Momento recente',
-    weight: '0,30',
+    variable: 'Momento',
     impact: '9,8%',
+    coefficient: '0,098',
     description: 'Captura se a seleção vem ganhando ou perdendo força no último ano.',
   },
   {
-    component: 'Vantagem de sede',
-    weight: '0,10',
-    impact: '3,3%',
-    description: 'Inclui o benefício estrutural de atuar como país-sede.',
+    component: 'Valor de mercado',
+    variable: 'Mercado',
+    impact: '32,8%',
+    coefficient: '0,328',
+    description: 'Aproxima a qualidade agregada do elenco pelo valor econômico dos jogadores.',
   },
   {
-    component: 'Pontuação FIFA',
-    weight: '0,05',
-    impact: '1,6%',
-    description: 'Usa a pontuação institucional oficial como informação complementar.',
+    component: 'Histórico em Copas',
+    variable: 'Histórico',
+    impact: '29,5%',
+    coefficient: '0,295',
+    description: 'Resume tradição, participações e melhor desempenho histórico no torneio.',
+  },
+  {
+    component: 'Vantagem de sede',
+    variable: 'Sede',
+    impact: '3,3%',
+    coefficient: '0,033',
+    description: 'Inclui o benefício estrutural de atuar como país-sede.',
   },
 ];
 
@@ -51,27 +59,43 @@ const steps = [
 interface EquationProps {
   number: string;
   title: string;
-  children: React.ReactNode;
+  tex: string;
   note?: string;
 }
 
-const Fraction: React.FC<{ top: React.ReactNode; bottom: React.ReactNode }> = ({ top, bottom }) => (
-  <span className="mx-2 inline-flex min-w-[9rem] flex-col items-center align-middle">
-    <span className="w-full px-2 pb-1 text-center">{top}</span>
-    <span className="w-full border-t-2 border-brand-dark px-2 pt-1 text-center">{bottom}</span>
+const renderMath = (tex: string, displayMode = false) => ({
+  __html: katex.renderToString(tex, {
+    displayMode,
+    output: 'html',
+    strict: false,
+    throwOnError: false,
+  }),
+});
+
+const InlineMath: React.FC<{ tex: string }> = ({ tex }) => (
+  <span dangerouslySetInnerHTML={renderMath(tex)} />
+);
+
+const SymbolPill: React.FC<{ tex: string }> = ({ tex }) => (
+  <span
+    className="mx-1 inline-flex items-center bg-brand-light px-2 py-1 text-brand-green"
+    style={{ borderRadius: 8 }}
+  >
+    <InlineMath tex={tex} />
   </span>
 );
 
-const Equation: React.FC<EquationProps> = ({ number, title, children, note }) => (
+const Equation: React.FC<EquationProps> = ({ number, title, tex, note }) => (
   <figure className="my-8 border border-brand-dark/14 bg-white shadow-sm" style={{ borderRadius: 8 }}>
     <figcaption className="flex items-center justify-between gap-4 border-b border-brand-dark/10 bg-brand-light/70 px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] text-brand-dark/60 sm:px-6">
       <span>{title}</span>
       <span className="font-mono text-brand-green">equação {number}</span>
     </figcaption>
     <div className="overflow-x-auto px-4 py-6 sm:px-6">
-      <div className="min-w-max text-center font-serif text-[1.35rem] leading-[2.4rem] text-brand-dark sm:text-[1.65rem]">
-        {children}
-      </div>
+      <div
+        className="min-w-max text-center text-brand-dark [&_.katex-display]:my-0 [&_.katex]:text-[1.35rem] sm:[&_.katex]:text-[1.7rem]"
+        dangerouslySetInnerHTML={renderMath(tex, true)}
+      />
     </div>
     {note && (
       <p className="border-t border-brand-dark/10 px-4 py-4 text-sm leading-relaxed text-brand-dark/68 sm:px-6">
@@ -108,16 +132,10 @@ const MethodologyPage: React.FC = () => {
             possível. Por fim, o torneio é simulado muitas vezes; a chance de ser campeão, chegar à final ou avançar de fase
             é a frequência com que esse evento aparece nas simulações.
           </p>
-          <div className="mt-6 flex flex-wrap gap-2 text-xs font-bold uppercase tracking-[0.14em] text-brand-dark/58">
-            <span className="border border-brand-dark/15 px-3 py-2" style={{ borderRadius: 8 }}>índice de força</span>
-            <span className="border border-brand-dark/15 px-3 py-2" style={{ borderRadius: 8 }}>Poisson</span>
-            <span className="border border-brand-dark/15 px-3 py-2" style={{ borderRadius: 8 }}>Dixon-Coles</span>
-            <span className="border border-brand-dark/15 px-3 py-2" style={{ borderRadius: 8 }}>Monte Carlo</span>
-          </div>
         </section>
 
         <section className="py-10">
-          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">1. O fio condutor</h2>
+          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">1. Introdução</h2>
           <p className="leading-relaxed text-brand-dark/75">
             A pergunta “quem tem mais chance de ganhar a Copa?” é grande demais para ser respondida de uma vez. O modelo
             quebra essa pergunta em partes menores. Primeiro pergunta: “qual é a força relativa de cada seleção?”. Depois:
@@ -136,68 +154,49 @@ const MethodologyPage: React.FC = () => {
         </section>
 
         <section className="border-t border-brand-dark/15 py-10">
-          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">2. Colocando variáveis diferentes na mesma escala</h2>
+          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">2. Variáveis e preditor linear</h2>
           <p className="leading-relaxed text-brand-dark/75">
-            Os dados entram no modelo em unidades diferentes: milhões de euros, pontos de rating, variação recente, presença
-            como país-sede. Para que nenhum componente domine a conta só por usar uma unidade maior, cada informação é
-            convertida para a escala de 0 a 1.
+            A primeira etapa é construir um preditor linear para resumir a força pré-torneio de cada seleção. Para isso,
+            usamos seis informações: pontuação FIFA, rating ELO, momento recente, valor de mercado, histórico em Copas e
+            vantagem de sede. A ideia é combinar dimensões complementares: desempenho institucional, força competitiva,
+            tendência recente, qualidade do elenco, tradição no torneio e contexto geográfico da Copa de 2026.
           </p>
 
-          <Equation
-            number="1"
-            title="Normalização de uma informação"
-            note="Assim, a seleção com menor valor naquele critério recebe 0, a seleção com maior valor recebe 1, e as demais ficam proporcionalmente entre esses dois extremos."
-          >
-            <span>
-              valor normalizado =
-              <Fraction
-                top="valor da seleção - menor valor entre as seleções"
-                bottom="maior valor entre as seleções - menor valor entre as seleções"
-              />
-            </span>
-          </Equation>
-
-          <p className="leading-relaxed text-brand-dark/75">
-            Depois da normalização, todos os componentes falam a mesma língua. Um valor próximo de 1 significa que a seleção
-            está perto do topo naquele critério; um valor próximo de 0 significa que ela está perto da base.
+          <p className="mt-4 leading-relaxed text-brand-dark/75">
+            Como essas variáveis vêm em escalas diferentes, todas são normalizadas para a faixa de 0 a 1 antes de entrar no
+            preditor. Assim, cada componente passa a representar posição relativa no conjunto de seleções: valores próximos
+            de 1 indicam uma seleção perto do topo naquele critério, enquanto valores próximos de 0 indicam uma seleção mais
+            distante do topo.
           </p>
         </section>
 
         <section className="border-t border-brand-dark/15 py-10">
           <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">3. Construindo a força de cada seleção</h2>
           <p className="leading-relaxed text-brand-dark/75">
-            A força pré-torneio é uma média ponderada. Isso quer dizer que cada componente entra na conta, mas alguns entram
-            com mais peso do que outros. No ajuste atual, valor de mercado, histórico em Copas e ELO têm maior influência;
-            momento recente, sede e pontuação FIFA entram como informações complementares.
+            A força da seleção é obtida por um preditor linear: cada variável normalizada entra multiplicada por um
+            coeficiente. Esses coeficientes representam o impacto ajustado de cada componente na força pré-torneio.
           </p>
 
           <Equation
-            number="2"
-            title="Força bruta da seleção"
-            note="A soma dos pesos é 3,05. Dividir por 3,05 transforma a soma ponderada em uma média ponderada, mantendo o resultado em uma escala comparável entre seleções."
-          >
-            <span>
-              força bruta =
-              <Fraction
-                top={
-                  <span>
-                    1,00 × mercado + 0,90 × histórico + 0,70 × ELO + 0,30 × momento
-                    <br />
-                    + 0,10 × sede + 0,05 × FIFA
-                  </span>
-                }
-                bottom="3,05"
-              />
-            </span>
-          </Equation>
+            number="1"
+            title="Preditor linear de força"
+            tex={String.raw`\begin{aligned}\mathrm{For\c{c}a}={}&w_1\cdot\mathrm{FIFA}\\&+w_2\cdot\mathrm{ELO}\\&+w_3\cdot\mathrm{Momento}\\&+w_4\cdot\mathrm{Mercado}\\&+w_5\cdot\mathrm{Hist\acute{o}rico}\\&+w_6\cdot\mathrm{Sede}\end{aligned}`}
+            note="A equação é calculada para uma seleção por vez. Cada variável representa o valor normalizado daquela seleção no respectivo componente."
+          />
+
+          <p className="leading-relaxed text-brand-dark/75">
+            Os coeficientes e parâmetros foram calibrados para que as probabilidades reflitam, da melhor forma possível,
+            a leitura do cenário atual pela média de 26 casas de apostas. Na tabela abaixo, o impacto é o coeficiente
+            ajustado de cada variável no preditor.
+          </p>
 
           <div className="mt-8 overflow-x-auto border border-brand-dark/12" style={{ borderRadius: 8 }}>
             <table className="w-full min-w-[720px] border-collapse text-sm">
               <thead>
                 <tr className="border-b border-brand-dark/12 bg-brand-light/60 text-left">
                   <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Componente</th>
-                  <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Peso</th>
-                  <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Impacto</th>
+                  <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Variável</th>
+                  <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Impacto ajustado</th>
                   <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">O que representa</th>
                 </tr>
               </thead>
@@ -205,7 +204,7 @@ const MethodologyPage: React.FC = () => {
                 {weights.map((row) => (
                   <tr key={row.component} className="border-b border-brand-dark/8 last:border-b-0">
                     <td className="px-4 py-4 font-bold text-brand-dark">{row.component}</td>
-                    <td className="px-4 py-4 font-mono font-bold">{row.weight}</td>
+                    <td className="px-4 py-4 font-mono font-bold">{row.variable}</td>
                     <td className="px-4 py-4 font-mono font-bold text-brand-green">{row.impact}</td>
                     <td className="px-4 py-4 leading-relaxed text-brand-dark/65">{row.description}</td>
                   </tr>
@@ -214,25 +213,40 @@ const MethodologyPage: React.FC = () => {
             </table>
           </div>
 
-          <p className="mt-6 leading-relaxed text-brand-dark/75">
-            Em seguida, aplicamos uma transformação pequena na força bruta. Ela serve para calibrar o comportamento do
-            simulador: a elasticidade separa um pouco mais as seleções mais fortes, enquanto o offset garante que nenhuma
-            seleção comece com força praticamente nula.
+          <Equation
+            number="2"
+            title="Força com os coeficientes calibrados"
+            tex={String.raw`\begin{aligned}\mathrm{For\c{c}a}={}&0{,}016\cdot\mathrm{FIFA}\\&+0{,}230\cdot\mathrm{ELO}\\&+0{,}098\cdot\mathrm{Momento}\\&+0{,}328\cdot\mathrm{Mercado}\\&+0{,}295\cdot\mathrm{Hist\acute{o}rico}\\&+0{,}033\cdot\mathrm{Sede}\end{aligned}`}
+            note="Os percentuais da tabela são usados como proporções na equação: por exemplo, 32,8% entra como 0,328."
+          />
+        </section>
+
+        <section className="border-t border-brand-dark/15 py-10">
+          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">4. Ajuste da força</h2>
+          <p className="leading-relaxed text-brand-dark/75">
+            Depois de calcular a força linear, aplicamos uma transformação de calibração. Ela tem dois papéis. O offset
+            adiciona uma base comum às seleções e, com isso, controla o quanto a distância entre favorito e menos favorito
+            pesa na divisão de gols esperados. Quanto maior esse offset, menor tende a ser a diferença relativa entre uma
+            seleção muito forte e uma seleção mais fraca; quanto menor o offset, mais a distância original entre elas aparece.
+          </p>
+
+          <p className="mt-4 leading-relaxed text-brand-dark/75">
+            A elasticidade controla a curvatura da escala de força. Valores acima de 1 ampliam diferenças no topo: seleções
+            já fortes ficam proporcionalmente mais fortes. Valores abaixo de 1 comprimem essas diferenças, tornando o campo
+            competitivo mais equilibrado. Assim, o parâmetro regula quanto o modelo deseja premiar superioridade estrutural
+            antes de deixar a variância do futebol atuar.
           </p>
 
           <Equation
             number="3"
             title="Força ajustada usada nas partidas"
-            note="No ajuste atual, o offset é 0,13 e a elasticidade é 1,15. A força ajustada é a quantidade que de fato entra na comparação entre duas seleções."
-          >
-            <span>
-              força ajustada = 0,13 + (força bruta)<sup>1,15</sup>
-            </span>
-          </Equation>
+            tex={String.raw`\mathrm{For\c{c}a}_{\mathrm{ajustada}}=\alpha+\left(\mathrm{For\c{c}a}\right)^{\gamma}`}
+            note="No projeto, usamos offset α = 0,13 e elasticidade γ = 1,15. A força ajustada é a quantidade que entra na comparação entre duas seleções."
+          />
         </section>
 
         <section className="border-t border-brand-dark/15 py-10">
-          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">4. Transformando força em gols esperados</h2>
+          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">5. Transformando força em gols esperados</h2>
           <p className="leading-relaxed text-brand-dark/75">
             Em uma partida, o modelo fixa primeiro a média total de gols: 3,00 gols por jogo. Depois, divide esse total entre
             as duas seleções conforme a força ajustada de cada uma. Se as forças forem iguais, cada seleção fica com 1,50 gol
@@ -242,32 +256,19 @@ const MethodologyPage: React.FC = () => {
           <Equation
             number="4"
             title="Divisão da média total de gols"
-            note="Esta equação é o coração intuitivo do modelo: a soma esperada continua sendo 3,00, mas a fatia de cada seleção muda conforme a força relativa no confronto."
-          >
-            <span>
-              parcela da seleção A =
-              <Fraction
-                top="força ajustada da seleção A"
-                bottom="força ajustada da seleção A + força ajustada da seleção B"
-              />
-            </span>
-          </Equation>
+            tex={String.raw`\begin{aligned}\lambda_A&=\mu\frac{\mathrm{For\c{c}a}_{A,\mathrm{ajustada}}}{\mathrm{For\c{c}a}_{A,\mathrm{ajustada}}+\mathrm{For\c{c}a}_{B,\mathrm{ajustada}}}\\[0.35em]\lambda_B&=\mu\frac{\mathrm{For\c{c}a}_{B,\mathrm{ajustada}}}{\mathrm{For\c{c}a}_{A,\mathrm{ajustada}}+\mathrm{For\c{c}a}_{B,\mathrm{ajustada}}}\end{aligned}`}
+            note="A forma geral reparte a média total μ entre as equipes. No projeto, μ = 3,00 gols por partida."
+          />
 
-          <Equation
-            number="5"
-            title="Gols esperados de cada seleção"
-            note="O símbolo λ, quando aparece na literatura, significa apenas “média esperada de gols”. Aqui mantemos a frase completa para evitar ambiguidade."
-          >
-            <span>
-              gols esperados da seleção A = 3,00 × parcela da seleção A
-              <br />
-              gols esperados da seleção B = 3,00 - gols esperados da seleção A
-            </span>
-          </Equation>
+          <p className="leading-relaxed text-brand-dark/75">
+            Aqui, <SymbolPill tex={String.raw`\lambda_A`} /> e <SymbolPill tex={String.raw`\lambda_B`} /> são os gols esperados de cada seleção,
+            <SymbolPill tex={String.raw`\mathrm{For\c{c}a}_{A,\mathrm{ajustada}}`} /> e <SymbolPill tex={String.raw`\mathrm{For\c{c}a}_{B,\mathrm{ajustada}}`} /> são as forças ajustadas no confronto, e
+            <SymbolPill tex={String.raw`\mu`} /> é a média total de gols do jogo.
+          </p>
         </section>
 
         <section className="border-t border-brand-dark/15 py-10">
-          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">5. Transformando gols esperados em placares prováveis</h2>
+          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">6. Transformando gols esperados em placares prováveis</h2>
           <p className="leading-relaxed text-brand-dark/75">
             Uma média esperada não diz que o placar será exatamente aquele número. Ela define uma distribuição. Se uma
             seleção tem média de 1,8 gol, por exemplo, ela pode marcar 0, 1, 2, 3 ou mais gols; cada contagem tem uma
@@ -275,34 +276,18 @@ const MethodologyPage: React.FC = () => {
           </p>
 
           <Equation
-            number="6"
+            number="5"
             title="Probabilidade de uma seleção marcar uma quantidade de gols"
-            note="A letra g representa uma contagem possível de gols: 0, 1, 2, 3 etc. A função exponencial e o fatorial são a forma matemática padrão da distribuição de Poisson."
-          >
-            <span>
-              probabilidade de marcar g gols =
-              <Fraction
-                top={
-                  <span>
-                    e<sup>-gols esperados</sup> × (gols esperados)<sup>g</sup>
-                  </span>
-                }
-                bottom="g!"
-              />
-            </span>
-          </Equation>
+            tex={String.raw`\mathbb{P}(G=g\mid\lambda)=\frac{e^{-\lambda}\lambda^g}{g!}`}
+            note="A letra g representa uma contagem possível de gols: 0, 1, 2, 3 etc. O λ é a média esperada de gols daquela seleção no confronto."
+          />
 
           <Equation
-            number="7"
+            number="6"
             title="Probabilidade inicial de um placar"
+            tex={String.raw`P_0(a,b)=\mathbb{P}(G_A=a\mid\lambda_A)\,\mathbb{P}(G_B=b\mid\lambda_B)`}
             note="Aqui, a é o número de gols da seleção A e b é o número de gols da seleção B. Por exemplo: a probabilidade inicial de 2 a 1 é a chance de A marcar 2 gols multiplicada pela chance de B marcar 1 gol."
-          >
-            <span>
-              probabilidade inicial do placar a × b =
-              <br />
-              probabilidade de A marcar a gols × probabilidade de B marcar b gols
-            </span>
-          </Equation>
+          />
 
           <p className="leading-relaxed text-brand-dark/75">
             O futebol, porém, tem muitos jogos de baixa contagem. Por isso, aplicamos a correção de Dixon-Coles nos placares
@@ -311,59 +296,21 @@ const MethodologyPage: React.FC = () => {
           </p>
 
           <Equation
-            number="8"
+            number="7"
             title="Probabilidade corrigida do placar"
-            note="O parâmetro ρ é igual a -0,13 no ajuste atual. O fator Dixon-Coles vale 1 para os demais placares; portanto, a correção só atua nos resultados baixos."
-          >
-            <span>
-              probabilidade corrigida do placar =
-              <br />
-              probabilidade inicial do placar × fator Dixon-Coles
-            </span>
-          </Equation>
+            tex={String.raw`P(a,b)=\tau(a,b;\lambda_A,\lambda_B,\rho)\,P_0(a,b)`}
+            note="No ajuste atual, ρ = -0,13. O fator τ vale 1 para os demais placares; portanto, a correção só atua nos resultados baixos."
+          />
 
-          <div className="overflow-x-auto border border-brand-dark/12" style={{ borderRadius: 8 }}>
-            <table className="w-full min-w-[760px] text-sm">
-              <thead>
-                <tr className="border-b border-brand-dark/12 bg-brand-light/60 text-left">
-                  <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Placar</th>
-                  <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Fator Dixon-Coles</th>
-                  <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Interpretação</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-brand-dark/8">
-                  <td className="px-4 py-4 font-mono">0 a 0</td>
-                  <td className="px-4 py-4 font-serif text-lg">1 - gols esperados A × gols esperados B × ρ</td>
-                  <td className="px-4 py-4 text-brand-dark/65">Ajusta empates sem gols.</td>
-                </tr>
-                <tr className="border-b border-brand-dark/8">
-                  <td className="px-4 py-4 font-mono">1 a 0</td>
-                  <td className="px-4 py-4 font-serif text-lg">1 + gols esperados B × ρ</td>
-                  <td className="px-4 py-4 text-brand-dark/65">Ajusta vitória mínima da seleção A.</td>
-                </tr>
-                <tr className="border-b border-brand-dark/8">
-                  <td className="px-4 py-4 font-mono">0 a 1</td>
-                  <td className="px-4 py-4 font-serif text-lg">1 + gols esperados A × ρ</td>
-                  <td className="px-4 py-4 text-brand-dark/65">Ajusta vitória mínima da seleção B.</td>
-                </tr>
-                <tr className="border-b border-brand-dark/8">
-                  <td className="px-4 py-4 font-mono">1 a 1</td>
-                  <td className="px-4 py-4 font-serif text-lg">1 - ρ</td>
-                  <td className="px-4 py-4 text-brand-dark/65">Ajusta empate com um gol para cada lado.</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-4 font-mono">demais placares</td>
-                  <td className="px-4 py-4 font-serif text-lg">1</td>
-                  <td className="px-4 py-4 text-brand-dark/65">Mantém a probabilidade calculada pela Poisson.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <p className="leading-relaxed text-brand-dark/75">
+            Em termos práticos, o fator <InlineMath tex={String.raw`\tau`} /> altera apenas os placares de baixa contagem:
+            0 a 0, 1 a 0, 0 a 1 e 1 a 1. Para os demais placares, o fator é igual a 1 e a probabilidade permanece a mesma
+            da matriz de Poisson independente.
+          </p>
         </section>
 
         <section className="border-t border-brand-dark/15 py-10">
-          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">6. Somando placares para obter vitória, empate e derrota</h2>
+          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">7. Somando placares para obter vitória, empate e derrota</h2>
           <p className="leading-relaxed text-brand-dark/75">
             Depois que todos os placares têm probabilidade, as probabilidades de resultado são obtidas por soma. A chance de
             vitória da seleção A é a soma de todos os placares em que A faz mais gols que B. A chance de empate é a soma dos
@@ -371,22 +318,15 @@ const MethodologyPage: React.FC = () => {
           </p>
 
           <Equation
-            number="9"
+            number="8"
             title="Resultado como soma de placares"
+            tex={String.raw`\begin{aligned}P(A\ \mathrm{vence})&=\sum_{a>b}P(a,b)\\[0.35em]P(\mathrm{empate})&=\sum_{a=b}P(a,b)\\[0.35em]P(B\ \mathrm{vence})&=\sum_{a<b}P(a,b)\end{aligned}`}
             note="Essa etapa evita transformar o modelo em um palpite único. O resultado final considera a matriz inteira de placares possíveis."
-          >
-            <span>
-              chance de A vencer = soma dos placares em que gols de A &gt; gols de B
-              <br />
-              chance de empate = soma dos placares em que gols de A = gols de B
-              <br />
-              chance de B vencer = soma dos placares em que gols de A &lt; gols de B
-            </span>
-          </Equation>
+          />
         </section>
 
         <section className="border-t border-brand-dark/15 py-10">
-          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">7. Da partida ao torneio completo</h2>
+          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">8. Da partida ao torneio completo</h2>
           <p className="leading-relaxed text-brand-dark/75">
             A Copa não é apenas uma coleção de jogos independentes. O resultado de uma partida altera classificação no grupo,
             adversários prováveis e caminho no mata-mata. Por isso, depois de calcular as probabilidades de placar, o torneio
@@ -394,22 +334,20 @@ const MethodologyPage: React.FC = () => {
           </p>
 
           <Equation
-            number="10"
+            number="9"
             title="Probabilidade estimada por simulação"
-            note="Se uma seleção é campeã em 83.000 de 1.000.000 simulações, a estimativa de título é 83.000 dividido por 1.000.000, isto é, 8,3%."
-          >
-            <span>
-              probabilidade estimada de um evento =
-              <Fraction
-                top="número de simulações em que o evento aconteceu"
-                bottom="número total de simulações"
-              />
-            </span>
-          </Equation>
+            tex={String.raw`\hat{P}(E)=\frac{\displaystyle\sum_{r=1}^{N}\mathbf{1}\{E_r\}}{N}`}
+            note="Na notação, N é o número total de simulações, r identifica uma simulação específica, E é o evento de interesse e I(E_r) vale 1 quando o evento ocorreu naquela simulação e 0 quando não ocorreu."
+          />
+
+          <p className="leading-relaxed text-brand-dark/75">
+            Em termos diretos, se uma seleção é campeã em 83.000 de 1.000.000 simulações, sua probabilidade estimada de
+            título é 83.000 dividido por 1.000.000, isto é, 8,3%.
+          </p>
         </section>
 
         <section className="border-t border-brand-dark/15 py-10">
-          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">8. Como interpretar</h2>
+          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">9. Como interpretar</h2>
           <div className="grid gap-5 md:grid-cols-3">
             <div className="border border-brand-dark/12 p-5" style={{ borderRadius: 8 }}>
               <h3 className="mb-3 font-serif text-xl font-bold normal-case">Probabilidade não é destino</h3>
