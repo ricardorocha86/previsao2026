@@ -1,313 +1,408 @@
-
 import React from 'react';
-import { FlaskConical, Sigma, Sliders, Zap, Shield } from 'lucide-react';
-import PageHeader from './PageHeader';
+
+const weights = [
+  {
+    component: 'Valor de mercado',
+    symbol: 'x_Mkt',
+    weight: '1,00',
+    impact: '32,8%',
+    description: 'Aproxima a qualidade agregada do elenco por meio do valor econômico dos jogadores.',
+  },
+  {
+    component: 'Histórico em Copas',
+    symbol: 'x_Hist',
+    weight: '0,90',
+    impact: '29,5%',
+    description: 'Resume tradição competitiva, participações e melhor desempenho histórico no torneio.',
+  },
+  {
+    component: 'Rating ELO',
+    symbol: 'x_ELO',
+    weight: '0,70',
+    impact: '23,0%',
+    description: 'Mede a força competitiva corrente a partir de resultados internacionais recentes e passados.',
+  },
+  {
+    component: 'Momento',
+    symbol: 'x_Mom',
+    weight: '0,30',
+    impact: '9,8%',
+    description: 'Captura a direção recente da equipe, usando a variação do rating ELO no último ano.',
+  },
+  {
+    component: 'Anfitrião',
+    symbol: 'x_Anf',
+    weight: '0,10',
+    impact: '3,3%',
+    description: 'Inclui a vantagem estrutural dos países-sede da Copa de 2026.',
+  },
+  {
+    component: 'Pontuação FIFA',
+    symbol: 'x_FIFA',
+    weight: '0,05',
+    impact: '1,6%',
+    description: 'Usa a pontuação institucional oficial como informação complementar de desempenho.',
+  },
+];
+
+const steps = [
+  'Organizar variáveis comparáveis para todas as seleções.',
+  'Normalizar cada variável para a escala comum de 0 a 1.',
+  'Combinar as variáveis em um índice único de força.',
+  'Converter a força relativa do confronto em médias esperadas de gols.',
+  'Calcular a distribuição de placares possíveis.',
+  'Repetir o torneio muitas vezes e estimar probabilidades por frequência.',
+];
+
+interface EquationProps {
+  number: string;
+  title: string;
+  children: React.ReactNode;
+  note?: string;
+}
+
+const Equation: React.FC<EquationProps> = ({ number, title, children, note }) => (
+  <figure className="my-7 border-l-4 border-brand-green bg-brand-light/45 px-4 py-5 sm:px-6" style={{ borderRadius: 8 }}>
+    <figcaption className="mb-3 flex items-center justify-between gap-4 text-xs font-bold uppercase tracking-[0.18em] text-brand-dark/55">
+      <span>{title}</span>
+      <span className="font-mono text-brand-green">({number})</span>
+    </figcaption>
+    <div className="overflow-x-auto">
+      <div className="min-w-max text-center font-serif text-2xl leading-relaxed text-brand-dark sm:text-3xl">
+        {children}
+      </div>
+    </div>
+    {note && <p className="mt-3 text-sm leading-relaxed text-brand-dark/68">{note}</p>}
+  </figure>
+);
 
 const MethodologyPage: React.FC = () => {
   return (
-    <div className="bg-brand-light min-h-screen font-opensans text-brand-dark">
+    <main className="min-h-screen bg-white font-opensans text-brand-dark">
+      <article className="mx-auto max-w-[980px] px-4 py-12 sm:px-6 md:py-16">
+        <header className="border-b border-brand-dark/15 pb-10">
+          <p className="mb-4 font-montserrat text-xs font-black uppercase tracking-[0.28em] text-brand-green">
+            Nota metodológica
+          </p>
+          <h1 className="max-w-4xl font-serif text-4xl font-bold leading-tight tracking-normal text-brand-dark normal-case md:text-6xl">
+            Modelo probabilístico para a simulação da Copa do Mundo de 2026
+          </h1>
+          <div className="mt-6 grid gap-2 border-y border-brand-dark/10 py-4 text-sm text-brand-dark/68 sm:grid-cols-3">
+            <p><strong className="text-brand-dark">Projeto:</strong> Previsão Esportiva</p>
+            <p><strong className="text-brand-dark">Objeto:</strong> Seleções nacionais</p>
+            <p><strong className="text-brand-dark">Saída:</strong> Probabilidades de placar e avanço</p>
+          </div>
+        </header>
 
-      <PageHeader
-        icon={FlaskConical}
-        eyebrow="Laboratório Científico"
-        title="Metodologia da"
-        accent="Simulação"
-        description="Como transformamos a força relativa das seleções em médias de gols, probabilidades de placar e simulações do torneio."
-      />
-
-      <div className="max-w-5xl mx-auto px-4 py-20 space-y-20">
-
-        {/* INTRODUÇÃO: Modelo Poisson e soma fixa de gols */}
-        <section>
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-green/10 border border-brand-green/20 rounded-full mb-5">
-                <span className="text-[10px] font-black text-brand-green uppercase tracking-[0.15em]">Introdução</span>
-              </div>
-              <h3 className="text-3xl font-montserrat font-black text-brand-dark uppercase tracking-tight mb-5">
-                Do modelo aos gols simulados
-              </h3>
-              <p className="text-brand-dark/70 text-base leading-relaxed mb-4">
-                A base da simulação é um <strong className="text-brand-dark">modelo Poisson com médias independentes</strong>. Em cada confronto, a Seleção 1 tem uma média esperada de gols (<span className="font-black italic">m₁</span>) e a Seleção 2 tem outra média (<span className="font-black italic">m₂</span>).
-              </p>
-              <p className="text-brand-dark/70 text-base leading-relaxed mb-4">
-                Em vez de começar estimando essas médias separadamente, o modelo fixa primeiro a <strong className="text-brand-dark">soma esperada de gols da partida</strong> (<span className="font-black italic">m</span>). Depois, divide essa soma entre as equipes conforme a força relativa de cada uma.
-              </p>
-              <p className="text-brand-dark/70 text-base leading-relaxed mb-6">
-                Assim, o objetivo da modelagem é simples: dado um total esperado de gols para o jogo, repartir esse total entre os dois times de acordo com o potencial competitivo de cada seleção.
-              </p>
-              <div className="space-y-3 font-mono text-sm bg-white p-6 rounded-2xl border border-brand-dark/10 shadow-sm text-brand-dark/70">
-                <div className="flex items-center gap-3">
-                  <span className="bg-brand-green/10 text-brand-green font-black px-2 py-1 rounded-lg">m</span>
-                  <span>=</span>
-                  <span>Total esperado de gols da partida</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="bg-brand-green/10 text-brand-green font-black px-2 py-1 rounded-lg">m₁, m₂</span>
-                  <span>=</span>
-                  <span>Médias de gols de cada seleção</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="bg-brand-green/10 text-brand-green font-black px-2 py-1 rounded-lg">f₁, f₂</span>
-                  <span>=</span>
-                  <span>Forças usadas para dividir a soma fixa</span>
-                </div>
-                <div className="w-full h-px bg-brand-dark/10 my-1"></div>
-                <div className="text-[10px] text-brand-dark/40 uppercase tracking-widest font-bold">Premissa de Independência</div>
-                <div className="text-brand-green font-bold">S₁ ~ Poisson(m₁)</div>
-                <div className="text-brand-green font-bold">S₂ ~ Poisson(m₂)</div>
-              </div>
-            </div>
-
-            {/* Formula Card */}
-            <div className="bg-brand-dark text-white p-8 rounded-3xl shadow-2xl relative overflow-hidden group">
-              <div className="absolute -right-8 -top-8 opacity-[0.06] transform rotate-12 group-hover:rotate-0 transition-transform duration-700">
-                <Sigma className="w-56 h-56 text-brand-neon" />
-              </div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-green/20 rounded-full mb-6">
-                <span className="text-[10px] font-black text-brand-neon uppercase tracking-widest">Modelo de soma fixa</span>
-              </div>
-              <div className="space-y-8 relative z-10">
-                <div className="text-center">
-                  <div className="text-4xl md:text-5xl font-black font-montserrat mb-2 tracking-tight text-white">
-                    m = m₁ + m₂
-                  </div>
-                  <p className="text-white/30 text-[10px] uppercase tracking-widest font-bold">Total de gols esperado no confronto</p>
-                </div>
-                <div className="bg-brand-green/10 p-6 rounded-2xl border border-brand-green/20">
-                  <div className="flex items-center justify-center gap-4 text-2xl md:text-3xl font-black font-montserrat">
-                    <span>m₁ =</span>
-                    <div className="flex flex-col items-center text-center">
-                      <span className="text-brand-neon">m • f₁</span>
-                      <div className="h-0.5 w-full bg-white/30 my-1"></div>
-                      <span className="text-white/70">(f₁ + f₂)</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="text-center opacity-50">
-                  <div className="text-2xl font-montserrat font-black">m₂ = m - m₁</div>
-                </div>
-                <p className="text-white/45 text-sm leading-relaxed text-center">
-                  Se as forças forem iguais, cada equipe recebe metade do total esperado. Quanto maior a força relativa de uma seleção, maior a parcela de gols esperados atribuída a ela.
-                </p>
-              </div>
-            </div>
+        <section className="border-b border-brand-dark/15 py-10">
+          <h2 className="mb-4 font-serif text-2xl font-bold normal-case text-brand-dark">Resumo</h2>
+          <p className="text-lg leading-relaxed text-brand-dark/75">
+            O objetivo do modelo é transformar informações conhecidas antes do torneio em probabilidades de resultados.
+            Para isso, cada seleção recebe um índice de força construído a partir de seis componentes: valor de mercado,
+            histórico em Copas, rating ELO, momento recente, vantagem de sede e pontuação FIFA. Em cada partida, as forças
+            das duas equipes são comparadas para definir quantos gols se espera que cada uma marque. A partir dessas médias,
+            calculamos a probabilidade de placares como 0 a 0, 1 a 0, 2 a 1 e assim por diante. Por fim, o torneio inteiro
+            é simulado muitas vezes; as probabilidades divulgadas são as frequências com que cada evento ocorre nessas simulações.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-2 text-xs font-bold uppercase tracking-[0.14em] text-brand-dark/58">
+            <span className="border border-brand-dark/15 px-3 py-2" style={{ borderRadius: 8 }}>Poisson</span>
+            <span className="border border-brand-dark/15 px-3 py-2" style={{ borderRadius: 8 }}>Dixon-Coles</span>
+            <span className="border border-brand-dark/15 px-3 py-2" style={{ borderRadius: 8 }}>Monte Carlo</span>
+            <span className="border border-brand-dark/15 px-3 py-2" style={{ borderRadius: 8 }}>Copa 2026</span>
           </div>
         </section>
 
-        {/* SECTION 1: FORÇA RESULTANTE — 6 PILARES */}
-        <section className="bg-white rounded-3xl shadow-sm border border-brand-dark/5 overflow-hidden">
-          {/* Section header stripe */}
-          <div className="bg-brand-dark px-8 py-5 flex items-center gap-4">
-            <div className="p-2 bg-brand-green/20 rounded-xl">
-              <Sigma className="w-5 h-5 text-brand-neon" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black text-brand-neon uppercase tracking-[0.2em]">Seção 01</p>
-              <h3 className="text-xl font-montserrat font-black text-white uppercase tracking-tight">Força Resultante — Os 6 Pilares</h3>
-            </div>
-          </div>
-
-          <div className="p-8 md:p-10">
-            <p className="text-brand-dark/70 leading-relaxed mb-8">
-              A força usada na divisão da média de gols não vem de um único indicador. Ela resume seis dimensões complementares: qualidade do elenco, histórico competitivo, rating atual, momento recente, vantagem de sede e pontuação institucional. Cada dimensão é normalizada para a mesma escala e combinada por pesos.
-            </p>
-
-            {/* Formula */}
-            <div className="bg-brand-dark rounded-2xl p-6 mb-8 overflow-x-auto">
-              <p className="text-brand-neon text-[10px] uppercase tracking-[0.2em] font-black mb-3">Fórmula da Força Resultante</p>
-              <div className="font-mono text-sm md:text-base text-center leading-loose">
-                <span className="text-brand-neon font-black">F<sub>res</sub></span>
-                <span className="text-white/50"> = </span>
-                <span className="text-white">
-                  (w<sub>FIFA</sub>·x<sub>FIFA</sub>) + (w<sub>ELO</sub>·x<sub>ELO</sub>) + (w<sub>Mom</sub>·x<sub>Mom</sub>) + (w<sub>Mkt</sub>·x<sub>Mkt</sub>) + (w<sub>Hist</sub>·x<sub>Hist</sub>) + (w<sub>Anf</sub>·x<sub>Anf</sub>)
-                </span>
-                <br />
-                <span className="text-white/30 text-xs">onde cada </span>
-                <span className="text-white/60 text-xs font-mono">w</span>
-                <span className="text-white/30 text-xs"> é o peso do componente e cada </span>
-                <span className="text-white/60 text-xs font-mono">x</span>
-                <span className="text-white/30 text-xs"> o valor normalizado [0, 1]</span>
-              </div>
-            </div>
-
-            {/* Pillars */}
-            <div className="overflow-x-auto rounded-2xl border border-brand-dark/10">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-brand-dark/5">
-                    <th className="text-left px-5 py-4 font-montserrat font-black uppercase tracking-widest text-xs text-brand-dark">Componente</th>
-                    <th className="text-center px-5 py-4 font-montserrat font-black uppercase tracking-widest text-xs text-brand-dark">Impacto</th>
-                    <th className="text-left px-5 py-4 font-montserrat font-black uppercase tracking-widest text-xs text-brand-dark hidden md:table-cell">Origem</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    { label: 'Valor de Mercado', pct: '32.8%', pctNum: 32.8, origin: 'Valor agregado do elenco (Milhões de EUR)' },
-                    { label: 'Histórico Copas',  pct: '29.5%', pctNum: 29.5, origin: 'Score ponderado de participações e melhor resultado histórico' },
-                    { label: 'ELO Rating',       pct: '23.0%', pctNum: 23.0, origin: 'Rating competitivo atual (eloratings.net)' },
-                    { label: 'Momento',          pct: '9.8%',  pctNum: 9.8,  origin: 'Variação do ELO nos últimos 12 meses' },
-                    { label: 'Anfitrião',        pct: '3.3%',  pctNum: 3.3,  origin: 'Flag binária — vantagem para USA, MEX e CAN' },
-                    { label: 'FIFA',             pct: '1.6%',  pctNum: 1.6,  origin: 'Pontuação institucional oficial (FIFA_Current_Points)' },
-                  ].map((row, i) => (
-                    <tr key={i} className="border-t border-brand-dark/5 hover:bg-brand-green/5 transition-colors">
-                      <td className="px-5 py-4 font-black text-brand-dark">{row.label}</td>
-                      <td className="px-5 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="flex-1 bg-brand-dark/10 rounded-full h-2 hidden sm:block">
-                            <div className="bg-brand-green h-2 rounded-full transition-all" style={{ width: `${(row.pctNum / 33) * 100}%` }}></div>
-                          </div>
-                          <span className="font-black text-brand-green font-mono text-sm whitespace-nowrap">{row.pct}</span>
-                        </div>
-                      </td>
-                      <td className="px-5 py-4 text-brand-dark/50 text-xs hidden md:table-cell">{row.origin}</td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <tr className="border-t-2 border-brand-dark/10 bg-brand-dark/5">
-                    <td className="px-5 py-3 font-montserrat font-black text-xs uppercase tracking-widest text-brand-dark">Total</td>
-                    <td className="px-5 py-3 text-center font-black text-brand-green font-mono">100%</td>
-                    <td className="hidden md:table-cell"></td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        {/* SECTION 2: PARÂMETROS DE AJUSTE */}
-        <section>
-          <div className="flex items-center gap-4 mb-8">
-            <div className="p-2 bg-brand-yellow/20 rounded-xl">
-              <Sliders className="w-5 h-5 text-brand-yellow" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black text-brand-yellow uppercase tracking-[0.2em]">Seção 02</p>
-              <h3 className="text-2xl font-montserrat font-black text-brand-dark uppercase tracking-tight">Parâmetros de Ajuste</h3>
-            </div>
-          </div>
-
-          <p className="text-brand-dark/70 leading-relaxed mb-8">
-            Depois de calcular a força resultante, aplicamos ajustes calibrados para transformar esse indicador em uma força final utilizável na simulação. Esses parâmetros controlam o quanto o modelo separa favoritos e azarões antes de repartir a média fixa de gols.
+        <section className="py-10">
+          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">1. A pergunta estatística</h2>
+          <p className="leading-relaxed text-brand-dark/75">
+            A pergunta central é simples: se duas seleções se enfrentam hoje, qual é a chance de cada placar possível?
+            A resposta não começa tentando adivinhar diretamente o campeão. Ela começa em uma unidade menor e observável:
+            a partida. Uma vez que sabemos estimar jogos individuais, conseguimos encadear esses jogos para simular fase
+            de grupos, mata-mata e campanha completa.
           </p>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Formula span full */}
-            <div className="md:col-span-2 bg-brand-dark rounded-2xl p-6 text-center font-mono">
-              <p className="text-brand-neon text-[10px] uppercase tracking-[0.2em] font-black mb-3">Transformação Final</p>
-              <p className="text-2xl md:text-3xl font-black font-montserrat text-white">
-                Força Final = <span className="text-brand-yellow">Offset</span> + (F<sub>res</sub>)<sup className="text-brand-neon">Elasticidade</sup>
+          <ol className="mt-6 grid gap-3 text-sm text-brand-dark/74 sm:grid-cols-2">
+            {steps.map((step, index) => (
+              <li key={step} className="flex gap-3 border border-brand-dark/10 p-4" style={{ borderRadius: 8 }}>
+                <span className="font-mono text-base font-black text-brand-green">{index + 1}</span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="border-t border-brand-dark/15 py-10">
+          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">2. Das evidências ao índice de força</h2>
+          <p className="leading-relaxed text-brand-dark/75">
+            Cada fonte de informação tem escala própria. Valor de mercado pode estar em milhões de euros; rating ELO pode
+            estar em pontos; vantagem de sede pode ser uma variável binária. Para combinar grandezas tão diferentes, primeiro
+            colocamos tudo na mesma escala. Para uma seleção <span className="font-serif italic">i</span> e um componente
+            <span className="font-serif italic"> k</span>, usamos uma normalização min-max:
+          </p>
+
+          <Equation
+            number="1"
+            title="Normalização dos componentes"
+            note="Depois dessa transformação, 0 representa o menor valor observado entre as seleções e 1 representa o maior valor observado naquele componente."
+          >
+            <span>
+              x<sub>i,k</sub> =
+              <span className="mx-3 inline-flex flex-col align-middle">
+                <span>z<sub>i,k</sub> - min(z<sub>k</sub>)</span>
+                <span className="border-t border-brand-dark pt-1">max(z<sub>k</sub>) - min(z<sub>k</sub>)</span>
+              </span>
+            </span>
+          </Equation>
+
+          <p className="leading-relaxed text-brand-dark/75">
+            Em seguida, os seis componentes normalizados são agregados por média ponderada. Os pesos não dizem que um fator
+            é o único determinante do futebol; eles dizem quanto cada evidência contribui para a força pré-torneio usada
+            pelo simulador.
+          </p>
+
+          <Equation
+            number="2"
+            title="Força resultante"
+            note="A divisão pela soma dos pesos mantém o índice em escala interpretável e evita que o valor final dependa apenas da quantidade de componentes incluídos."
+          >
+            <span>
+              F<sup>res</sup><sub>i</sub> =
+              <span className="mx-3 inline-flex flex-col align-middle">
+                <span>Σ<sub>k=1</sub><sup>6</sup> w<sub>k</sub>x<sub>i,k</sub></span>
+                <span className="border-t border-brand-dark pt-1">Σ<sub>k=1</sub><sup>6</sup> w<sub>k</sub></span>
+              </span>
+            </span>
+          </Equation>
+
+          <div className="mt-8 overflow-x-auto border border-brand-dark/12" style={{ borderRadius: 8 }}>
+            <table className="w-full min-w-[760px] border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-brand-dark/12 bg-brand-light/60 text-left">
+                  <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Componente</th>
+                  <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Símbolo</th>
+                  <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Peso</th>
+                  <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Impacto</th>
+                  <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Interpretação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {weights.map((row) => (
+                  <tr key={row.component} className="border-b border-brand-dark/8 last:border-b-0">
+                    <td className="px-4 py-4 font-bold text-brand-dark">{row.component}</td>
+                    <td className="px-4 py-4 font-serif text-lg italic">{row.symbol}</td>
+                    <td className="px-4 py-4 font-mono font-bold">{row.weight}</td>
+                    <td className="px-4 py-4 font-mono font-bold text-brand-green">{row.impact}</td>
+                    <td className="px-4 py-4 leading-relaxed text-brand-dark/65">{row.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="border-t border-brand-dark/15 py-10">
+          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">3. Da força ao número esperado de gols</h2>
+          <p className="leading-relaxed text-brand-dark/75">
+            O índice de força ainda não é uma probabilidade de vitória. Ele precisa ser convertido para a linguagem do jogo:
+            gols. Antes dessa conversão, aplicamos uma transformação com dois parâmetros. A elasticidade aumenta levemente
+            a separação entre seleções fortes no topo; o offset impede que seleções mais fracas tenham força próxima de zero.
+          </p>
+
+          <Equation
+            number="3"
+            title="Transformação da força"
+            note="No modelo atual, α = 0,13 e γ = 1,15. Em termos práticos, isso preserva a possibilidade de surpresa sem apagar a diferença entre favoritos e azarões."
+          >
+            <span>
+              F<sub>i</sub> = α + (F<sup>res</sup><sub>i</sub>)<sup>γ</sup>
+            </span>
+          </Equation>
+
+          <p className="leading-relaxed text-brand-dark/75">
+            Para uma partida entre as seleções <span className="font-serif italic">i</span> e
+            <span className="font-serif italic"> j</span>, a média total de gols é fixada em
+            <span className="font-mono font-bold"> m = 3,00</span>. O modelo então reparte esse total de acordo com a força
+            relativa das duas equipes. Se as forças forem iguais, cada lado recebe metade da média. Se uma equipe for mais
+            forte, ela recebe uma parcela maior.
+          </p>
+
+          <Equation
+            number="4"
+            title="Partição da média total de gols"
+            note="λi e λj são as médias esperadas de gols de cada seleção no confronto específico. Elas são o elo entre o índice de força e a matriz de placares."
+          >
+            <span>
+              π<sub>i</sub> =
+              <span className="mx-3 inline-flex flex-col align-middle">
+                <span>F<sub>i</sub></span>
+                <span className="border-t border-brand-dark pt-1">F<sub>i</sub> + F<sub>j</sub></span>
+              </span>
+              ,&nbsp; λ<sub>i</sub> = mπ<sub>i</sub>,&nbsp; λ<sub>j</sub> = m(1 - π<sub>i</sub>)
+            </span>
+          </Equation>
+        </section>
+
+        <section className="border-t border-brand-dark/15 py-10">
+          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">4. Da média de gols à probabilidade de placar</h2>
+          <p className="leading-relaxed text-brand-dark/75">
+            Com as médias <span className="font-serif italic">λ</span> definidas, usamos a distribuição de Poisson para
+            calcular a chance de cada contagem de gols. Essa escolha é comum em modelagem de futebol porque gols são eventos
+            discretos, raros em comparação ao tempo total de jogo, e bem representados por uma taxa média de ocorrência.
+          </p>
+
+          <Equation
+            number="5"
+            title="Distribuição de Poisson para o placar"
+            note="A matriz conjunta combina todos os pares de placar: 0 a 0, 1 a 0, 0 a 1, 2 a 1, 3 a 2 e assim por diante."
+          >
+            <span>
+              P<sub>0</sub>(G<sub>i</sub>=a, G<sub>j</sub>=b) =
+              e<sup>-(λ<sub>i</sub>+λ<sub>j</sub>)</sup>
+              <span className="mx-3 inline-flex flex-col align-middle">
+                <span>λ<sub>i</sub><sup>a</sup></span>
+                <span className="border-t border-brand-dark pt-1">a!</span>
+              </span>
+              <span className="inline-flex flex-col align-middle">
+                <span>λ<sub>j</sub><sup>b</sup></span>
+                <span className="border-t border-brand-dark pt-1">b!</span>
+              </span>
+            </span>
+          </Equation>
+
+          <p className="leading-relaxed text-brand-dark/75">
+            O futebol, porém, tem uma particularidade: placares baixos são mais estruturados do que a independência pura
+            sugere. Um jogo truncado aumenta a chance de 0 a 0 ou 1 a 1 e altera a frequência de 1 a 0 e 0 a 1. Para lidar
+            com isso, aplicamos a correção de Dixon-Coles nos quatro placares baixos.
+          </p>
+
+          <Equation
+            number="6"
+            title="Correção Dixon-Coles"
+            note="No modelo atual, ρ = -0,13. O fator τ só altera os placares baixos; para os demais resultados, a probabilidade permanece a da Poisson independente."
+          >
+            <span>
+              P(a,b) = τ(a,b; λ<sub>i</sub>, λ<sub>j</sub>, ρ) P<sub>0</sub>(a,b)
+            </span>
+          </Equation>
+
+          <div className="overflow-x-auto border border-brand-dark/12" style={{ borderRadius: 8 }}>
+            <table className="w-full min-w-[680px] text-sm">
+              <thead>
+                <tr className="border-b border-brand-dark/12 bg-brand-light/60 text-left">
+                  <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Condição</th>
+                  <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Fator τ</th>
+                  <th className="px-4 py-3 font-montserrat text-[11px] font-black uppercase tracking-[0.16em]">Leitura intuitiva</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-brand-dark/8">
+                  <td className="px-4 py-4 font-mono">a = 0, b = 0</td>
+                  <td className="px-4 py-4 font-serif text-lg">1 - λ<sub>i</sub>λ<sub>j</sub>ρ</td>
+                  <td className="px-4 py-4 text-brand-dark/65">Ajusta a frequência de empates sem gols.</td>
+                </tr>
+                <tr className="border-b border-brand-dark/8">
+                  <td className="px-4 py-4 font-mono">a = 0, b = 1</td>
+                  <td className="px-4 py-4 font-serif text-lg">1 + λ<sub>i</sub>ρ</td>
+                  <td className="px-4 py-4 text-brand-dark/65">Corrige vitórias mínimas da equipe visitante.</td>
+                </tr>
+                <tr className="border-b border-brand-dark/8">
+                  <td className="px-4 py-4 font-mono">a = 1, b = 0</td>
+                  <td className="px-4 py-4 font-serif text-lg">1 + λ<sub>j</sub>ρ</td>
+                  <td className="px-4 py-4 text-brand-dark/65">Corrige vitórias mínimas da equipe mandante.</td>
+                </tr>
+                <tr className="border-b border-brand-dark/8">
+                  <td className="px-4 py-4 font-mono">a = 1, b = 1</td>
+                  <td className="px-4 py-4 font-serif text-lg">1 - ρ</td>
+                  <td className="px-4 py-4 text-brand-dark/65">Ajusta empates de baixa contagem.</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-4 font-mono">demais placares</td>
+                  <td className="px-4 py-4 font-serif text-lg">1</td>
+                  <td className="px-4 py-4 text-brand-dark/65">Mantém a probabilidade original da Poisson.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <Equation
+            number="7"
+            title="Probabilidades de resultado da partida"
+            note="A vitória, o empate e a derrota são somas de células da matriz de placares, não palpites isolados."
+          >
+            <span>
+              P(i vence) = Σ<sub>a&gt;b</sub> P(a,b),&nbsp;
+              P(empate) = Σ<sub>a=b</sub> P(a,b),&nbsp;
+              P(j vence) = Σ<sub>a&lt;b</sub> P(a,b)
+            </span>
+          </Equation>
+        </section>
+
+        <section className="border-t border-brand-dark/15 py-10">
+          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">5. Da partida ao torneio</h2>
+          <p className="leading-relaxed text-brand-dark/75">
+            Uma Copa do Mundo não é uma única previsão; é uma sequência de dependências. O resultado de um jogo muda
+            classificação, adversários possíveis e caminho no mata-mata. Por isso, depois de obter a matriz de placares
+            de cada confronto, usamos simulação de Monte Carlo: o torneio é repetido <span className="font-mono font-bold">1.000.000</span>
+            de vezes, sempre respeitando a estrutura da competição.
+          </p>
+
+          <Equation
+            number="8"
+            title="Estimativa por frequência de simulação"
+            note="Se uma seleção é campeã em 83.000 de 1.000.000 simulações, sua probabilidade estimada de título é 8,3%."
+          >
+            <span>
+              P̂(E) =
+              <span className="mx-3 inline-flex flex-col align-middle">
+                <span>1</span>
+                <span className="border-t border-brand-dark pt-1">N</span>
+              </span>
+              Σ<sub>r=1</sub><sup>N</sup> I(E ocorre na simulação r)
+            </span>
+          </Equation>
+
+          <p className="leading-relaxed text-brand-dark/75">
+            Essa etapa final produz as probabilidades publicadas: terminar em cada posição do grupo, avançar de fase,
+            chegar às oitavas, quartas, semifinal, final e conquistar o título. A interpretação correta é frequencista:
+            a probabilidade é a proporção de universos simulados em que aquele evento aconteceu.
+          </p>
+        </section>
+
+        <section className="border-t border-brand-dark/15 py-10">
+          <h2 className="mb-5 font-serif text-2xl font-bold normal-case text-brand-dark">6. Como ler o resultado</h2>
+          <div className="grid gap-5 md:grid-cols-3">
+            <div className="border border-brand-dark/12 p-5" style={{ borderRadius: 8 }}>
+              <h3 className="mb-3 font-serif text-xl font-bold normal-case">Probabilidade não é destino</h3>
+              <p className="text-sm leading-relaxed text-brand-dark/68">
+                Um time com 70% de chance ainda perde em 30% dos cenários. O modelo mede incerteza, não certeza.
               </p>
             </div>
-
-            {/* Elasticidade */}
-            <div className="bg-white border border-brand-dark/10 rounded-2xl p-8 shadow-sm hover:border-brand-green/40 transition-colors">
-              <div className="flex items-start gap-4 mb-5">
-                <div className="p-2 bg-brand-green/10 rounded-xl">
-                  <Zap className="w-6 h-6 text-brand-green" />
-                </div>
-                <div>
-                  <h4 className="font-montserrat font-black text-base uppercase tracking-tight text-brand-dark">Elasticidade</h4>
-                  <span className="font-mono font-black text-brand-green text-3xl">1.15</span>
-                </div>
-              </div>
-              <p className="text-brand-dark/70 text-sm leading-relaxed">
-                Age como um <strong className="text-brand-dark">potenciador de elite</strong>. Valores acima de 1.00 amplificam as pequenas diferenças no topo da tabela, transformando vantagens marginais em ganhos competitivos reais.
+            <div className="border border-brand-dark/12 p-5" style={{ borderRadius: 8 }}>
+              <h3 className="mb-3 font-serif text-xl font-bold normal-case">O caminho importa</h3>
+              <p className="text-sm leading-relaxed text-brand-dark/68">
+                Duas seleções de força parecida podem ter chances diferentes por causa do grupo e dos adversários prováveis.
               </p>
-              <div className="mt-4 bg-brand-green/5 border border-brand-green/20 rounded-xl p-3 text-xs text-brand-green font-mono font-bold">
-                f &gt; 1.0 ⟹ vantagem amplificada exponencialmente
-              </div>
             </div>
-
-            {/* Offset */}
-            <div className="bg-white border border-brand-dark/10 rounded-2xl p-8 shadow-sm hover:border-brand-yellow/40 transition-colors">
-              <div className="flex items-start gap-4 mb-5">
-                <div className="p-2 bg-brand-yellow/10 rounded-xl">
-                  <Sliders className="w-6 h-6 text-brand-yellow" />
-                </div>
-                <div>
-                  <h4 className="font-montserrat font-black text-base uppercase tracking-tight text-brand-dark">Offset</h4>
-                  <span className="font-mono font-black text-brand-yellow text-3xl">0.13</span>
-                </div>
-              </div>
-              <p className="text-brand-dark/70 text-sm leading-relaxed">
-                É o <strong className="text-brand-dark">parâmetro de balanceamento</strong>. Reduz a distância relativa entre potências e azarões, garantindo que nenhum time seja "nulo" e que o fator sorte opere sobre uma base mínima.
-              </p>
-              <div className="mt-4 bg-brand-yellow/5 border border-brand-yellow/20 rounded-xl p-3 text-xs text-brand-dark/60 font-mono font-bold">
-                gap = Forte − Offset / Fraco − Offset → mais equilibrado
-              </div>
-            </div>
-
-            {/* Média de Gols */}
-            <div className="md:col-span-2 bg-brand-dark rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-6">
-              <div className="text-center sm:text-left shrink-0">
-                <p className="text-white/30 text-[10px] uppercase tracking-[0.2em] font-black mb-1">Média de Gols</p>
-                <p className="font-mono font-black text-5xl text-brand-neon">3.00</p>
-              </div>
-              <div className="h-px sm:h-14 sm:w-px bg-white/10 w-full sm:w-auto"></div>
-              <p className="text-white/50 text-sm leading-relaxed font-opensans">
-                Define a <strong className="text-white">intensidade ofensiva geral</strong> do torneio. No modelo, este é o total esperado de gols da partida (<strong className="text-white">m</strong>), que depois é dividido entre as seleções conforme suas forças finais.
+            <div className="border border-brand-dark/12 p-5" style={{ borderRadius: 8 }}>
+              <h3 className="mb-3 font-serif text-xl font-bold normal-case">O modelo é pré-torneio</h3>
+              <p className="text-sm leading-relaxed text-brand-dark/68">
+                As estimativas refletem as informações disponíveis antes dos jogos e devem ser atualizadas quando novos dados surgirem.
               </p>
             </div>
           </div>
         </section>
 
-        {/* SECTION 3: CORREÇÃO DIXON-COLES */}
-        <section className="bg-white rounded-3xl shadow-sm border border-brand-dark/5 overflow-hidden">
-          <div className="bg-brand-dark px-8 py-5 flex items-center gap-4">
-            <div className="p-2 bg-brand-neon/20 rounded-xl">
-              <Shield className="w-5 h-5 text-brand-neon" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black text-brand-neon uppercase tracking-[0.2em]">Seção 03</p>
-              <h3 className="text-xl font-montserrat font-black text-white uppercase tracking-tight">Correção Dixon-Coles</h3>
-            </div>
-          </div>
-
-          <div className="p-8 md:p-10 grid md:grid-cols-2 gap-10 items-start">
-            <div>
-              <p className="text-brand-dark/70 leading-relaxed mb-5">
-                Com as médias <strong className="text-brand-dark">m₁</strong> e <strong className="text-brand-dark">m₂</strong> definidas, o modelo calcula a probabilidade de cada placar possível pela <strong className="text-brand-dark">Distribuição de Poisson</strong>. Essa matriz de placares é a base para estimar vitória, empate, derrota e avanço no torneio.
-              </p>
-              <p className="text-brand-dark/70 leading-relaxed mb-5">
-                No entanto, modelos Poisson puros tendem a subestimar placares baixos — como <strong className="text-brand-dark">0-0</strong> e <strong className="text-brand-dark">1-1</strong> — extremamente comuns no futebol.
-              </p>
-              <p className="text-brand-dark/70 leading-relaxed">
-                A correção de <strong className="text-brand-dark">Dixon-Coles</strong> ajusta a probabilidade conjunta dos gols quando os placares esperados são baixos, tornando o modelo muito mais realista em torneios de tiro curto como a Copa do Mundo.
-              </p>
-            </div>
-
-            <div className="space-y-5">
-              <div className="bg-brand-dark rounded-2xl p-6">
-                <p className="text-white/30 text-[10px] uppercase tracking-[0.2em] font-black mb-3">Parâmetro de Correlação</p>
-                <div className="flex items-baseline gap-3">
-                  <span className="font-mono font-black text-6xl text-brand-neon">ρ</span>
-                  <span className="font-mono font-black text-3xl text-white">= −0.13</span>
-                </div>
-              </div>
-
-              <div className="bg-brand-green/5 border border-brand-green/20 rounded-2xl p-5">
-                <p className="text-brand-green text-[10px] font-black uppercase tracking-[0.15em] mb-2">Por que −0.13?</p>
-                <p className="text-brand-dark/70 text-sm leading-relaxed">
-                  Ajuste empírico clássico da literatura de modelagem de futebol. Um ρ <strong className="text-brand-dark">negativo</strong> corrige a dependência entre ataques e defesas em situações de poucos gols, evitando que o modelo ignore confrontos defensivos.
-                </p>
-              </div>
-
-              <div>
-                <p className="text-[10px] text-brand-dark/40 uppercase tracking-[0.15em] font-black mb-3">Placares corrigidos</p>
-                <div className="flex gap-3 flex-wrap">
-                  {['0 × 0', '0 × 1', '1 × 0', '1 × 1'].map(s => (
-                    <span key={s} className="font-mono font-black text-sm bg-brand-dark text-brand-neon px-4 py-2 rounded-xl">{s}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </div>
-    </div>
+        <footer className="border-t-2 border-brand-dark py-8">
+          <h2 className="mb-4 font-serif text-2xl font-bold normal-case text-brand-dark">Conclusão</h2>
+          <p className="text-lg leading-relaxed text-brand-dark/75">
+            A metodologia segue uma cadeia transparente: dados viram força, força vira média de gols, média de gols vira
+            distribuição de placares, e placares simulados viram probabilidades de campanha. Esse encadeamento permite que
+            o resultado final seja explicado passo a passo. A pergunta deixa de ser “quem vai ganhar?” e passa a ser
+            “em quantos cenários plausíveis cada seleção chega a cada fase?”.
+          </p>
+        </footer>
+      </article>
+    </main>
   );
 };
 
