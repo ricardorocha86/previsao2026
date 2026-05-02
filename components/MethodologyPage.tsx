@@ -39,11 +39,11 @@ const weights = [
     description: 'Resume tradição, participações e melhor desempenho histórico no torneio.',
   },
   {
-    component: 'Vantagem de sede',
-    variable: 'Sede',
+    component: 'Anfitrião',
+    variable: 'Anfitrião',
     impact: '3,3%',
     coefficient: '0,033',
-    description: 'Inclui o benefício estrutural de atuar como país-sede.',
+    description: 'Inclui o benefício estrutural de atuar como anfitrião do torneio.',
   },
 ];
 
@@ -158,7 +158,7 @@ const MethodologyPage: React.FC = () => {
           <p className="leading-relaxed text-brand-dark/75">
             A primeira etapa é construir um preditor linear para resumir a força pré-torneio de cada seleção. Para isso,
             usamos seis informações: pontuação FIFA, rating ELO, momento recente, valor de mercado, histórico em Copas e
-            vantagem de sede. A ideia é combinar dimensões complementares: desempenho institucional, força competitiva,
+            condição de anfitrião. A ideia é combinar dimensões complementares: desempenho institucional, força competitiva,
             tendência recente, qualidade do elenco, tradição no torneio e contexto geográfico da Copa de 2026.
           </p>
 
@@ -180,7 +180,7 @@ const MethodologyPage: React.FC = () => {
           <Equation
             number="1"
             title="Preditor linear de força"
-            tex={String.raw`\begin{aligned}\mathrm{For\c{c}a}={}&w_1\cdot\mathrm{FIFA}\\&+w_2\cdot\mathrm{ELO}\\&+w_3\cdot\mathrm{Momento}\\&+w_4\cdot\mathrm{Mercado}\\&+w_5\cdot\mathrm{Hist\acute{o}rico}\\&+w_6\cdot\mathrm{Sede}\end{aligned}`}
+            tex={String.raw`\begin{aligned}\mathrm{For\c{c}a}={}&w_1\cdot\mathrm{FIFA}\\&+w_2\cdot\mathrm{ELO}\\&+w_3\cdot\mathrm{Momento}\\&+w_4\cdot\mathrm{Mercado}\\&+w_5\cdot\mathrm{Hist\acute{o}rico}\\&+w_6\cdot\mathrm{Anfitri\tilde{a}o}\end{aligned}`}
             note="A equação é calculada para uma seleção por vez. Cada variável representa o valor normalizado daquela seleção no respectivo componente."
           />
 
@@ -216,7 +216,7 @@ const MethodologyPage: React.FC = () => {
           <Equation
             number="2"
             title="Força com os coeficientes calibrados"
-            tex={String.raw`\begin{aligned}\mathrm{For\c{c}a}={}&0{,}016\cdot\mathrm{FIFA}\\&+0{,}230\cdot\mathrm{ELO}\\&+0{,}098\cdot\mathrm{Momento}\\&+0{,}328\cdot\mathrm{Mercado}\\&+0{,}295\cdot\mathrm{Hist\acute{o}rico}\\&+0{,}033\cdot\mathrm{Sede}\end{aligned}`}
+            tex={String.raw`\begin{aligned}\mathrm{For\c{c}a}={}&0{,}016\cdot\mathrm{FIFA}\\&+0{,}230\cdot\mathrm{ELO}\\&+0{,}098\cdot\mathrm{Momento}\\&+0{,}328\cdot\mathrm{Mercado}\\&+0{,}295\cdot\mathrm{Hist\acute{o}rico}\\&+0{,}033\cdot\mathrm{Anfitri\tilde{a}o}\end{aligned}`}
             note="Os percentuais da tabela são usados como proporções na equação: por exemplo, 32,8% entra como 0,328."
           />
         </section>
