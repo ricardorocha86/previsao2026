@@ -256,13 +256,13 @@ const MethodologyPage: React.FC = () => {
           <Equation
             number="4"
             title="Divisão da média total de gols"
-            tex={String.raw`\begin{aligned}\lambda_A&=\mu\frac{\mathrm{For\c{c}a}_{A,\mathrm{ajustada}}}{\mathrm{For\c{c}a}_{A,\mathrm{ajustada}}+\mathrm{For\c{c}a}_{B,\mathrm{ajustada}}}\\[0.35em]\lambda_B&=\mu\frac{\mathrm{For\c{c}a}_{B,\mathrm{ajustada}}}{\mathrm{For\c{c}a}_{A,\mathrm{ajustada}}+\mathrm{For\c{c}a}_{B,\mathrm{ajustada}}}\end{aligned}`}
+            tex={String.raw`\begin{aligned}\lambda_A&=\mu\frac{F_A}{F_A+F_B}\\[0.35em]\lambda_B&=\mu\frac{F_B}{F_A+F_B}\end{aligned}`}
             note="A forma geral reparte a média total μ entre as equipes. No projeto, μ = 3,00 gols por partida."
           />
 
           <p className="leading-relaxed text-brand-dark/75">
             Aqui, <SymbolPill tex={String.raw`\lambda_A`} /> e <SymbolPill tex={String.raw`\lambda_B`} /> são os gols esperados de cada seleção,
-            <SymbolPill tex={String.raw`\mathrm{For\c{c}a}_{A,\mathrm{ajustada}}`} /> e <SymbolPill tex={String.raw`\mathrm{For\c{c}a}_{B,\mathrm{ajustada}}`} /> são as forças ajustadas no confronto, e
+            <SymbolPill tex={String.raw`F_A`} /> e <SymbolPill tex={String.raw`F_B`} /> são as forças ajustadas de cada seleção no confronto, e
             <SymbolPill tex={String.raw`\mu`} /> é a média total de gols do jogo.
           </p>
         </section>
