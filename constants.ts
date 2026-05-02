@@ -150,13 +150,13 @@ export const RESEARCHERS: Researcher[] = [
     affiliation: 'UFSCar', image: '/assets/fotos/luis-ernesto-salasar.webp',
     lattes: 'http://lattes.cnpq.br/5464564215528609',
   },
-  // Membros
   {
-    id: '1', name: 'Fernando Humberto de Almeida Moraes Neto',
+    id: '1', name: 'Fernando Humberto de Almeida Moraes Neto', coord: true,
     affiliation: 'UFMT', image: '/assets/fotos/fernando-humberto.webp',
     linkedin: 'https://www.linkedin.com/in/fernandomoraesds/',
     lattes: 'http://lattes.cnpq.br/5446300739482164',
   },
+  // Membros
   {
     id: '5', name: 'David Franco Regalado',
     affiliation: 'UFBA / Senai-Cimatec', image: '/assets/fotos/david-franco.webp',
