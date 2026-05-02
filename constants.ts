@@ -246,12 +246,6 @@ export const RESEARCHERS: Researcher[] = [
     affiliation: 'UFBA', image: '/assets/fotos/leonardo-rodrigues.webp',
   },
   {
-    id: '22', name: 'ANDERSON LUIZ ARA SOUZA',
-    affiliation: 'UFPR', image: '/assets/fotos/anderson-ara.webp',
-    linkedin: 'https://www.linkedin.com/in/andersonara',
-    lattes: 'http://lattes.cnpq.br/8916772290938469',
-  },
-  {
     id: '23', name: 'Diego Carvalho do Nascimento',
     affiliation: 'NEOMA Business School', image: '/assets/fotos/diego-nascimento.webp',
     linkedin: 'https://www.linkedin.com/in/dnascimento05/',
