@@ -1,20 +1,42 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Previsão Esportiva
 
-# Run and deploy your AI Studio app
+Site público do projeto Previsão Esportiva para consulta de probabilidades, metodologia, produção científica, repercussão na mídia e equipe.
 
-This contains everything you need to run your app locally.
+## Stack
 
-View your app in AI Studio: https://ai.studio/apps/drive/1g_ZvOTIINCbDO2HHsM8GJ_92kezjh46s
+- React 18
+- Vite
+- TypeScript
+- Tailwind CSS
+- KaTeX para fórmulas matemáticas
+- Lucide React para ícones
 
-## Run Locally
+## Como Rodar
 
-**Prerequisites:**  Node.js
+1. Instale as dependências:
+   ```bash
+   npm install
+   ```
+2. Rode o servidor local:
+   ```bash
+   npm run dev
+   ```
+3. Gere o build de produção:
+   ```bash
+   npm run build
+   ```
+4. Visualize o build:
+   ```bash
+   npm run preview
+   ```
 
+## Organização Dos Dados
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- `data/worldCupTeams.ts`: seleções usadas em comparações e metadados esportivos.
+- `data/researchers.ts`: integrantes do projeto.
+- `data/publications.ts`: publicações acadêmicas.
+- `data/mediaMentions.ts`: reportagens e citações na mídia.
+- `assets/*.json`: dados de simulação e confrontos da Copa 2026.
+- `public/assets`: arquivos públicos servidos diretamente em `/assets`.
+
+O app não depende mais de API key no frontend.

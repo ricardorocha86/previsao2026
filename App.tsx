@@ -1,28 +1,95 @@
-
-import React, { useState } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
+import { ArrowUpRight, Instagram, Mail, Menu, X } from 'lucide-react';
 import { Logo } from './components/Logo';
 import Hero from './components/Hero';
-import WorldCupHub from './components/WorldCupHub';
-import TeamPage from './components/TeamPage';
-import SciencePage from './components/SciencePage';
-import MediaPage from './components/MediaPage';
-import MethodologyPage from './components/MethodologyPage';
-import { Menu, X, Instagram, Mail, ArrowUpRight } from 'lucide-react';
 
 type ViewState = 'home' | 'copa' | 'team' | 'science' | 'media' | 'methodology';
 
+const WorldCupHub = lazy(() => import('./components/WorldCupHub'));
+const TeamPage = lazy(() => import('./components/TeamPage'));
+const SciencePage = lazy(() => import('./components/SciencePage'));
+const MediaPage = lazy(() => import('./components/MediaPage'));
+const MethodologyPage = lazy(() => import('./components/MethodologyPage'));
+
+const ROUTES: Record<ViewState, string> = {
+  home: '/',
+  copa: '/copa-2026',
+  methodology: '/metodologia',
+  science: '/pesquisa',
+  media: '/midia',
+  team: '/equipe',
+};
+
+const NAV_ITEMS: Array<{ view: ViewState; label: string; mobileLabel?: string }> = [
+  { view: 'home', label: 'Início' },
+  { view: 'copa', label: 'Copa 2026' },
+  { view: 'methodology', label: 'Metodologia' },
+  { view: 'science', label: 'Pesquisa', mobileLabel: 'Produção Científica' },
+  { view: 'media', label: 'Na Mídia' },
+  { view: 'team', label: 'Equipe' },
+];
+
+const HOME_LINKS: Array<{ title: string; description: string; view: ViewState }> = [
+  {
+    title: 'Copa 2026',
+    description: 'Probabilidades, confrontos e sínteses do torneio.',
+    view: 'copa',
+  },
+  {
+    title: 'Metodologia',
+    description: 'Como as estimativas são construídas e interpretadas.',
+    view: 'methodology',
+  },
+  {
+    title: 'Pesquisa',
+    description: 'Publicações e referências acadêmicas do grupo.',
+    view: 'science',
+  },
+  {
+    title: 'Na mídia',
+    description: 'Reportagens e registros de divulgação científica.',
+    view: 'media',
+  },
+  {
+    title: 'Equipe',
+    description: 'Pesquisadores e instituições envolvidas.',
+    view: 'team',
+  },
+];
+
+const getViewFromLocation = (): ViewState => {
+  const hashPath = window.location.hash.startsWith('#/') ? window.location.hash.slice(1) : '';
+  const currentPath = hashPath || window.location.pathname;
+  return (Object.entries(ROUTES).find(([, path]) => path === currentPath)?.[0] as ViewState) || 'home';
+};
+
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentView, setCurrentView] = useState<ViewState>('home');
+  const [currentView, setCurrentView] = useState<ViewState>(() => getViewFromLocation());
+
+  useEffect(() => {
+    const syncView = () => setCurrentView(getViewFromLocation());
+    window.addEventListener('popstate', syncView);
+    window.addEventListener('hashchange', syncView);
+    return () => {
+      window.removeEventListener('popstate', syncView);
+      window.removeEventListener('hashchange', syncView);
+    };
+  }, []);
 
   const navigateTo = (view: ViewState) => {
+    const targetPath = ROUTES[view];
+    if (window.location.pathname !== targetPath || window.location.hash) {
+      window.history.pushState(null, '', targetPath);
+    }
     setCurrentView(view);
     setIsMenuOpen(false);
     window.scrollTo(0, 0);
   };
 
   const NavItem: React.FC<{ view: ViewState; label: string }> = ({ view, label }) => (
-    <button 
+    <button
+      type="button"
       onClick={() => navigateTo(view)}
       className={`font-montserrat font-bold text-sm uppercase tracking-widest transition-colors pb-1 ${currentView === view ? 'text-brand-green border-b-2 border-brand-green' : 'text-brand-dark/40 hover:text-brand-green'}`}
     >
@@ -32,47 +99,50 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-brand-light font-opensans selection:bg-brand-green selection:text-white flex flex-col text-brand-dark">
-      {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-brand-dark/10 shadow-sm">
         <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
-            <div 
-              className="flex-shrink-0 flex items-center gap-2 cursor-pointer group"
+            <button
+              type="button"
+              className="flex-shrink-0 flex items-center gap-2 cursor-pointer group text-left"
               onClick={() => navigateTo('home')}
+              aria-label="Ir para o início"
             >
               <Logo className="h-10 md:h-12 group-hover:opacity-80 transition-opacity" />
-            </div>
-            
-            {/* Desktop Menu */}
+            </button>
+
             <div className="hidden md:flex items-center space-x-8">
-              <NavItem view="home" label="Início" />
-              <NavItem view="copa" label="Copa 2026" />
-              <NavItem view="methodology" label="Metodologia" />
-              <NavItem view="science" label="Pesquisa" />
-              <NavItem view="media" label="Na Mídia" />
-              <NavItem view="team" label="Equipe" />
-              
+              {NAV_ITEMS.map((item) => (
+                <NavItem key={item.view} view={item.view} label={item.label} />
+              ))}
             </div>
 
-            {/* Mobile Menu Button */}
             <div className="md:hidden">
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-brand-dark p-2">
+              <button
+                type="button"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="text-brand-dark p-2"
+                aria-label={isMenuOpen ? 'Fechar menu' : 'Abrir menu'}
+              >
                 {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </div>
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden bg-white border-t border-brand-dark/10 absolute w-full shadow-2xl h-screen z-50">
             <div className="px-4 pt-4 pb-8 space-y-2">
-              <button onClick={() => navigateTo('home')} className={`block w-full text-left px-3 py-6 text-xl font-montserrat font-bold border-b border-brand-dark/5 transition-colors ${currentView === 'home' ? 'text-brand-green bg-brand-green/5' : 'text-brand-dark'}`}>Início</button>
-              <button onClick={() => navigateTo('copa')} className={`block w-full text-left px-3 py-6 text-xl font-montserrat font-bold border-b border-brand-dark/5 transition-colors ${currentView === 'copa' ? 'text-brand-green bg-brand-green/5' : 'text-brand-dark'}`}>Copa 2026</button>
-              <button onClick={() => navigateTo('methodology')} className={`block w-full text-left px-3 py-6 text-xl font-montserrat font-bold border-b border-brand-dark/5 transition-colors ${currentView === 'methodology' ? 'text-brand-green bg-brand-green/5' : 'text-brand-dark'}`}>Metodologia</button>
-              <button onClick={() => navigateTo('science')} className={`block w-full text-left px-3 py-6 text-xl font-montserrat font-bold border-b border-brand-dark/5 transition-colors ${currentView === 'science' ? 'text-brand-green bg-brand-green/5' : 'text-brand-dark'}`}>Produção Científica</button>
-              <button onClick={() => navigateTo('media')} className={`block w-full text-left px-3 py-6 text-xl font-montserrat font-bold border-b border-brand-dark/5 transition-colors ${currentView === 'media' ? 'text-brand-green bg-brand-green/5' : 'text-brand-dark'}`}>Na Mídia</button>
-              <button onClick={() => navigateTo('team')} className={`block w-full text-left px-3 py-6 text-xl font-montserrat font-bold border-b border-brand-dark/5 transition-colors ${currentView === 'team' ? 'text-brand-green bg-brand-green/5' : 'text-brand-dark'}`}>Equipe</button>
+              {NAV_ITEMS.map((item) => (
+                <button
+                  key={item.view}
+                  type="button"
+                  onClick={() => navigateTo(item.view)}
+                  className={`block w-full text-left px-3 py-6 text-xl font-montserrat font-bold border-b border-brand-dark/5 transition-colors ${currentView === item.view ? 'text-brand-green bg-brand-green/5' : 'text-brand-dark'}`}
+                >
+                  {item.mobileLabel ?? item.label}
+                </button>
+              ))}
             </div>
           </div>
         )}
@@ -98,33 +168,7 @@ export default function App() {
                 </div>
 
                 <div className="border-t border-brand-dark/10">
-                  {[
-                    {
-                      title: 'Copa 2026',
-                      description: 'Probabilidades, confrontos e sínteses do torneio.',
-                      view: 'copa' as ViewState,
-                    },
-                    {
-                      title: 'Metodologia',
-                      description: 'Como as estimativas são construídas e interpretadas.',
-                      view: 'methodology' as ViewState,
-                    },
-                    {
-                      title: 'Pesquisa',
-                      description: 'Publicações e referências acadêmicas do grupo.',
-                      view: 'science' as ViewState,
-                    },
-                    {
-                      title: 'Na mídia',
-                      description: 'Reportagens e registros de divulgação científica.',
-                      view: 'media' as ViewState,
-                    },
-                    {
-                      title: 'Equipe',
-                      description: 'Pesquisadores e instituições envolvidas.',
-                      view: 'team' as ViewState,
-                    },
-                  ].map((item) => (
+                  {HOME_LINKS.map((item) => (
                     <button
                       key={item.title}
                       type="button"
@@ -137,7 +181,7 @@ export default function App() {
                       <span className="text-sm leading-relaxed text-brand-dark/60">
                         {item.description}
                       </span>
-                      <span className="inline-flex h-10 w-10 items-center justify-center border border-brand-dark/10 text-brand-green transition group-hover:border-brand-green group-hover:bg-brand-green group-hover:text-white" style={{ borderRadius: 8 }}>
+                      <span className="inline-flex h-10 w-10 items-center justify-center border border-brand-dark/10 text-brand-green transition group-hover:border-brand-green group-hover:bg-brand-green group-hover:text-white rounded-lg">
                         <ArrowUpRight className="h-4 w-4" />
                       </span>
                     </button>
@@ -147,11 +191,16 @@ export default function App() {
             </section>
           </>
         )}
-        {currentView === 'copa' && <WorldCupHub />}
-        {currentView === 'team' && <TeamPage />}
-        {currentView === 'science' && <SciencePage />}
-        {currentView === 'media' && <MediaPage />}
-        {currentView === 'methodology' && <MethodologyPage />}
+
+        {currentView !== 'home' && (
+          <Suspense fallback={<div className="min-h-[60vh] bg-brand-light" />}>
+            {currentView === 'copa' && <WorldCupHub />}
+            {currentView === 'team' && <TeamPage />}
+            {currentView === 'science' && <SciencePage />}
+            {currentView === 'media' && <MediaPage />}
+            {currentView === 'methodology' && <MethodologyPage />}
+          </Suspense>
+        )}
       </main>
 
       <footer className="bg-white text-brand-dark border-t border-brand-dark/10">
@@ -167,8 +216,7 @@ export default function App() {
               href="https://www.instagram.com/previsaoesportiva/"
               target="_blank"
               rel="noreferrer"
-              className="mt-6 inline-flex items-center gap-3 bg-brand-green px-6 py-4 font-montserrat text-sm font-bold uppercase text-white transition hover:bg-brand-grad2 md:mt-0"
-              style={{ borderRadius: 8 }}
+              className="mt-6 inline-flex items-center gap-3 bg-brand-green px-6 py-4 font-montserrat text-sm font-bold uppercase text-white transition hover:bg-brand-grad2 md:mt-0 rounded-lg"
             >
               <Instagram className="h-5 w-5" />
               @previsaoesportiva
@@ -179,7 +227,7 @@ export default function App() {
 
         <div className="max-w-[1080px] mx-auto px-4 py-14 grid gap-12 lg:grid-cols-[1.25fr_0.85fr_0.9fr]">
           <div>
-            <button onClick={() => navigateTo('home')} className="inline-block text-left">
+            <button type="button" onClick={() => navigateTo('home')} className="inline-block text-left">
               <Logo className="h-16 mb-5 origin-left" />
             </button>
             <p className="max-w-lg text-sm leading-relaxed text-brand-dark/68">
@@ -211,11 +259,11 @@ export default function App() {
           <div>
             <h4 className="text-brand-dark font-montserrat font-bold uppercase tracking-wider mb-5 text-sm">Navegação</h4>
             <div className="grid grid-cols-2 gap-3 text-sm text-brand-dark/68">
-              <button onClick={() => navigateTo('copa')} className="text-left hover:text-brand-green transition">Resultados</button>
-              <button onClick={() => navigateTo('methodology')} className="text-left hover:text-brand-green transition">Metodologia</button>
-              <button onClick={() => navigateTo('science')} className="text-left hover:text-brand-green transition">Pesquisa</button>
-              <button onClick={() => navigateTo('media')} className="text-left hover:text-brand-green transition">Na mídia</button>
-              <button onClick={() => navigateTo('team')} className="text-left hover:text-brand-green transition">Equipe</button>
+              <button type="button" onClick={() => navigateTo('copa')} className="text-left hover:text-brand-green transition">Resultados</button>
+              <button type="button" onClick={() => navigateTo('methodology')} className="text-left hover:text-brand-green transition">Metodologia</button>
+              <button type="button" onClick={() => navigateTo('science')} className="text-left hover:text-brand-green transition">Pesquisa</button>
+              <button type="button" onClick={() => navigateTo('media')} className="text-left hover:text-brand-green transition">Na mídia</button>
+              <button type="button" onClick={() => navigateTo('team')} className="text-left hover:text-brand-green transition">Equipe</button>
             </div>
           </div>
         </div>

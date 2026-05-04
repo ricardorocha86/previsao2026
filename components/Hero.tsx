@@ -17,6 +17,8 @@ const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
           src={bannerImage}
           alt=""
           className="h-full w-full object-cover object-center opacity-90"
+          fetchPriority="high"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(241,241,241,0.92)_0%,rgba(241,241,241,0.75)_35%,rgba(241,241,241,0.3)_60%,rgba(241,241,241,0)_80%)]" />
       </div>
@@ -33,6 +35,8 @@ const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
               src={logoImage} 
               alt="Previsão Esportiva" 
               className="h-40 md:h-60 w-auto object-contain drop-shadow-[0_10px_40px_rgba(0,0,0,0.08)]"
+              fetchPriority="high"
+              decoding="async"
             />
           </div>
 

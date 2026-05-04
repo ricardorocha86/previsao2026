@@ -13,29 +13,6 @@ export interface Team {
   defense: number; // 0-100
 }
 
-export interface PredictionResult {
-  homeWinProbability: number;
-  drawProbability: number;
-  awayWinProbability: number;
-  predictedScore: string;
-  reasoning: string;
-  keyFactors: string[];
-}
-
-export interface NewsItem {
-  title: string;
-  source: string;
-  url: string;
-  snippet: string;
-}
-
-export enum SimulationStatus {
-  IDLE = 'IDLE',
-  LOADING = 'LOADING',
-  SUCCESS = 'SUCCESS',
-  ERROR = 'ERROR'
-}
-
 export interface Researcher {
   id: string;
   name: string;

@@ -21,10 +21,9 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   return (
     <header className="bg-brand-dark py-20 px-4 text-center relative overflow-hidden">
       <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#209927_1px,transparent_1px)] [background-size:40px_40px]" />
-      <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[60%] bg-brand-green/10 blur-[100px] rounded-full pointer-events-none" />
 
       <div className="relative z-10 max-w-4xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-6 py-2 bg-brand-green/20 border border-brand-green/30 rounded-full mb-8">
+        <div className="inline-flex items-center gap-2 px-6 py-2 bg-brand-green/20 border border-brand-green/30 rounded-lg mb-8">
           <Icon className="w-4 h-4 text-brand-neon" />
           <span className="text-[10px] font-black text-brand-neon uppercase tracking-[0.3em]">
             {eyebrow}

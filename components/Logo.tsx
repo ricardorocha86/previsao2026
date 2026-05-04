@@ -8,6 +8,7 @@ export const Logo: React.FC<{ className?: string }> = ({ className = "h-10" }) =
         src="/assets/LogoMPrevisao.png" 
         alt="Previsão Esportiva Logo" 
         className="h-full w-auto object-contain"
+        decoding="async"
       />
     </div>
   );

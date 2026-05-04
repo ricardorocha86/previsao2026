@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { PUBLICATIONS } from '../constants';
+import { PUBLICATIONS } from '../data/publications';
 import { ArrowUpRight, BookOpen, FileText } from 'lucide-react';
 import PageHeader from './PageHeader';
 

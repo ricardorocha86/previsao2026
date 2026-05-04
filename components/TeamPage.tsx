@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { RESEARCHERS } from '../constants';
+import { RESEARCHERS } from '../data/researchers';
 import { Researcher } from '../types';
 import { Users } from 'lucide-react';
 import PageHeader from './PageHeader';

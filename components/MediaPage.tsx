@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MEDIA_MENTIONS } from '../constants';
+import { MEDIA_MENTIONS } from '../data/mediaMentions';
 import { ExternalLink, Newspaper, TrendingUp, Calendar, Play, Tv, MonitorPlay } from 'lucide-react';
 import { MediaMention } from '../types';
 import PageHeader from './PageHeader';

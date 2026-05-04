@@ -244,7 +244,7 @@ const WorldCupHub: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-[2rem] shadow-2xl border border-brand-dark/5 overflow-hidden overflow-x-auto">
+          <div className="bg-white rounded-2xl shadow-2xl border border-brand-dark/5 overflow-hidden overflow-x-auto overscroll-x-contain">
             <table className="w-full text-left border-collapse min-w-[1200px]">
               <thead>
                 <tr className="bg-brand-dark text-white font-montserrat text-[10px] uppercase tracking-[0.25em]">
@@ -265,7 +265,7 @@ const WorldCupHub: React.FC = () => {
                       <div className="flex items-center gap-3">
                         <span className="text-[10px] text-brand-dark/30 font-black w-6 tabular-nums font-opensans">{idx + 1}</span>
                         <div className="w-8 h-5 rounded-sm shadow-sm border border-brand-dark/5 overflow-hidden flex-shrink-0">
-                          <img src={getFlag(team['Seleção'])} className="w-full h-full object-cover" alt="" />
+                          <img src={getFlag(team['Seleção'])} className="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
                         </div>
                         <span className="font-montserrat font-bold text-brand-dark uppercase tracking-tight text-sm">{team['Seleção']}</span>
                       </div>
@@ -371,7 +371,7 @@ const WorldCupHub: React.FC = () => {
                           <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-2 mb-4">
                             <div className="flex flex-col items-center text-center gap-2">
                               <div className="w-16 h-10 rounded-xl border border-brand-dark/10 overflow-hidden shadow-sm group-hover/card:scale-110 transition-transform duration-500">
-                                <img src={getFlag(jogo['Seleção A'])} className="w-full h-full object-cover" alt="" />
+                                <img src={getFlag(jogo['Seleção A'])} className="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
                               </div>
                               <div className="space-y-1">
                                 <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block h-7 flex items-center justify-center">{jogo['Seleção A']}</span>
@@ -389,7 +389,7 @@ const WorldCupHub: React.FC = () => {
 
                             <div className="flex flex-col items-center text-center gap-2">
                               <div className="w-16 h-10 rounded-xl border border-brand-dark/10 overflow-hidden shadow-sm group-hover/card:scale-110 transition-transform duration-500">
-                                <img src={getFlag(jogo['Seleção B'])} className="w-full h-full object-cover" alt="" />
+                                <img src={getFlag(jogo['Seleção B'])} className="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
                               </div>
                               <div className="space-y-1">
                                 <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block h-7 flex items-center justify-center">{jogo['Seleção B']}</span>
