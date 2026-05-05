@@ -33,11 +33,6 @@ export const RESEARCHERS: Researcher[] = [
     lattes: 'http://lattes.cnpq.br/4579497412852854',
   },
   {
-    id: '25', name: 'Luis Ernesto Bueno Salasar', coord: true,
-    affiliation: 'UFSCar', image: '/assets/fotos/luis-ernesto-salasar.webp',
-    lattes: 'http://lattes.cnpq.br/5464564215528609',
-  },
-  {
     id: '1', name: 'Fernando Humberto de Almeida Moraes Neto', coord: true,
     affiliation: 'UFMT', image: '/assets/fotos/fernando-humberto.webp',
     linkedin: 'https://www.linkedin.com/in/fernandomoraesds/',
