@@ -31,6 +31,8 @@ export interface Publication {
   journal: string;
   year: number;
   authors: string;
+  publisher: string;
+  publisherLogo?: string;
   link: string;
   abstract: string;
 }
