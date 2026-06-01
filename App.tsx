@@ -3,9 +3,10 @@ import { ArrowUpRight, Instagram, Mail, Menu, X } from 'lucide-react';
 import { Logo } from './components/Logo';
 import Hero from './components/Hero';
 
-type ViewState = 'home' | 'copa' | 'team' | 'science' | 'media' | 'methodology';
+type ViewState = 'home' | 'copa' | 'mapa' | 'team' | 'science' | 'media' | 'methodology';
 
 const WorldCupHub = lazy(() => import('./components/WorldCupHub'));
+const MapPage = lazy(() => import('./components/MapPage'));
 const TeamPage = lazy(() => import('./components/TeamPage'));
 const SciencePage = lazy(() => import('./components/SciencePage'));
 const MediaPage = lazy(() => import('./components/MediaPage'));
@@ -14,6 +15,7 @@ const MethodologyPage = lazy(() => import('./components/MethodologyPage'));
 const ROUTES: Record<ViewState, string> = {
   home: '/',
   copa: '/copa-2026',
+  mapa: '/mapa',
   methodology: '/metodologia',
   science: '/pesquisa',
   media: '/midia',
@@ -23,6 +25,7 @@ const ROUTES: Record<ViewState, string> = {
 const NAV_ITEMS: Array<{ view: ViewState; label: string; mobileLabel?: string }> = [
   { view: 'home', label: 'Início' },
   { view: 'copa', label: 'Copa 2026' },
+  { view: 'mapa', label: 'Mapa' },
   { view: 'methodology', label: 'Metodologia' },
   { view: 'science', label: 'Pesquisa', mobileLabel: 'Produção Científica' },
   { view: 'media', label: 'Na Mídia' },
@@ -34,6 +37,11 @@ const HOME_LINKS: Array<{ title: string; description: string; view: ViewState }>
     title: 'Copa 2026',
     description: 'Probabilidades, confrontos e sínteses do torneio.',
     view: 'copa',
+  },
+  {
+    title: 'Mapa',
+    description: 'Mapa interativo das 48 seleções classificadas.',
+    view: 'mapa',
   },
   {
     title: 'Metodologia',
@@ -195,6 +203,7 @@ export default function App() {
         {currentView !== 'home' && (
           <Suspense fallback={<div className="min-h-[60vh] bg-brand-light" />}>
             {currentView === 'copa' && <WorldCupHub />}
+            {currentView === 'mapa' && <MapPage />}
             {currentView === 'team' && <TeamPage />}
             {currentView === 'science' && <SciencePage />}
             {currentView === 'media' && <MediaPage />}
@@ -260,6 +269,7 @@ export default function App() {
             <h4 className="text-brand-dark font-montserrat font-bold uppercase tracking-wider mb-5 text-sm">Navegação</h4>
             <div className="grid grid-cols-2 gap-3 text-sm text-brand-dark/68">
               <button type="button" onClick={() => navigateTo('copa')} className="text-left hover:text-brand-green transition">Resultados</button>
+              <button type="button" onClick={() => navigateTo('mapa')} className="text-left hover:text-brand-green transition">Mapa</button>
               <button type="button" onClick={() => navigateTo('methodology')} className="text-left hover:text-brand-green transition">Metodologia</button>
               <button type="button" onClick={() => navigateTo('science')} className="text-left hover:text-brand-green transition">Pesquisa</button>
               <button type="button" onClick={() => navigateTo('media')} className="text-left hover:text-brand-green transition">Na mídia</button>

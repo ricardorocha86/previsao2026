@@ -1,0 +1,68 @@
+{
+  "_descricao": "48 seleções da Copa do Mundo 2026. Chave de 'selecoes' = código ISO 3166-1 numérico (mesmo do mapa world-atlas). iso2 = código da bandeira (flagcdn.com). conf = confederação. prob = probabilidade estimada de ser campeã (%), vinda da simulação pré-torneio da Previsão Esportiva (coluna 'Campeão'). Escócia não tem código numérico próprio (faz parte do Reino Unido no mapa), então a chave 'GB-SCT' não casa com nenhum polígono e ela não é desenhada — mas continua na base para totalizar 48.",
+
+  "confederacoes": {
+    "UEFA":     { "nome": "UEFA · Europa",               "cor": "#4ea8ff" },
+    "CONMEBOL": { "nome": "CONMEBOL · América do Sul",    "cor": "#ffd23f" },
+    "CONCACAF": { "nome": "CONCACAF · Amér. N. e Central", "cor": "#ff5d8f" },
+    "CAF":      { "nome": "CAF · África",                 "cor": "#ff7a45" },
+    "AFC":      { "nome": "AFC · Ásia",                   "cor": "#b06bf2" },
+    "OFC":      { "nome": "OFC · Oceania",                "cor": "#2dd4bf" }
+  },
+
+  "selecoes": {
+    "076":    { "nome": "Brasil",               "iso2": "br",     "conf": "CONMEBOL",        "titulos": 5, "part": 22, "gols": 237, "art": "Ronaldo (15)",         "best": "Campeão (5x)",        "prob": 9.1 },
+    "032":    { "nome": "Argentina",            "iso2": "ar",     "conf": "CONMEBOL",        "titulos": 3, "part": 19, "gols": 145, "art": "Batistuta (10)",       "best": "Campeão (3x)",        "prob": 9.0 },
+    "858":    { "nome": "Uruguai",              "iso2": "uy",     "conf": "CONMEBOL",        "titulos": 2, "part": 14, "gols": 88,  "art": "Schiaffino / Ghiggia", "best": "Campeão (2x)",        "prob": 2.2 },
+    "170":    { "nome": "Colômbia",             "iso2": "co",     "conf": "CONMEBOL",        "titulos": 0, "part": 7,  "gols": 33,  "art": "James Rodríguez (6)",  "best": "Quartas de final",    "prob": 1.9 },
+    "218":    { "nome": "Equador",              "iso2": "ec",     "conf": "CONMEBOL",        "titulos": 0, "part": 4,  "gols": 11,  "art": "Agustín Delgado (3)",  "best": "Oitavas de final",    "prob": 1.3 },
+    "600":    { "nome": "Paraguai",             "iso2": "py",     "conf": "CONMEBOL",        "titulos": 0, "part": 8,  "gols": 30,  "art": "Roque Santa Cruz (2)", "best": "Quartas (2010)",      "prob": 0.9 },
+
+    "250":    { "nome": "França",               "iso2": "fr",     "conf": "UEFA", "titulos": 2, "part": 16, "gols": 120, "art": "Just Fontaine (13)",  "best": "Campeão (2x)",     "prob": 14.3 },
+    "826":    { "nome": "Inglaterra",           "iso2": "gb-eng", "conf": "UEFA", "titulos": 1, "part": 17, "gols": 96,  "art": "Gary Lineker (10)",   "best": "Campeão (1x)",     "prob": 13.3 },
+    "724":    { "nome": "Espanha",              "iso2": "es",     "conf": "UEFA", "titulos": 1, "part": 16, "gols": 99,  "art": "David Villa (9)",     "best": "Campeão (1x)",     "prob": 11.1 },
+    "620":    { "nome": "Portugal",             "iso2": "pt",     "conf": "UEFA", "titulos": 0, "part": 9,  "gols": 46,  "art": "Eusébio (9)",         "best": "3º lugar (1966)",  "prob": 6.2 },
+    "276":    { "nome": "Alemanha",             "iso2": "de",     "conf": "UEFA", "titulos": 4, "part": 20, "gols": 232, "art": "Miroslav Klose (16)", "best": "Campeão (4x)",     "prob": 5.0 },
+    "528":    { "nome": "Holanda",              "iso2": "nl",     "conf": "UEFA", "titulos": 0, "part": 11, "gols": 78,  "art": "Rensenbrink (6)",     "best": "Vice (3x)",        "prob": 4.3 },
+    "056":    { "nome": "Bélgica",              "iso2": "be",     "conf": "UEFA", "titulos": 0, "part": 14, "gols": 68,  "art": "Marc Wilmots (6)",    "best": "3º lugar (1986)",  "prob": 4.0 },
+    "756":    { "nome": "Suíça",                "iso2": "ch",     "conf": "UEFA", "titulos": 0, "part": 12, "gols": 52,  "art": "Alexander Frei (3)",  "best": "Quartas de final", "prob": 2.3 },
+    "792":    { "nome": "Turquia",              "iso2": "tr",     "conf": "UEFA", "titulos": 0, "part": 2,  "gols": 14,  "art": "Hakan Şükür (5)",     "best": "3º lugar (2002)",  "prob": 1.5 },
+    "191":    { "nome": "Croácia",              "iso2": "hr",     "conf": "UEFA", "titulos": 0, "part": 7,  "gols": 35,  "art": "Davor Šuker (6)",     "best": "Vice (2018)",      "prob": 1.4 },
+    "578":    { "nome": "Noruega",              "iso2": "no",     "conf": "UEFA", "titulos": 0, "part": 3,  "gols": 8,   "art": "Jørgen Juve (5)",     "best": "Oitavas de final", "prob": 0.9 },
+    "752":    { "nome": "Suécia",               "iso2": "se",     "conf": "UEFA", "titulos": 0, "part": 12, "gols": 80,  "art": "Kennet Andersson",    "best": "Vice (1958)",      "prob": 0.8 },
+    "040":    { "nome": "Áustria",              "iso2": "at",     "conf": "UEFA", "titulos": 0, "part": 8,  "gols": 43,  "art": "Toni Polster (6)",    "best": "3º lugar (1954)",  "prob": 0.6 },
+    "070":    { "nome": "Bósnia e Herzegovina", "iso2": "ba",     "conf": "UEFA", "titulos": 0, "part": 2,  "gols": 4,   "art": "Ibišević (1)",        "best": "Fase de grupos",   "prob": 0.2 },
+    "203":    { "nome": "Tchéquia",             "iso2": "cz",     "conf": "UEFA", "titulos": 0, "part": 9,  "gols": 41,  "art": "Tomáš Rosický",       "best": "Vice (1962)",      "prob": 0.2 },
+    "GB-SCT": { "nome": "Escócia",              "iso2": "gb-sct", "conf": "UEFA", "titulos": 0, "part": 8,  "gols": 25,  "art": "Joe Jordan (4)",      "best": "Fase de grupos",   "prob": 0.2 },
+
+    "686":    { "nome": "Senegal",              "iso2": "sn",     "conf": "CAF", "titulos": 0, "part": 3, "gols": 11, "art": "El Hadji Diouf (2)", "best": "Quartas (2002)",   "prob": 1.7 },
+    "504":    { "nome": "Marrocos",             "iso2": "ma",     "conf": "CAF", "titulos": 0, "part": 7, "gols": 14, "art": "En-Nesyri (3)",      "best": "4º lugar (2022)",  "prob": 0.9 },
+    "012":    { "nome": "Argélia",              "iso2": "dz",     "conf": "CAF", "titulos": 0, "part": 5, "gols": 13, "art": "Belloumi (2)",       "best": "Oitavas (2014)",   "prob": 0.4 },
+    "384":    { "nome": "Costa do Marfim",      "iso2": "ci",     "conf": "CAF", "titulos": 0, "part": 4, "gols": 9,  "art": "Didier Drogba (2)",  "best": "Fase de grupos",   "prob": 0.1 },
+    "288":    { "nome": "Gana",                 "iso2": "gh",     "conf": "CAF", "titulos": 0, "part": 4, "gols": 14, "art": "Asamoah Gyan (6)",   "best": "Quartas (2010)",   "prob": 0.1 },
+    "818":    { "nome": "Egito",                "iso2": "eg",     "conf": "CAF", "titulos": 0, "part": 4, "gols": 11, "art": "El-Shazly (3)",      "best": "Oitavas de final", "prob": 0.1 },
+    "788":    { "nome": "Tunísia",              "iso2": "tn",     "conf": "CAF", "titulos": 0, "part": 7, "gols": 12, "art": "Wahbi Khazri (2)",   "best": "Fase de grupos",   "prob": 0.0 },
+    "132":    { "nome": "Cabo Verde",           "iso2": "cv",     "conf": "CAF", "titulos": 0, "part": 1, "gols": 0,  "art": "Estreante",          "best": "Estreante em 2026","prob": 0.0 },
+    "180":    { "nome": "Rep. Dem. do Congo",   "iso2": "cd",     "conf": "CAF", "titulos": 0, "part": 2, "gols": 4,  "art": "Kembo Uba (2)",      "best": "Fase de grupos (1974)", "prob": 0.2 },
+    "710":    { "nome": "África do Sul",        "iso2": "za",     "conf": "CAF", "titulos": 0, "part": 4, "gols": 9,  "art": "Benni McCarthy (5)", "best": "Fase de grupos",   "prob": 0.0 },
+
+    "392":    { "nome": "Japão",                "iso2": "jp",     "conf": "AFC", "titulos": 0, "part": 8,  "gols": 27, "art": "Kamamoto (7)",      "best": "Oitavas de final", "prob": 1.3 },
+    "410":    { "nome": "Coreia do Sul",        "iso2": "kr",     "conf": "AFC", "titulos": 0, "part": 11, "gols": 36, "art": "Ahn Jung-hwan (3)", "best": "4º lugar (2002)",  "prob": 0.8 },
+    "036":    { "nome": "Austrália",            "iso2": "au",     "conf": "AFC", "titulos": 0, "part": 6,  "gols": 19, "art": "Tim Cahill (5)",    "best": "Oitavas (2006)",   "prob": 0.5 },
+    "682":    { "nome": "Arábia Saudita",       "iso2": "sa",     "conf": "AFC", "titulos": 0, "part": 7,  "gols": 17, "art": "Al-Jaber (4)",      "best": "Oitavas (1994)",   "prob": 0.1 },
+    "364":    { "nome": "Irã",                  "iso2": "ir",     "conf": "AFC", "titulos": 0, "part": 7,  "gols": 12, "art": "Ali Daei (3)",      "best": "Fase de grupos",   "prob": 0.0 },
+    "860":    { "nome": "Uzbequistão",          "iso2": "uz",     "conf": "AFC", "titulos": 0, "part": 1,  "gols": 0,  "art": "Estreante",         "best": "Estreante em 2026","prob": 0.0 },
+    "400":    { "nome": "Jordânia",             "iso2": "jo",     "conf": "AFC", "titulos": 0, "part": 1,  "gols": 0,  "art": "Estreante",         "best": "Estreante em 2026","prob": 0.0 },
+    "368":    { "nome": "Iraque",               "iso2": "iq",     "conf": "AFC", "titulos": 0, "part": 2,  "gols": 4,  "art": "Hussein Saeed (2)", "best": "Fase de grupos",   "prob": 0.0 },
+    "634":    { "nome": "Catar",                "iso2": "qa",     "conf": "AFC", "titulos": 0, "part": 1,  "gols": 1,  "art": "M. Muntari (1)",    "best": "Fase de grupos (2022)", "prob": 0.0 },
+
+    "484":    { "nome": "México",               "iso2": "mx",     "conf": "CONCACAF (sede)", "titulos": 0, "part": 17, "gols": 61, "art": "Hernández (4)",      "best": "Quartas de final", "prob": 1.9 },
+    "840":    { "nome": "Estados Unidos",       "iso2": "us",     "conf": "CONCACAF (sede)", "titulos": 0, "part": 11, "gols": 47, "art": "Landon Donovan (5)", "best": "Semifinal (1930)", "prob": 0.9 },
+    "124":    { "nome": "Canadá",               "iso2": "ca",     "conf": "CONCACAF (sede)", "titulos": 0, "part": 3,  "gols": 2,  "art": "Alphonso Davies (1)","best": "Fase de grupos",   "prob": 0.2 },
+    "591":    { "nome": "Panamá",               "iso2": "pa",     "conf": "CONCACAF", "titulos": 0, "part": 2, "gols": 3, "art": "Blas Pérez (1)", "best": "Fase de grupos", "prob": 0.0 },
+    "531":    { "nome": "Curaçao",              "iso2": "cw",     "conf": "CONCACAF", "titulos": 0, "part": 1, "gols": 0, "art": "Estreante",      "best": "Estreante em 2026", "prob": 0.0 },
+    "332":    { "nome": "Haiti",                "iso2": "ht",     "conf": "CONCACAF", "titulos": 0, "part": 2, "gols": 2, "art": "Sanon (2)",      "best": "Fase de grupos (1974)", "prob": 0.0 },
+
+    "554":    { "nome": "Nova Zelândia",        "iso2": "nz",     "conf": "OFC", "titulos": 0, "part": 3, "gols": 8, "art": "Wynton Rufer (1)", "best": "Fase de grupos", "prob": 0.0 }
+  }
+}
