@@ -348,7 +348,7 @@ const MAP_CSS = `
 .mp-country{fill:var(--grey); stroke:var(--grey-line); stroke-width:.4px;
   transition:fill .25s ease, opacity .25s ease; cursor:default}
 .mp-country.mp-team{cursor:pointer}
-.mp-country.mp-champion{stroke:#fff; stroke-width:1.1px; filter:url(#mp-champGlow)}
+.mp-country.mp-champion{stroke:#fff; stroke-width:0.55px; filter:url(#mp-champGlow)}
 .mp-country.mp-dim{opacity:.32}
 .mp-country.mp-hl{stroke:#fff; stroke-width:1.5px; filter:url(#mp-glow)}
 .mp-sphere{fill:url(#mp-ocean)}
