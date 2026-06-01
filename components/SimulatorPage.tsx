@@ -6,7 +6,7 @@ const STREAMLIT_URL_RAW = 'https://previsao2026.streamlit.app';
 
 const SimulatorPage: React.FC = () => {
   return (
-    <div className="relative w-full h-[calc(100vh-5rem)] bg-brand-light">
+    <div className="relative w-full h-[calc(100dvh-81px)] bg-brand-light">
       <iframe
         src={STREAMLIT_URL}
         title="Simulador Previsão Esportiva"

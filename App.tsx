@@ -221,6 +221,7 @@ export default function App() {
         )}
       </main>
 
+      {currentView !== 'simulador' && (
       <footer className="bg-white text-brand-dark border-t border-brand-dark/10">
         <div className="bg-brand-dark text-white">
           <div className="max-w-[1080px] mx-auto px-4 py-10 md:flex md:items-center md:justify-between md:gap-8">
@@ -295,6 +296,7 @@ export default function App() {
           </div>
         </div>
       </footer>
+      )}
     </div>
   );
 }
