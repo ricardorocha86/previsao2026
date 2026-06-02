@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Globe2 } from 'lucide-react';
 import PageHeader from './PageHeader';
 import dados from '../assets/dados_copa2026.json';
+import simulacaoGeral from '../assets/simulacao_geral.json';
+import simulacaoGeralBayes from '../assets/simulacao_geral_bayes.json';
 
 const D3_SRC = 'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
 const TOPOJSON_SRC = 'https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js';
@@ -66,7 +68,31 @@ const MapPage: React.FC = () => {
 
       const TEAMS: Record<string, any> = (dados as any).selecoes;
       const CONF: Record<string, any> = (dados as any).confederacoes;
-      const MAXPROB = Math.max(...Object.values(TEAMS).map((t: any) => +t.prob || 0), 1);
+
+      const matchTeamName = (nome: string) => {
+        if (nome === "Tchéquia") return "Tcheca";
+        if (nome === "Rep. Dem. do Congo") return "RD do Congo";
+        if (nome === "Curaçao") return "Curaçau";
+        return nome;
+      };
+
+      const getProb = (teamName: string, isBayes: boolean) => {
+        const normalized = matchTeamName(teamName);
+        const dataset = isBayes ? simulacaoGeralBayes : simulacaoGeral;
+        const entry = dataset.find((item: any) => item['Seleção'] === normalized);
+        if (entry) {
+          const val = entry['Campeão'];
+          if (typeof val === 'string') {
+            return parseFloat(val.replace('%', '').replace(',', '.')) || 0;
+          }
+          return parseFloat(val) || 0;
+        }
+        return 0;
+      };
+
+      const allProbs1 = Object.values(TEAMS).map((t: any) => getProb(t.nome, false));
+      const allProbs2 = Object.values(TEAMS).map((t: any) => getProb(t.nome, true));
+      const MAXPROB = Math.max(...allProbs1, ...allProbs2, 1);
 
       let width = wrap.clientWidth;
       let height = wrap.clientHeight;
@@ -129,12 +155,23 @@ const MapPage: React.FC = () => {
         const cor = (CONF[confKey(t.conf)] || {}).cor || '#9fb3c0';
         cb.style.background = cor + '33';
         cb.style.color = cor;
-        const prob = +t.prob || 0;
-        q('[data-c="prob"]').textContent = prob.toFixed(1).replace('.', ',') + '%';
+
+        // Methodology 1
+        const prob1 = getProb(t.nome, false);
+        q('[data-c="prob"]').textContent = prob1.toFixed(1).replace('.', ',') + '%';
         const fill = q('[data-c="prob-fill"]');
         fill.style.width = '0%';
         void fill.offsetWidth;
-        fill.style.width = Math.max(3, (prob / MAXPROB) * 100) + '%';
+        fill.style.width = Math.max(3, (prob1 / MAXPROB) * 100) + '%';
+
+        // Methodology 2
+        const prob2 = getProb(t.nome, true);
+        q('[data-c="prob2"]').textContent = prob2.toFixed(1).replace('.', ',') + '%';
+        const fill2 = q('[data-c="prob2-fill"]');
+        fill2.style.width = '0%';
+        void fill2.offsetWidth;
+        fill2.style.width = Math.max(3, (prob2 / MAXPROB) * 100) + '%';
+
         q('[data-c="part"]').textContent = t.part + 'x';
         q('[data-c="gols"]').textContent = t.gols;
         q('[data-c="art"]').textContent = t.art;
@@ -308,8 +345,12 @@ const MapPage: React.FC = () => {
             </div>
             <div className="mp-card-body">
               <div className="mp-prob">
-                <div className="mp-prob-head"><span className="mp-k">Chance de ser campeã</span><span className="mp-v" data-c="prob" /></div>
+                <div className="mp-prob-head"><span className="mp-k">M1 · Simulação Clássica</span><span className="mp-v" data-c="prob" /></div>
                 <div className="mp-prob-bar"><i data-c="prob-fill" /></div>
+              </div>
+              <div className="mp-prob" style={{ marginTop: '14px', marginBottom: '8px' }}>
+                <div className="mp-prob-head"><span className="mp-k">M2 · Edição Bayesiana</span><span className="mp-v-m2" data-c="prob2" /></div>
+                <div className="mp-prob-bar"><i className="mp-prob-bar-m2-fill" data-c="prob2-fill" /></div>
               </div>
               <div className="mp-row"><span className="mp-k">Participações</span><span className="mp-v" data-c="part" /></div>
               <div className="mp-row"><span className="mp-k">Gols na história</span><span className="mp-v" data-c="gols" /></div>
@@ -396,10 +437,17 @@ const MAP_CSS = `
 .mp-prob-head .mp-v{font-family:'Anton',sans-serif; font-size:20px; line-height:1;
   background:linear-gradient(90deg,var(--gold),var(--gold-2));
   -webkit-background-clip:text; background-clip:text; color:transparent}
+.mp-prob-head .mp-v-m2{font-family:'Anton',sans-serif; font-size:20px; line-height:1;
+  background:linear-gradient(90deg,#00d2be,#005C53);
+  -webkit-background-clip:text; background-clip:text; color:transparent}
 .mp-prob-bar{height:8px; border-radius:99px; background:rgba(255,255,255,.08); overflow:hidden}
 .mp-prob-bar i{display:block; height:100%; width:0; border-radius:99px;
   background:linear-gradient(90deg,var(--gold-2),var(--gold));
   box-shadow:0 0 12px rgba(244,196,48,.5);
+  transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.mp-prob-bar .mp-prob-bar-m2-fill{display:block; height:100%; width:0; border-radius:99px;
+  background:linear-gradient(90deg,#005C53,#00b4a0);
+  box-shadow:0 0 12px rgba(0,180,160,.5);
   transition:width .5s cubic-bezier(.2,.8,.2,1)}
 .mp-row{display:flex; justify-content:space-between; align-items:center; padding:7px 0;
   border-bottom:1px solid rgba(255,255,255,.06); font-size:13.5px}
