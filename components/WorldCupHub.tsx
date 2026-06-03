@@ -114,6 +114,12 @@ const WorldCupHub: React.FC = () => {
     return val || 0;
   };
 
+  const formatFairOdd = (val: any) => {
+    const probability = parsePercent(val);
+    if (!probability) return '-';
+    return (100 / probability).toFixed(2);
+  };
+
   const sortedData = useMemo(() => {
     let sortableData = [...(currentSimulacaoGeral as any[])];
     if (sortConfig !== null) {
@@ -480,6 +486,7 @@ const WorldCupHub: React.FC = () => {
                               <div className="space-y-1">
                                 <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block h-7 flex items-center justify-center">{jogo['Seleção A']}</span>
                                 <span className={`font-exo text-lg font-bold italic ${theme.accentText} block`}>{jogo['Vitória A']}</span>
+                                <span className="block text-[9px] font-montserrat font-bold uppercase tracking-widest text-brand-dark/30">Odd justa {formatFairOdd(jogo['Vitória A'])}</span>
                               </div>
                             </div>
 
@@ -488,6 +495,7 @@ const WorldCupHub: React.FC = () => {
                               <div className="flex flex-col items-center opacity-40">
                                 <span className="text-[8px] font-montserrat font-black uppercase tracking-widest mb-0.5">Empate</span>
                                 <span className="font-exo text-sm font-bold italic text-brand-dark">{jogo['Empate']}</span>
+                                <span className="mt-0.5 text-[8px] font-montserrat font-bold uppercase tracking-widest text-brand-dark/70">Odd justa {formatFairOdd(jogo['Empate'])}</span>
                               </div>
                             </div>
 
@@ -498,6 +506,7 @@ const WorldCupHub: React.FC = () => {
                               <div className="space-y-1">
                                 <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block h-7 flex items-center justify-center">{jogo['Seleção B']}</span>
                                 <span className="font-exo text-lg font-bold italic text-brand-blue block">{jogo['Vitória B']}</span>
+                                <span className="block text-[9px] font-montserrat font-bold uppercase tracking-widest text-brand-dark/30">Odd justa {formatFairOdd(jogo['Vitória B'])}</span>
                               </div>
                             </div>
                           </div>
