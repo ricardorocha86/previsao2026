@@ -1,13 +1,15 @@
 import React, { Suspense, lazy, useEffect, useState } from 'react';
-import { ArrowUpRight, Instagram, Mail, Menu, X } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, Instagram, Mail, Menu, X } from 'lucide-react';
 import { Logo } from './components/Logo';
 import Hero from './components/Hero';
+import HomeOverview from './components/HomeOverview';
 
-type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'team' | 'science' | 'media' | 'methodology';
+type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology';
 
 const WorldCupHub = lazy(() => import('./components/WorldCupHub'));
 const MapPage = lazy(() => import('./components/MapPage'));
 const SimulatorPage = lazy(() => import('./components/SimulatorPage'));
+const BolaoPage = lazy(() => import('./components/BolaoPage'));
 const TeamPage = lazy(() => import('./components/TeamPage'));
 const SciencePage = lazy(() => import('./components/SciencePage'));
 const MediaPage = lazy(() => import('./components/MediaPage'));
@@ -18,59 +20,26 @@ const ROUTES: Record<ViewState, string> = {
   copa: '/copa-2026',
   mapa: '/mapa',
   simulador: '/simulador',
+  bolao: '/bolao',
   methodology: '/metodologia',
   science: '/pesquisa',
   media: '/midia',
   team: '/equipe',
 };
 
+// Reordered as requested: Copa 2026, Bolão, Mapa, Simulador (Metodologia moved to dropdown)
 const NAV_ITEMS: Array<{ view: ViewState; label: string; mobileLabel?: string }> = [
-  { view: 'home', label: 'Início' },
-  { view: 'copa', label: 'Copa 2026' },
-  { view: 'mapa', label: 'Mapa' },
-  { view: 'simulador', label: 'Simulador' },
-  { view: 'methodology', label: 'Metodologia' },
-  { view: 'science', label: 'Pesquisa', mobileLabel: 'Produção Científica' },
-  { view: 'media', label: 'Na Mídia' },
-  { view: 'team', label: 'Equipe' },
+  { view: 'copa', label: '🏆 Copa 2026' },
+  { view: 'bolao', label: '⚽ Bolão' },
+  { view: 'mapa', label: '🗺️ Mapa' },
+  { view: 'simulador', label: '📊 Simulador' },
 ];
 
-const HOME_LINKS: Array<{ title: string; description: string; view: ViewState }> = [
-  {
-    title: 'Copa 2026',
-    description: 'Probabilidades, confrontos e sínteses do torneio.',
-    view: 'copa',
-  },
-  {
-    title: 'Mapa',
-    description: 'Mapa interativo das 48 seleções classificadas.',
-    view: 'mapa',
-  },
-  {
-    title: 'Simulador',
-    description: 'Aplicativo interativo para simular cenários do torneio.',
-    view: 'simulador',
-  },
-  {
-    title: 'Metodologia',
-    description: 'Como as estimativas são construídas e interpretadas.',
-    view: 'methodology',
-  },
-  {
-    title: 'Pesquisa',
-    description: 'Publicações e referências acadêmicas do grupo.',
-    view: 'science',
-  },
-  {
-    title: 'Na mídia',
-    description: 'Reportagens e registros de divulgação científica.',
-    view: 'media',
-  },
-  {
-    title: 'Equipe',
-    description: 'Pesquisadores e instituições envolvidas.',
-    view: 'team',
-  },
+const PROJECT_NAV_ITEMS: Array<{ view: ViewState; label: string; mobileLabel?: string }> = [
+  { view: 'science', label: 'Artigos Científicos', mobileLabel: 'Artigos Científicos' },
+  { view: 'media', label: 'Destaques na Mídia', mobileLabel: 'Destaques na Mídia' },
+  { view: 'team', label: 'Membros da Equipe', mobileLabel: 'Membros da Equipe' },
+  { view: 'methodology', label: 'Metodologia', mobileLabel: 'Metodologia' },
 ];
 
 const getViewFromLocation = (): ViewState => {
@@ -82,6 +51,8 @@ const getViewFromLocation = (): ViewState => {
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentView, setCurrentView] = useState<ViewState>(() => getViewFromLocation());
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
 
   useEffect(() => {
     const syncView = () => setCurrentView(getViewFromLocation());
@@ -100,6 +71,7 @@ export default function App() {
     }
     setCurrentView(view);
     setIsMenuOpen(false);
+    setIsMobileDropdownOpen(false);
     window.scrollTo(0, 0);
   };
 
@@ -116,24 +88,90 @@ export default function App() {
   return (
     <div className="min-h-screen bg-brand-light font-opensans selection:bg-brand-green selection:text-white flex flex-col text-brand-dark">
       <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-brand-dark/10 shadow-sm">
-        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
+            {/* Logo 30% larger */}
             <button
               type="button"
               className="flex-shrink-0 flex items-center gap-2 cursor-pointer group text-left"
               onClick={() => navigateTo('home')}
               aria-label="Ir para o início"
             >
-              <Logo className="h-10 md:h-12 group-hover:opacity-80 transition-opacity" />
+              <Logo className="h-[52px] md:h-[62px] group-hover:opacity-80 transition-opacity" />
             </button>
 
-            <div className="hidden md:flex items-center space-x-8">
+            {/* Desktop Navigation */}
+            <div className="hidden min-[1180px]:flex items-center gap-6 xl:gap-8">
               {NAV_ITEMS.map((item) => (
                 <NavItem key={item.view} view={item.view} label={item.label} />
               ))}
+
+              {/* Grouped Pages Dropdown under "Sobre" */}
+              <div 
+                className="relative py-4 flex items-center"
+                onMouseEnter={() => setIsDropdownOpen(true)}
+                onMouseLeave={() => setIsDropdownOpen(false)}
+              >
+                <button
+                  type="button"
+                  className={`flex items-center gap-1 font-montserrat font-bold text-sm uppercase tracking-widest transition-colors pb-1 ${
+                    ['science', 'media', 'team', 'methodology'].includes(currentView) 
+                      ? 'text-brand-green border-b-2 border-brand-green' 
+                      : 'text-brand-dark/40 hover:text-brand-green'
+                  }`}
+                >
+                  <span>Sobre</span>
+                  <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {isDropdownOpen && (
+                  <div className="absolute left-0 top-full pt-1 w-[240px] z-50">
+                    <div className="rounded-lg shadow-xl bg-white border border-brand-dark/10 divide-y divide-brand-dark/5 focus:outline-none py-1 transition-all">
+                      {PROJECT_NAV_ITEMS.map((item) => (
+                        <button
+                          key={item.view}
+                          type="button"
+                          onClick={() => {
+                            navigateTo(item.view);
+                            setIsDropdownOpen(false);
+                          }}
+                          className={`block w-full text-left px-4 py-3 text-xs uppercase tracking-wider font-montserrat font-bold transition-colors ${
+                            currentView === item.view 
+                              ? 'text-brand-green bg-brand-green/5' 
+                              : 'text-brand-dark/60 hover:text-brand-green hover:bg-brand-light/50'
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Instagram Icon-only Button */}
+              <a
+                href="https://www.instagram.com/previsaoesportiva/"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-[#f9ce3f] via-[#e1306c] to-[#833ab4] text-white shadow-sm hover:shadow-md hover:scale-110 active:scale-95 transition-all duration-300 ml-2"
+                aria-label="Instagram"
+              >
+                <Instagram className="h-5 w-5" />
+              </a>
             </div>
 
-            <div className="md:hidden">
+            {/* Mobile Header Icons: Instagram Icon-only Button & Hamburger Menu */}
+            <div className="min-[1180px]:hidden flex items-center gap-3">
+              <a
+                href="https://www.instagram.com/previsaoesportiva/"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-tr from-[#f9ce3f] via-[#e1306c] to-[#833ab4] text-white shadow-sm hover:scale-110 active:scale-95 transition-all"
+                aria-label="Instagram"
+              >
+                <Instagram className="h-5 w-5" />
+              </a>
               <button
                 type="button"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -146,19 +184,64 @@ export default function App() {
           </div>
         </div>
 
+        {/* Mobile Navigation Drawer */}
         {isMenuOpen && (
-          <div className="md:hidden bg-white border-t border-brand-dark/10 absolute w-full shadow-2xl h-screen z-50">
-            <div className="px-4 pt-4 pb-8 space-y-2">
+          <div className="min-[1180px]:hidden bg-white border-t border-brand-dark/10 absolute w-full shadow-2xl h-[calc(100vh-5rem)] overflow-y-auto z-50 flex flex-col justify-between">
+            <div className="px-4 pt-4 pb-12 space-y-2">
               {NAV_ITEMS.map((item) => (
                 <button
                   key={item.view}
                   type="button"
                   onClick={() => navigateTo(item.view)}
-                  className={`block w-full text-left px-3 py-6 text-xl font-montserrat font-bold border-b border-brand-dark/5 transition-colors ${currentView === item.view ? 'text-brand-green bg-brand-green/5' : 'text-brand-dark'}`}
+                  className={`block w-full text-left px-3 py-5 text-xl font-montserrat font-bold border-b border-brand-dark/5 transition-colors ${currentView === item.view ? 'text-brand-green bg-brand-green/5' : 'text-brand-dark'}`}
                 >
                   {item.mobileLabel ?? item.label}
                 </button>
               ))}
+
+              {/* Collapsible Accordion for "Sobre" */}
+              <div className="border-b border-brand-dark/5">
+                <button
+                  type="button"
+                  onClick={() => setIsMobileDropdownOpen(!isMobileDropdownOpen)}
+                  className={`flex items-center justify-between w-full text-left px-3 py-5 text-xl font-montserrat font-bold transition-colors ${
+                    ['science', 'media', 'team', 'methodology'].includes(currentView) ? 'text-brand-green' : 'text-brand-dark'
+                  }`}
+                >
+                  <span>Sobre</span>
+                  <ChevronDown className={`h-6 w-6 transition-transform duration-200 ${isMobileDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {isMobileDropdownOpen && (
+                  <div className="bg-brand-light/40 pl-4 py-2 space-y-1">
+                    {PROJECT_NAV_ITEMS.map((item) => (
+                      <button
+                        key={item.view}
+                        type="button"
+                        onClick={() => navigateTo(item.view)}
+                        className={`block w-full text-left px-4 py-4 text-lg font-montserrat font-semibold transition-colors ${
+                          currentView === item.view ? 'text-brand-green font-bold' : 'text-brand-dark/70 hover:text-brand-green'
+                        }`}
+                      >
+                        {item.mobileLabel ?? item.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Mobile Instagram Button (Circular, Centered) */}
+              <div className="pt-8 flex justify-center">
+                <a
+                  href="https://www.instagram.com/previsaoesportiva/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-tr from-[#f9ce3f] via-[#e1306c] to-[#833ab4] text-white shadow-md hover:scale-110 active:scale-95 transition-all"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="h-6 w-6" />
+                </a>
+              </div>
             </div>
           </div>
         )}
@@ -168,43 +251,7 @@ export default function App() {
         {currentView === 'home' && (
           <>
             <Hero onNavigate={(view) => navigateTo(view)} />
-
-            <section className="bg-white px-4 py-20 border-t border-brand-dark/10">
-              <div className="max-w-[1080px] mx-auto grid gap-12 lg:grid-cols-[0.82fr_1.18fr]">
-                <div>
-                  <p className="mb-4 font-montserrat text-sm font-bold uppercase text-brand-green">
-                    Explore o site
-                  </p>
-                  <h2 className="text-3xl md:text-5xl font-montserrat font-black uppercase leading-tight text-brand-dark">
-                    O projeto em cinco frentes.
-                  </h2>
-                  <p className="mt-6 max-w-md text-lg leading-relaxed text-brand-dark/64">
-                    Resultados, método, produção científica, imprensa e equipe reunidos para consulta pública.
-                  </p>
-                </div>
-
-                <div className="border-t border-brand-dark/10">
-                  {HOME_LINKS.map((item) => (
-                    <button
-                      key={item.title}
-                      type="button"
-                      onClick={() => navigateTo(item.view)}
-                      className="group grid w-full gap-3 border-b border-brand-dark/10 py-6 text-left transition hover:bg-brand-light/70 sm:grid-cols-[220px_1fr_auto] sm:items-center sm:px-5"
-                    >
-                      <span className="font-montserrat text-xl font-bold uppercase text-brand-dark">
-                        {item.title}
-                      </span>
-                      <span className="text-sm leading-relaxed text-brand-dark/60">
-                        {item.description}
-                      </span>
-                      <span className="inline-flex h-10 w-10 items-center justify-center border border-brand-dark/10 text-brand-green transition group-hover:border-brand-green group-hover:bg-brand-green group-hover:text-white rounded-lg">
-                        <ArrowUpRight className="h-4 w-4" />
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </section>
+            <HomeOverview onNavigate={(view) => navigateTo(view)} />
           </>
         )}
 
@@ -213,6 +260,7 @@ export default function App() {
             {currentView === 'copa' && <WorldCupHub />}
             {currentView === 'mapa' && <MapPage />}
             {currentView === 'simulador' && <SimulatorPage />}
+            {currentView === 'bolao' && <BolaoPage />}
             {currentView === 'team' && <TeamPage />}
             {currentView === 'science' && <SciencePage />}
             {currentView === 'media' && <MediaPage />}
@@ -281,6 +329,7 @@ export default function App() {
               <button type="button" onClick={() => navigateTo('copa')} className="text-left hover:text-brand-green transition">Resultados</button>
               <button type="button" onClick={() => navigateTo('mapa')} className="text-left hover:text-brand-green transition">Mapa</button>
               <button type="button" onClick={() => navigateTo('simulador')} className="text-left hover:text-brand-green transition">Simulador</button>
+              <button type="button" onClick={() => navigateTo('bolao')} className="text-left hover:text-brand-green transition">Bolão</button>
               <button type="button" onClick={() => navigateTo('methodology')} className="text-left hover:text-brand-green transition">Metodologia</button>
               <button type="button" onClick={() => navigateTo('science')} className="text-left hover:text-brand-green transition">Pesquisa</button>
               <button type="button" onClick={() => navigateTo('media')} className="text-left hover:text-brand-green transition">Na mídia</button>
@@ -292,7 +341,6 @@ export default function App() {
         <div className="border-t border-brand-dark/10 bg-brand-light">
           <div className="max-w-[1080px] mx-auto px-4 py-5 flex flex-col gap-2 text-xs text-brand-dark/55 md:flex-row md:items-center md:justify-between">
             <span>© 2026 Previsão Esportiva</span>
-            <span>Projeto acadêmico sem afiliação direta com a FIFA.</span>
           </div>
         </div>
       </footer>

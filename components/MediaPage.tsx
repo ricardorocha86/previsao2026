@@ -73,8 +73,9 @@ const MediaPage: React.FC = () => {
       <PageHeader
         icon={Tv}
         eyebrow="Repercussão na imprensa"
-        title="Na"
+        title="Destaques na"
         accent="Mídia"
+        noBreak
         description="Cobertura jornalística e participações públicas sobre as previsões científicas do projeto."
       />
 

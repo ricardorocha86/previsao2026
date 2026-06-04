@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /bolao2026/{submissionId} {
+      // Bloqueio total de leitura, deleção e atualização
+      allow read, update, delete: if false;
+
+      // Gravação permitida apenas sob validações rígidas
+      allow create: if request.resource.data.participant.name is string 
+                    && request.resource.data.participant.name.trim().size() >= 2
+                    && request.resource.data.participant.email is string
+                    && request.resource.data.participant.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+                    && request.resource.data.champion is string
+                    && request.resource.data.champion.size() > 0
+                    && request.resource.data.predictions is list
+                    && request.resource.data.predictions.size() == 104;
+    }
+  }
+}

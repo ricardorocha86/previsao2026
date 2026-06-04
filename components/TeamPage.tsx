@@ -121,7 +121,7 @@ const TeamPage: React.FC = () => {
       <PageHeader
         icon={Users}
         eyebrow="Conheça os integrantes"
-        title="Nossa"
+        title="Membros da"
         accent="Equipe"
         noBreak
         description="Profissionais dedicados à modelagem estatística e ciência de dados aplicada ao esporte."

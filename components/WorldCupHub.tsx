@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, Trophy, Search, ArrowUpDown, ArrowUp, ArrowDown, Clock, CalendarDays, MapPin, TrendingUp, Network } from 'lucide-react';
+import { Trophy, Search, ArrowUpDown, ArrowUp, ArrowDown, Clock, CalendarDays, MapPin, TrendingUp, Network } from 'lucide-react';
 import simulacaoGeral from '../assets/simulacao_geral.json';
 import simulacaoGeralBayes from '../assets/simulacao_geral_bayes.json';
 import previsoesJogos from '../assets/previsoes_jogos.json';
@@ -17,8 +17,6 @@ const GROUP_STYLE = {
 
 const WorldCupHub: React.FC = () => {
   const [methodology, setMethodology] = useState<1 | 2>(1);
-  const [activeCard, setActiveCard] = useState(0);
-  const [slideDirection, setSlideDirection] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchTermJogos, setSearchTermJogos] = useState('');
   const [selectedGroup, setSelectedGroup] = useState('Todos');
@@ -30,15 +28,6 @@ const WorldCupHub: React.FC = () => {
 
   const currentSimulacaoGeral = methodology === 1 ? simulacaoGeral : simulacaoGeralBayes;
   const currentPrevisoesJogos = methodology === 1 ? previsoesJogos : previsoesJogosBayes;
-
-  const cards = useMemo(() => {
-    return Array.from({ length: 10 }, (_, i) => 
-      methodology === 1 
-        ? `/assets/cards/card_${i + 1}.png` 
-        : `/assets/cards/card_m2_${i + 1}.webp`
-    );
-  }, [methodology]);
-
   const theme = useMemo(() => {
     if (methodology === 1) {
       return {
@@ -72,34 +61,6 @@ const WorldCupHub: React.FC = () => {
       };
     }
   }, [methodology]);
-
-  const nextCard = () => {
-    setSlideDirection(1);
-    setActiveCard((prev) => (prev + 1) % cards.length);
-  };
-
-  const prevCard = () => {
-    setSlideDirection(-1);
-    setActiveCard((prev) => (prev - 1 + cards.length) % cards.length);
-  };
-
-  const goToCard = (index: number) => {
-    if (index === activeCard) return;
-    const forwardDistance = (index - activeCard + cards.length) % cards.length;
-    setSlideDirection(forwardDistance <= cards.length / 2 ? 1 : -1);
-    setActiveCard(index);
-  };
-
-  const getCardOffset = (index: number) => {
-    const rawOffset = index - activeCard;
-    if (rawOffset > cards.length / 2) return rawOffset - cards.length;
-    if (rawOffset < -cards.length / 2) return rawOffset + cards.length;
-    return rawOffset;
-  };
-
-  const previousCard = cards[(activeCard - 1 + cards.length) % cards.length];
-  const nextPreviewCard = cards[(activeCard + 1) % cards.length];
-
   const getFlag = (teamName: string) => {
     if (!teamName) return "https://flagcdn.com/w320/un.png";
     const normalized = teamName.trim();
@@ -203,7 +164,6 @@ const WorldCupHub: React.FC = () => {
           <button
             onClick={() => {
               setMethodology(1);
-              setActiveCard(0);
             }}
             className={`p-6 md:p-8 rounded-[2rem] text-left transition-all duration-500 border-2 cursor-pointer group flex items-start gap-5 relative overflow-hidden ${
               methodology === 1
@@ -229,7 +189,6 @@ const WorldCupHub: React.FC = () => {
           <button
             onClick={() => {
               setMethodology(2);
-              setActiveCard(0);
             }}
             className={`p-6 md:p-8 rounded-[2rem] text-left transition-all duration-500 border-2 cursor-pointer group flex items-start gap-5 relative overflow-hidden ${
               methodology === 2
@@ -255,89 +214,8 @@ const WorldCupHub: React.FC = () => {
         </div>
       </div>
 
-      {/* CAROUSEL SECTION */}
-      <div className="max-w-7xl mx-auto px-4 mt-12 relative z-20">
-        <div className="relative overflow-hidden rounded-[1.75rem] md:rounded-[3.5rem] bg-brand-dark shadow-2xl border border-white/20 p-3 md:p-6">
-          <div className="absolute inset-0 overflow-hidden">
-            <img
-              key={`prev-bg-${previousCard}`}
-              src={previousCard}
-              alt=""
-              className="absolute inset-y-0 left-0 h-full w-1/2 object-cover opacity-45 blur-3xl scale-125 transition-opacity duration-700"
-            />
-            <img
-              key={`next-bg-${nextPreviewCard}`}
-              src={nextPreviewCard}
-              alt=""
-              className="absolute inset-y-0 right-0 h-full w-1/2 object-cover opacity-55 blur-3xl scale-125 transition-opacity duration-700"
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,18,16,0.80),rgba(8,18,16,0.22)_28%,rgba(8,18,16,0.18)_72%,rgba(8,18,16,0.82))]" />
-            <div className="absolute inset-0 bg-brand-dark/20 backdrop-blur-sm" />
-          </div>
-
-          <div className="relative h-[82vh] min-h-[560px] max-h-[880px] overflow-hidden rounded-[1.25rem] md:rounded-[2.75rem] border border-white/10 bg-black/10">
-             <button 
-                onClick={prevCard} 
-                aria-label="Card anterior"
-                className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-40 p-3 md:p-5 rounded-full bg-white/12 hover:bg-white/25 text-white backdrop-blur-md transition-all border border-white/20 group shadow-xl"
-             >
-                <ChevronLeft className="w-7 h-7 md:w-8 md:h-8 group-hover:-translate-x-1 transition-transform" />
-             </button>
-             
-             <button 
-                onClick={nextCard} 
-                aria-label="Proximo card"
-                className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-40 p-3 md:p-5 rounded-full bg-white/12 hover:bg-white/25 text-white backdrop-blur-md transition-all border border-white/20 group shadow-xl"
-             >
-                <ChevronRight className="w-7 h-7 md:w-8 md:h-8 group-hover:translate-x-1 transition-transform" />
-             </button>
-
-             <div className="absolute inset-0 flex items-center justify-center perspective-[1600px]">
-               {cards.map((card, i) => {
-                 const offset = getCardOffset(i);
-                 const isActive = offset === 0;
-                 const isAdjacent = Math.abs(offset) === 1;
-                 const hiddenDirection = offset === 0 ? slideDirection : Math.sign(offset || slideDirection);
-                 const transformClass = isActive
-                   ? 'translate-x-0 translate-y-0 rotate-0 scale-100 opacity-100 z-30 blur-0'
-                   : isAdjacent
-                     ? `${offset < 0 ? '-translate-x-[68%] md:-translate-x-[48%] -rotate-[5deg]' : 'translate-x-[68%] md:translate-x-[48%] rotate-[5deg]'} translate-y-3 scale-[0.82] opacity-30 md:opacity-35 z-20 blur-[3px] saturate-75 brightness-75`
-                     : `${hiddenDirection < 0 ? '-translate-x-[105%]' : 'translate-x-[105%]'} translate-y-8 scale-75 opacity-0 z-10 blur-md pointer-events-none`;
-
-                 return (
-                   <button
-                     key={card}
-                     type="button"
-                     onClick={() => isAdjacent && goToCard(i)}
-                     aria-label={`Abrir card ${i + 1}`}
-                     className={`absolute top-6 bottom-20 md:top-8 md:bottom-20 w-[84%] md:w-[72%] max-w-[980px] transition-all duration-700 ease-[cubic-bezier(0.2,0.85,0.25,1)] ${transformClass} ${isAdjacent ? 'cursor-pointer' : 'pointer-events-none'}`}
-                   >
-                     <img
-                       src={card}
-                       alt={`Insight ${i + 1}`}
-                       className={`h-full w-full object-contain transition-all duration-700 ${isActive ? 'drop-shadow-[0_40px_95px_rgba(0,0,0,0.62)]' : 'drop-shadow-[0_14px_36px_rgba(0,0,0,0.22)]'}`}
-                     />
-                   </button>
-                 );
-               })}
-             </div>
-             
-             <div className="absolute bottom-5 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 md:gap-3 z-40 rounded-full bg-black/20 px-3 py-2 backdrop-blur-md border border-white/10">
-                {cards.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => goToCard(i)}
-                    aria-label={`Ir para card ${i + 1}`}
-                    className={`h-1.5 rounded-full transition-all duration-500 ${i === activeCard ? `w-12 md:w-16 ${theme.accentBg}` : 'w-3 md:w-4 bg-white/35 hover:bg-white/60'}`}
-                  />
-                ))}
-             </div>
-          </div>
-        </div>
-      </div>
-
       {/* TABLES SECTION */}
-      <div className="max-w-7xl mx-auto px-4 mt-32 space-y-32">
+      <div className="max-w-7xl mx-auto px-4 mt-16 space-y-32">
         
         {/* PROBABILITIES TABLE - BRAND TYPOGRAPHY */}
         <section>

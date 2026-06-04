@@ -10,10 +10,10 @@ const SciencePage: React.FC = () => {
     <div className="bg-brand-light min-h-screen font-opensans text-brand-dark">
       <PageHeader
         icon={BookOpen}
-        eyebrow="Biblioteca Academica"
-        title="Producao"
-        accent="Cientifica"
-        description="Publicacoes que fundamentam a metodologia estatistica do projeto."
+        eyebrow="Biblioteca Acadêmica"
+        title="Artigos"
+        accent="Científicos"
+        description="Publicações que fundamentam a metodologia estatística do projeto."
       />
 
       <div className="max-w-5xl mx-auto px-4">
