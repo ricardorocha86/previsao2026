@@ -17,6 +17,9 @@ dist-ssr
 .env.local
 .env.*.local
 
+# Painel local de acesso ao Firebase (nao subir)
+painel-bolao-firestore/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -48,6 +48,13 @@ interface MatchPrediction {
   penaltyWinner: string | null;
 }
 
+type PredictionSource = 'manual' | 'randomGroup';
+
+interface FillMetadata {
+  usedRandomGroupFill: boolean;
+  randomGroupMatchCount: number;
+}
+
 interface Participant {
   name: string;
   email: string;
@@ -60,6 +67,7 @@ interface Participant {
 interface BolaoDraft {
   participant: Participant;
   predictions: Record<string, MatchPrediction>;
+  predictionSources: Record<string, PredictionSource>;
   submittedAt: string | null;
   lastSavedAt: string | null;
 }
@@ -119,6 +127,7 @@ const createInitialParticipant = (): Participant => ({
 const createInitialDraft = (): BolaoDraft => ({
   participant: createInitialParticipant(),
   predictions: {},
+  predictionSources: {},
   submittedAt: null,
   lastSavedAt: null,
 });
@@ -126,6 +135,7 @@ const createInitialDraft = (): BolaoDraft => ({
 const normalizeDraft = (draft: BolaoDraft): BolaoDraft => ({
   ...draft,
   submittedAt: null,
+  predictionSources: draft.predictionSources ?? {},
   participant: {
     ...createInitialParticipant(),
     ...draft.participant,
@@ -274,6 +284,16 @@ const heroFlagFor = (team: string) => {
   return code ? `https://flagcdn.com/w640/${code}.png` : flagFor(team);
 };
 
+type PlayerEasterEggPlacement = 'right' | 'left' | 'top';
+
+const PLAYER_EASTER_EGGS: Record<string, { player: string; src: string; placement: PlayerEasterEggPlacement }> = {
+  Argentina: { player: 'Messi', src: '/assets/easter-eggs/messi.png', placement: 'right' },
+  Brasil: { player: 'Neymar', src: '/assets/easter-eggs/neymar.png', placement: 'left' },
+  Portugal: { player: 'CR7', src: '/assets/easter-eggs/cr7.png', placement: 'right' },
+};
+
+const playerEasterEggFor = (team: string) => PLAYER_EASTER_EGGS[normalizedTeamName(team)] ?? null;
+
 const teamCode = (team: string) => {
   const normalized = normalizedTeamName(team);
   return TEAM_CODE_OVERRIDES[normalized] ?? normalized.replace(/[^a-zA-Z]/g, '').slice(0, 3).toUpperCase();
@@ -316,6 +336,14 @@ const groupMatchesByLetter = GROUP_MATCHES.reduce<Record<string, CupMatch[]>>((a
   acc[letter] = [...(acc[letter] ?? []), match];
   return acc;
 }, {});
+
+const buildFillMetadata = (predictionSources: Record<string, PredictionSource>): FillMetadata => {
+  const randomGroupMatchCount = GROUP_MATCHES.filter((match) => predictionSources[match.id] === 'randomGroup').length;
+  return {
+    usedRandomGroupFill: randomGroupMatchCount > 0,
+    randomGroupMatchCount,
+  };
+};
 
 const getPrediction = (predictions: Record<string, MatchPrediction>, matchId: string) =>
   predictions[matchId] ?? emptyPrediction();
@@ -799,6 +827,7 @@ const downloadJson = (draft: BolaoDraft, allMatches: CupMatch[], champion: strin
     participant: draft.participant,
     submittedAt: draft.submittedAt,
     champion,
+    fillMetadata: buildFillMetadata(draft.predictionSources),
     predictions: allMatches.map((match) => ({
       matchId: match.id,
       stage: match.stage,
@@ -816,6 +845,60 @@ const downloadJson = (draft: BolaoDraft, allMatches: CupMatch[], champion: strin
   link.download = `bolao-previsao-${normalizeSlug(draft.participant.name || 'rascunho')}.json`;
   link.click();
   URL.revokeObjectURL(url);
+};
+
+const ChampionFlagBadge: React.FC<{ team: string; compact?: boolean }> = ({ team, compact = false }) => {
+  const easterEgg = playerEasterEggFor(team);
+  const playerPosition = easterEgg
+    ? {
+        right: compact ? '-right-5 bottom-0' : '-right-10 bottom-0',
+        left: compact ? '-left-5 bottom-0' : '-left-10 bottom-0',
+        top: compact ? 'left-1/2 -top-4 -translate-x-1/2' : 'left-1/2 -top-12 -translate-x-1/2',
+      }[easterEgg.placement]
+    : '';
+
+  if (compact) {
+    return (
+      <span className="relative h-12 w-12 flex-none" title={easterEgg ? `${team} - ${easterEgg.player}` : team}>
+        <span className="absolute left-0 top-1.5 grid h-9 w-12 place-items-center overflow-hidden rounded-md border border-brand-dark/10 bg-white shadow-sm">
+          <img src={heroFlagFor(team)} alt={`Bandeira de ${team}`} className="h-full w-full object-cover" loading="lazy" decoding="async" />
+        </span>
+        {easterEgg && (
+          <span className={`absolute ${playerPosition} h-12 w-11`}>
+            <img
+              src={easterEgg.src}
+              alt={easterEgg.player}
+              className="h-full w-full animate-player-pulse object-contain drop-shadow-[0_6px_8px_rgba(0,0,0,0.28)]"
+              loading="lazy"
+              decoding="async"
+            />
+          </span>
+        )}
+      </span>
+    );
+  }
+
+  return (
+    <span className="relative block h-[94px] w-[108px]" title={easterEgg ? `${team} - ${easterEgg.player}` : team}>
+      <span className="absolute left-0 top-3 rounded-xl bg-gradient-to-br from-brand-yellow via-white to-brand-green p-[3px] shadow-lg shadow-brand-yellow/20">
+        <span className="absolute inset-0 rounded-xl border border-white/70 pointer-events-none" />
+        <span className="relative grid h-[72px] w-[108px] place-items-center overflow-hidden rounded-lg border border-brand-dark/10 bg-white shadow-sm">
+          <img src={heroFlagFor(team)} alt={`Bandeira de ${team}`} className="h-full w-full object-cover" loading="eager" decoding="async" />
+        </span>
+      </span>
+      {easterEgg && (
+        <span className={`absolute ${playerPosition} z-10 h-[94px] w-[78px]`}>
+          <img
+            src={easterEgg.src}
+            alt={easterEgg.player}
+            className="h-full w-full animate-player-pulse object-contain drop-shadow-[0_12px_14px_rgba(0,0,0,0.35)]"
+            loading="eager"
+            decoding="async"
+          />
+        </span>
+      )}
+    </span>
+  );
 };
 
 const ScoreInput: React.FC<{
@@ -1007,8 +1090,9 @@ const CompactScoreInput: React.FC<{
   label: string;
   value: number | null;
   disabled?: boolean;
+  inputKey?: string;
   onChange: (value: number | null) => void;
-}> = ({ label, value, disabled = false, onChange }) => (
+}> = ({ label, value, disabled = false, inputKey, onChange }) => (
   <input
     type="text"
     inputMode="numeric"
@@ -1016,8 +1100,21 @@ const CompactScoreInput: React.FC<{
     maxLength={1}
     value={value ?? ''}
     disabled={disabled}
+    data-group-score-input={inputKey}
+    onKeyDown={(event) => {
+      if (/^[0-9]$/.test(event.key)) {
+        event.preventDefault();
+        onChange(Number(event.key));
+        return;
+      }
+
+      if (event.key === 'Backspace' || event.key === 'Delete') {
+        event.preventDefault();
+        onChange(null);
+      }
+    }}
     onChange={(event) => {
-      const next = event.target.value.replace(/\D/g, '').slice(0, 1);
+      const next = event.target.value.replace(/\D/g, '').slice(-1);
       onChange(next === '' ? null : Number(next));
     }}
     className="h-8 w-8 rounded-md border border-brand-dark/15 bg-white text-center font-montserrat text-sm font-black text-brand-dark outline-none transition focus:border-brand-green focus:ring-2 focus:ring-brand-green/15 disabled:opacity-50 sm:h-9 sm:w-9"
@@ -1134,8 +1231,10 @@ const GroupMatchRow: React.FC<{
   match: CupMatch;
   prediction: MatchPrediction;
   disabled: boolean;
+  homeInputKey: string;
+  awayInputKey: string;
   onScore: (match: CupMatch, side: 'homeGoals' | 'awayGoals', value: number | null) => void;
-}> = ({ match, prediction, disabled, onScore }) => (
+}> = ({ match, prediction, disabled, homeInputKey, awayInputKey, onScore }) => (
   <div className="grid grid-cols-[minmax(0,1fr)_28px_32px_12px_32px_28px_minmax(0,1fr)] items-center gap-1.5 border-t border-brand-dark/8 py-2 first:border-t-0 sm:grid-cols-[minmax(0,1fr)_32px_36px_14px_36px_32px_minmax(0,1fr)] sm:gap-2">
     <span className="min-w-0 text-right text-[10px] font-bold uppercase leading-tight text-brand-dark [overflow-wrap:anywhere] sm:text-[11px]">
       {match.homeTeam}
@@ -1145,6 +1244,7 @@ const GroupMatchRow: React.FC<{
       label={`${match.homeTeam} gols`}
       value={prediction.homeGoals}
       disabled={disabled}
+      inputKey={homeInputKey}
       onChange={(value) => onScore(match, 'homeGoals', value)}
     />
     <span className="text-center font-montserrat text-[10px] font-black uppercase text-brand-dark/35">x</span>
@@ -1152,6 +1252,7 @@ const GroupMatchRow: React.FC<{
       label={`${match.awayTeam} gols`}
       value={prediction.awayGoals}
       disabled={disabled}
+      inputKey={awayInputKey}
       onChange={(value) => onScore(match, 'awayGoals', value)}
     />
     <CompactFlag team={match.awayTeam} />
@@ -1166,8 +1267,9 @@ const GroupColumn: React.FC<{
   matches: CupMatch[];
   predictions: Record<string, MatchPrediction>;
   disabled: boolean;
+  getInputKey: (match: CupMatch, side: 'homeGoals' | 'awayGoals') => string;
   onScore: (match: CupMatch, side: 'homeGoals' | 'awayGoals', value: number | null) => void;
-}> = ({ letter, matches, predictions, disabled, onScore }) => {
+}> = ({ letter, matches, predictions, disabled, getInputKey, onScore }) => {
   const complete = matches.filter((match) => isResolved(match, predictions[match.id])).length;
 
   return (
@@ -1186,6 +1288,8 @@ const GroupColumn: React.FC<{
             match={match}
             prediction={getPrediction(predictions, match.id)}
             disabled={disabled}
+            homeInputKey={getInputKey(match, 'homeGoals')}
+            awayInputKey={getInputKey(match, 'awayGoals')}
             onScore={onScore}
           />
         ))}
@@ -1785,12 +1889,7 @@ const KnockoutBracket: React.FC<{
                     
                     {champion ? (
                       <div className="mt-3 flex flex-col items-center w-full">
-                        <div className="relative rounded-xl bg-gradient-to-br from-brand-yellow via-white to-brand-green p-[3px] shadow-lg shadow-brand-yellow/20">
-                          <span className="absolute inset-0 rounded-xl border border-white/70 pointer-events-none" />
-                          <span className="relative grid h-[72px] w-[108px] place-items-center overflow-hidden rounded-lg border border-brand-dark/10 bg-white shadow-sm">
-                            <img src={heroFlagFor(champion)} alt={champion} className="h-full w-full object-cover" loading="eager" decoding="async" />
-                          </span>
-                        </div>
+                        <ChampionFlagBadge team={champion} />
                         <strong className="mt-3 block font-montserrat text-sm font-black text-brand-dark uppercase tracking-wider truncate max-w-full">
                           {champion}
                         </strong>
@@ -1962,7 +2061,6 @@ const BolaoPage: React.FC = () => {
   const finalMatch = bracket.final?.[0] ?? null;
   const thirdPlaceMatch = bracket.thirdPlace?.[0] ?? null;
   const champion = finalMatch ? resolvedWinner(finalMatch, draft.predictions[finalMatch.id]) : null;
-  const championFlagUrl = champion ? heroFlagFor(champion) : null;
   const isSubmitted = draft.submittedAt !== null;
 
   const isEmailValid = (email: string) => {
@@ -2004,6 +2102,34 @@ const BolaoPage: React.FC = () => {
     }));
   };
 
+  const groupScoreInputKey = (match: CupMatch, side: 'homeGoals' | 'awayGoals') => `${match.id}-${side}`;
+
+  const focusGroupScoreInput = (inputKey: string) => {
+    if (typeof window === 'undefined') return;
+    window.setTimeout(() => {
+      const input = document.querySelector<HTMLInputElement>(`[data-group-score-input="${inputKey}"]`);
+      input?.focus();
+      input?.select();
+    }, 0);
+  };
+
+  const firstGroupScoreInputKey = (letter: string) => {
+    const matches = groupMatchesByLetter[letter] ?? [];
+    for (const match of matches) {
+      const prediction = getPrediction(draft.predictions, match.id);
+      if (prediction.homeGoals === null) return groupScoreInputKey(match, 'homeGoals');
+      if (prediction.awayGoals === null) return groupScoreInputKey(match, 'awayGoals');
+    }
+    const firstMatch = matches[0];
+    return firstMatch ? groupScoreInputKey(firstMatch, 'homeGoals') : null;
+  };
+
+  useEffect(() => {
+    if (isSubmitted) return;
+    const inputKey = firstGroupScoreInputKey(selectedGroup);
+    if (inputKey) focusGroupScoreInput(inputKey);
+  }, [selectedGroup, isSubmitted]);
+
   const resetDownstream = (predictions: Record<string, MatchPrediction>, stage: MatchStage) => {
     const next = { ...predictions };
     const clearStage = (target: MatchStage) => {
@@ -2027,25 +2153,68 @@ const BolaoPage: React.FC = () => {
     if (isSubmitted) return;
     updateDraft((current) => {
       const predictions = resetDownstream(current.predictions, match.stage);
+      const predictionSources = { ...current.predictionSources };
       const currentPrediction = predictions[match.id] ?? emptyPrediction();
-      predictions[match.id] = {
+      const nextPrediction = {
         ...currentPrediction,
         [side]: value,
         penaltyWinner: null,
       };
-      return { ...current, predictions };
+      predictions[match.id] = nextPrediction;
+      if (nextPrediction.homeGoals === null && nextPrediction.awayGoals === null) {
+        delete predictionSources[match.id];
+      } else {
+        predictionSources[match.id] = 'manual';
+      }
+      return { ...current, predictions, predictionSources };
     });
+  };
+
+  const advanceGroupScoreFocus = (match: CupMatch, side: 'homeGoals' | 'awayGoals') => {
+    const group = groupLetter(match.group ?? '');
+    if (!group) return;
+
+    const matches = groupMatchesByLetter[group] ?? [];
+    const currentMatchIndex = matches.findIndex((candidate) => candidate.id === match.id);
+    if (currentMatchIndex === -1) return;
+
+    const inputKeys = matches.flatMap((candidate) => [
+      groupScoreInputKey(candidate, 'homeGoals'),
+      groupScoreInputKey(candidate, 'awayGoals'),
+    ]);
+    const currentInputIndex = currentMatchIndex * 2 + (side === 'homeGoals' ? 0 : 1);
+    const nextInputKey = inputKeys[currentInputIndex + 1];
+
+    if (nextInputKey) {
+      focusGroupScoreInput(nextInputKey);
+      return;
+    }
+
+    const nextGroupIndex = GROUP_ORDER.indexOf(group) + 1;
+    const nextGroupLetter = GROUP_ORDER[nextGroupIndex];
+    if (nextGroupLetter) {
+      setSelectedGroup(nextGroupLetter);
+    }
+  };
+
+  const setGroupScore = (match: CupMatch, side: 'homeGoals' | 'awayGoals', value: number | null) => {
+    setScore(match, side, value);
+    if (value !== null) {
+      advanceGroupScoreFocus(match, side);
+    }
   };
 
   const setPenalty = (match: CupMatch, team: string) => {
     if (isSubmitted) return;
     updateDraft((current) => {
       const predictions = resetDownstream(current.predictions, match.stage);
+      const predictionSources = { ...current.predictionSources };
       predictions[match.id] = {
         ...(predictions[match.id] ?? emptyPrediction()),
         penaltyWinner: team,
       };
-      return { ...current, predictions };
+      predictionSources[match.id] = 'manual';
+      return { ...current, predictions, predictionSources };
     });
   };
 
@@ -2053,13 +2222,15 @@ const BolaoPage: React.FC = () => {
     if (isSubmitted || match.stage === 'groups') return;
     updateDraft((current) => {
       const predictions = resetDownstream(current.predictions, match.stage);
+      const predictionSources = { ...current.predictionSources };
       const homeWins = team === match.homeTeam;
       predictions[match.id] = {
         homeGoals: homeWins ? 1 : 0,
         awayGoals: homeWins ? 0 : 1,
         penaltyWinner: null,
       };
-      return { ...current, predictions };
+      predictionSources[match.id] = 'manual';
+      return { ...current, predictions, predictionSources };
     });
   };
 
@@ -2075,6 +2246,7 @@ const BolaoPage: React.FC = () => {
     const matches = (bracket[stage] ?? []).filter(Boolean) as CupMatch[];
     updateDraft((current) => {
       const predictions = resetDownstream(current.predictions, stage);
+      const predictionSources = { ...current.predictionSources };
       matches.forEach((match) => {
         if (isResolved(match, predictions[match.id])) return;
         const homeWins = Math.random() < 0.5;
@@ -2083,8 +2255,9 @@ const BolaoPage: React.FC = () => {
           awayGoals: homeWins ? 0 : 1,
           penaltyWinner: null,
         };
+        predictionSources[match.id] = 'manual';
       });
-      return { ...current, predictions };
+      return { ...current, predictions, predictionSources };
     });
   };
 
@@ -2092,10 +2265,12 @@ const BolaoPage: React.FC = () => {
     if (isSubmitted) return;
     updateDraft((current) => {
       const predictions = resetDownstream(current.predictions, 'groups');
+      const predictionSources = { ...current.predictionSources };
       (groupMatchesByLetter[letter] ?? []).forEach((match) => {
         predictions[match.id] = suggestedScore(match);
+        delete predictionSources[match.id];
       });
-      return { ...current, predictions };
+      return { ...current, predictions, predictionSources };
     });
   };
 
@@ -2103,10 +2278,12 @@ const BolaoPage: React.FC = () => {
     if (isSubmitted) return;
     updateDraft((current) => {
       const predictions = resetDownstream(current.predictions, 'groups');
+      const predictionSources = { ...current.predictionSources };
       GROUP_MATCHES.forEach((match) => {
         predictions[match.id] = suggestedScore(match);
+        delete predictionSources[match.id];
       });
-      return { ...current, predictions };
+      return { ...current, predictions, predictionSources };
     });
   };
 
@@ -2114,10 +2291,12 @@ const BolaoPage: React.FC = () => {
     if (isSubmitted) return;
     updateDraft((current) => {
       const predictions = resetDownstream(current.predictions, 'groups');
+      const predictionSources = { ...current.predictionSources };
       (groupMatchesByLetter[selectedGroup] ?? []).forEach((match) => {
         predictions[match.id] = randomGroupScore();
+        predictionSources[match.id] = 'randomGroup';
       });
-      return { ...current, predictions };
+      return { ...current, predictions, predictionSources };
     });
   };
 
@@ -2125,16 +2304,18 @@ const BolaoPage: React.FC = () => {
     if (isSubmitted) return;
     updateDraft((current) => {
       const predictions = resetDownstream(current.predictions, 'groups');
+      const predictionSources = { ...current.predictionSources };
       (groupMatchesByLetter[letter] ?? []).forEach((match) => {
         delete predictions[match.id];
+        delete predictionSources[match.id];
       });
-      return { ...current, predictions };
+      return { ...current, predictions, predictionSources };
     });
   };
 
   const clearAll = () => {
     if (isSubmitted) return;
-    updateDraft((current) => ({ ...current, predictions: {}, submittedAt: null }));
+    updateDraft((current) => ({ ...current, predictions: {}, predictionSources: {}, submittedAt: null }));
     setNameTouched(false);
     setEmailTouched(false);
   };
@@ -2143,6 +2324,7 @@ const BolaoPage: React.FC = () => {
     updateDraft(() => ({
       participant: createInitialParticipant(),
       predictions: {},
+      predictionSources: {},
       submittedAt: null,
       lastSavedAt: new Date().toISOString()
     }));
@@ -2159,6 +2341,7 @@ const BolaoPage: React.FC = () => {
     setModalState('sending');
 
     const emailKey = draft.participant.email.trim().toLowerCase();
+    const fillMetadata = buildFillMetadata(draft.predictionSources);
     const payload = {
       participant: {
         name: draft.participant.name.trim(),
@@ -2170,6 +2353,7 @@ const BolaoPage: React.FC = () => {
       },
       submittedAt: new Date().toISOString(),
       champion,
+      fillMetadata,
       predictions: allVisibleMatches.map((match) => ({
         matchId: match.id,
         stage: match.stage,
@@ -2287,7 +2471,8 @@ const BolaoPage: React.FC = () => {
               matches={groupMatchesByLetter[selectedGroup] ?? []}
               predictions={draft.predictions}
               disabled={isSubmitted}
-              onScore={setScore}
+              getInputKey={groupScoreInputKey}
+              onScore={setGroupScore}
             />
           </div>
 
@@ -2434,7 +2619,7 @@ const BolaoPage: React.FC = () => {
         <section className="mx-auto max-w-7xl scroll-mt-40 border-t-4 border-brand-green/20 px-4 py-8">
           {(
             <div className="grid gap-6">
-              <SectionHeader eyebrow="Segunda fase — mata-mata" title="Árvore até a final">
+              <SectionHeader eyebrow="Segunda fase — mata-mata" title="Rumo até a Final">
                 <ProgressPill label="Jogos até a final" done={completedMatches} total={TOTAL_MATCHES} />
                 <button
                   type="button"
@@ -2551,7 +2736,7 @@ const BolaoPage: React.FC = () => {
         <section className="mx-auto max-w-7xl scroll-mt-40 border-t-4 border-brand-dark/5 px-4 py-8">
           <SectionHeader
             eyebrow="Segunda fase — mata-mata"
-            title="Árvore até a final"
+            title="Rumo até a Final"
             disabled
             hint="Termine de preencher todos os jogos da fase de grupos para liberar o chaveamento do mata-mata, das 16 avos até a grande final."
           />
@@ -2779,13 +2964,7 @@ const BolaoPage: React.FC = () => {
                 <div className="rounded-lg bg-white p-4">
                   <span className="text-[10px] font-black uppercase tracking-[0.16em] text-brand-dark/40">Campeão</span>
                   <div className="mt-2 flex min-w-0 items-center gap-3">
-                    {championFlagUrl && (
-                      <img
-                        src={championFlagUrl}
-                        alt={`Bandeira de ${champion}`}
-                        className="h-9 w-12 flex-none rounded-md border border-brand-dark/10 object-cover"
-                      />
-                    )}
+                    {champion && <ChampionFlagBadge team={champion} compact />}
                     <strong className="block truncate font-montserrat text-2xl font-black">{champion ?? '-'}</strong>
                   </div>
                 </div>

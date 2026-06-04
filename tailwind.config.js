@@ -21,6 +21,15 @@ export default {
         exo: ['"Exo 2"', 'sans-serif'],
         opensans: ['"Open Sans"', 'sans-serif'],
       },
+      keyframes: {
+        'player-pulse': {
+          '0%, 100%': { transform: 'scale(1.5)' },
+          '50%': { transform: 'scale(1.58)' },
+        },
+      },
+      animation: {
+        'player-pulse': 'player-pulse 1.8s ease-in-out infinite',
+      },
     },
   },
   plugins: [],

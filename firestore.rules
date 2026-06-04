@@ -1,19 +1,181 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /bolao2026/{submissionId} {
-      // Bloqueio total de leitura, deleção e atualização
-      allow read, update, delete: if false;
+    function signedIn() {
+      return request.auth != null;
+    }
 
-      // Gravação permitida apenas sob validações rígidas
-      allow create: if request.resource.data.participant.name is string 
-                    && request.resource.data.participant.name.trim().size() >= 2
-                    && request.resource.data.participant.email is string
-                    && request.resource.data.participant.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
-                    && request.resource.data.champion is string
-                    && request.resource.data.champion.size() > 0
-                    && request.resource.data.predictions is list
-                    && request.resource.data.predictions.size() == 104;
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/adminUsers/$(request.auth.uid));
+    }
+
+    function validEmail(email) {
+      return email is string
+        && email.size() <= 254
+        && email == email.trim()
+        && email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+    }
+
+    function validRequiredString(value, minSize, maxSize) {
+      return value is string
+        && value == value.trim()
+        && value.size() >= minSize
+        && value.size() <= maxSize;
+    }
+
+    function validOptionalString(value, maxSize) {
+      return value is string
+        && value == value.trim()
+        && value.size() <= maxSize;
+    }
+
+    function validParticipant(participant) {
+      return participant is map
+        && participant.keys().hasAll([
+          'name',
+          'email',
+          'expertiseLevel',
+          'footballFollowFrequency',
+          'cupPoolExperience',
+          'favoriteTeam'
+        ])
+        && participant.keys().hasOnly([
+          'name',
+          'email',
+          'expertiseLevel',
+          'footballFollowFrequency',
+          'cupPoolExperience',
+          'favoriteTeam'
+        ])
+        && validRequiredString(participant.name, 2, 120)
+        && validEmail(participant.email)
+        && participant.expertiseLevel in ['none', 'little', 'regular', 'expert']
+        && participant.footballFollowFrequency in ['never', 'rarely', 'sometimes', 'weekly']
+        && participant.cupPoolExperience in ['never', 'once', 'some', 'always']
+        && validOptionalString(participant.favoriteTeam, 80);
+    }
+
+    function validFillMetadata(fillMetadata) {
+      return fillMetadata is map
+        && fillMetadata.keys().hasAll([
+          'usedRandomGroupFill',
+          'randomGroupMatchCount'
+        ])
+        && fillMetadata.keys().hasOnly([
+          'usedRandomGroupFill',
+          'randomGroupMatchCount'
+        ])
+        && fillMetadata.usedRandomGroupFill is bool
+        && fillMetadata.randomGroupMatchCount is int
+        && fillMetadata.randomGroupMatchCount >= 0
+        && fillMetadata.randomGroupMatchCount <= 72
+        && fillMetadata.usedRandomGroupFill == (fillMetadata.randomGroupMatchCount > 0);
+    }
+
+    function validScorePrediction(prediction) {
+      return prediction is map
+        && prediction.keys().hasAll(['homeGoals', 'awayGoals', 'penaltyWinner'])
+        && prediction.keys().hasOnly(['homeGoals', 'awayGoals', 'penaltyWinner'])
+        && prediction.homeGoals is int
+        && prediction.awayGoals is int
+        && prediction.homeGoals >= 0
+        && prediction.homeGoals <= 30
+        && prediction.awayGoals >= 0
+        && prediction.awayGoals <= 30
+        && (
+          prediction.penaltyWinner == null
+          || (
+            prediction.penaltyWinner is string
+            && prediction.penaltyWinner.size() >= 1
+            && prediction.penaltyWinner.size() <= 80
+          )
+        );
+    }
+
+    function validPredictionItem(item) {
+      return item is map
+        && item.keys().hasAll([
+          'matchId',
+          'stage',
+          'label',
+          'homeTeam',
+          'awayTeam',
+          'prediction'
+        ])
+        && item.keys().hasOnly([
+          'matchId',
+          'stage',
+          'label',
+          'homeTeam',
+          'awayTeam',
+          'prediction'
+        ])
+        && validRequiredString(item.matchId, 3, 120)
+        && item.stage in [
+          'groups',
+          'roundOf32',
+          'roundOf16',
+          'quarterfinals',
+          'semifinals',
+          'thirdPlace',
+          'final'
+        ]
+        && validRequiredString(item.label, 1, 80)
+        && validRequiredString(item.homeTeam, 1, 80)
+        && validRequiredString(item.awayTeam, 1, 80)
+        && validScorePrediction(item.prediction);
+    }
+
+    function validSubmissionId(submissionId) {
+      return submissionId is string
+        && submissionId.size() <= 254
+        && submissionId == submissionId.lower()
+        && submissionId.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+    }
+
+    function validSubmission(submissionId) {
+      return request.resource.data is map
+        && request.resource.data.keys().hasAll([
+          'participant',
+          'submittedAt',
+          'champion',
+          'fillMetadata',
+          'predictions'
+        ])
+        && request.resource.data.keys().hasOnly([
+          'participant',
+          'submittedAt',
+          'champion',
+          'fillMetadata',
+          'predictions'
+        ])
+        && validSubmissionId(submissionId)
+        && validParticipant(request.resource.data.participant)
+        && validFillMetadata(request.resource.data.fillMetadata)
+        && submissionId == request.resource.data.participant.email.lower()
+        && request.resource.data.submittedAt is string
+        && request.resource.data.submittedAt.matches('^\\d{4}-\\d{2}-\\d{2}T.*Z$')
+        && validRequiredString(request.resource.data.champion, 1, 80)
+        && request.resource.data.predictions is list
+        && request.resource.data.predictions.size() == 104
+        && validPredictionItem(request.resource.data.predictions[0])
+        && validPredictionItem(request.resource.data.predictions[103]);
+    }
+
+    match /bolao2026/{submissionId} {
+      allow read: if isAdmin();
+      allow create: if validSubmission(submissionId);
+      allow update, delete: if false;
+    }
+
+    match /adminUsers/{userId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }
