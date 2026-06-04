@@ -51,6 +51,10 @@ interface MatchPrediction {
 interface Participant {
   name: string;
   email: string;
+  expertiseLevel: string;
+  footballFollowFrequency: string;
+  cupPoolExperience: string;
+  favoriteTeam: string;
 }
 
 interface BolaoDraft {
@@ -103,21 +107,36 @@ const emptyPrediction = (): MatchPrediction => ({
   penaltyWinner: null,
 });
 
+const createInitialParticipant = (): Participant => ({
+  name: '',
+  email: '',
+  expertiseLevel: '',
+  footballFollowFrequency: '',
+  cupPoolExperience: '',
+  favoriteTeam: '',
+});
+
 const createInitialDraft = (): BolaoDraft => ({
-  participant: {
-    name: '',
-    email: '',
-  },
+  participant: createInitialParticipant(),
   predictions: {},
   submittedAt: null,
   lastSavedAt: null,
+});
+
+const normalizeDraft = (draft: BolaoDraft): BolaoDraft => ({
+  ...draft,
+  submittedAt: null,
+  participant: {
+    ...createInitialParticipant(),
+    ...draft.participant,
+  },
 });
 
 const localBolaoRepository = {
   loadDraft(): BolaoDraft | null {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
-      return raw ? (JSON.parse(raw) as BolaoDraft) : null;
+      return raw ? normalizeDraft(JSON.parse(raw) as BolaoDraft) : null;
     } catch {
       return null;
     }
@@ -156,8 +175,6 @@ const shortTime = (value?: string) => {
 
 const shortVenue = (value?: string) => value?.split('â€“')[0]?.trim() ?? '';
 
-const flagFor = (team: string) => FLAGS[team] || 'https://flagcdn.com/w320/un.png';
-
 const TEAM_CODE_OVERRIDES: Record<string, string> = {
   'Africa do Sul': 'RSA',
   'Alemanha': 'GER',
@@ -195,10 +212,70 @@ const TEAM_CODE_OVERRIDES: Record<string, string> = {
   'Uruguai': 'URU',
 };
 
-const teamCode = (team: string) => {
-  const normalized = team
+const FLAGCDN_CODE_OVERRIDES: Record<string, string> = {
+  'Africa do Sul': 'za',
+  'Alemanha': 'de',
+  'Argelia': 'dz',
+  'Argentina': 'ar',
+  'Australia': 'au',
+  'Austria': 'at',
+  'Belgica': 'be',
+  'Bosnia e Herzegovina': 'ba',
+  'Brasil': 'br',
+  'Cabo Verde': 'cv',
+  'Canada': 'ca',
+  'Catar': 'qa',
+  'Colombia': 'co',
+  'Coreia do Sul': 'kr',
+  'Costa do Marfim': 'ci',
+  'Croacia': 'hr',
+  'Curacao': 'cw',
+  'Egito': 'eg',
+  'Equador': 'ec',
+  'Escocia': 'gb-sct',
+  'Espanha': 'es',
+  'Estados Unidos': 'us',
+  'Franca': 'fr',
+  'Gana': 'gh',
+  'Haiti': 'ht',
+  'Holanda': 'nl',
+  'Inglaterra': 'gb-eng',
+  'Iraque': 'iq',
+  'Ira': 'ir',
+  'Japao': 'jp',
+  'Jordania': 'jo',
+  'Marrocos': 'ma',
+  'Mexico': 'mx',
+  'Noruega': 'no',
+  'Nova Zelandia': 'nz',
+  'Panama': 'pa',
+  'Paraguai': 'py',
+  'Portugal': 'pt',
+  'RD do Congo': 'cd',
+  'Senegal': 'sn',
+  'Suecia': 'se',
+  'Suica': 'ch',
+  'Tcheca': 'cz',
+  'Tunisia': 'tn',
+  'Turquia': 'tr',
+  'Uruguai': 'uy',
+  'Uzbequistao': 'uz',
+};
+
+const normalizedTeamName = (team: string) =>
+  team
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
+
+const flagFor = (team: string) => FLAGS[team] || 'https://flagcdn.com/w320/un.png';
+
+const heroFlagFor = (team: string) => {
+  const code = FLAGCDN_CODE_OVERRIDES[normalizedTeamName(team)];
+  return code ? `https://flagcdn.com/w640/${code}.png` : flagFor(team);
+};
+
+const teamCode = (team: string) => {
+  const normalized = normalizedTeamName(team);
   return TEAM_CODE_OVERRIDES[normalized] ?? normalized.replace(/[^a-zA-Z]/g, '').slice(0, 3).toUpperCase();
 };
 
@@ -961,14 +1038,26 @@ const CompactFlag: React.FC<{ team: string; rectangular?: boolean }> = ({ team, 
 
 // Tabela de classificação compacta e discreta (menos destaque que a coluna de jogos).
 const CompactStandings: React.FC<{ rows: StandingRow[] }> = ({ rows }) => (
-  <div className="rounded-lg border border-brand-dark/10 bg-brand-light/40 p-2.5 sm:p-3">
+  <div className="min-w-0 rounded-lg border border-brand-dark/10 bg-brand-light/40 p-2.5 sm:p-3">
     <span className="mb-2 block font-montserrat text-[9px] font-black uppercase tracking-[0.16em] text-brand-dark/40">
       Classificação
     </span>
-    <table className="w-full border-collapse">
+    <table className="w-full table-fixed border-collapse">
+      <colgroup>
+        <col className="w-[24px]" />
+        <col />
+        <col className="w-[30px]" />
+        <col className="w-[24px]" />
+        <col className="w-[24px]" />
+        <col className="w-[24px]" />
+        <col className="w-[24px]" />
+        <col className="w-[26px]" />
+        <col className="w-[26px]" />
+        <col className="w-[26px]" />
+      </colgroup>
       <thead>
         <tr className="text-[8px] font-black uppercase tracking-[0.08em] text-brand-dark/30">
-          <th className="pb-1 pr-1 text-left font-black">#</th>
+          <th className="pb-1 text-left font-black">#</th>
           <th className="pb-1 text-left font-black">Seleção</th>
           <th className="pb-1 px-0.5 text-center font-black">Pts</th>
           <th className="pb-1 px-0.5 text-center font-black">J</th>
@@ -983,7 +1072,7 @@ const CompactStandings: React.FC<{ rows: StandingRow[] }> = ({ rows }) => (
       <tbody>
         {rows.map((row, index) => (
           <tr key={row.team} className="border-t border-brand-dark/5">
-            <td className="py-1.5 pr-1">
+            <td className="py-1.5">
               <span
                 className={`grid h-4 w-4 place-items-center rounded text-[9px] font-black ${
                   index < 2
@@ -996,7 +1085,7 @@ const CompactStandings: React.FC<{ rows: StandingRow[] }> = ({ rows }) => (
                 {index + 1}
               </span>
             </td>
-            <td className="py-1.5">
+            <td className="min-w-0 py-1.5 pr-1">
               <span className="flex min-w-0 items-center gap-1.5">
                 <CompactFlag team={row.team} rectangular />
                 <span className={`truncate text-[10px] font-bold uppercase ${index < 2 ? 'text-brand-dark' : 'text-brand-dark/55'}`}>
@@ -1696,24 +1785,10 @@ const KnockoutBracket: React.FC<{
                     
                     {champion ? (
                       <div className="mt-3 flex flex-col items-center w-full">
-                        <div className="relative flex items-center justify-center h-[104px] w-[104px]">
-                          {/* Static soft gold glow behind the flag assembly (no pulsing to prevent flickering/fading) */}
-                          <div className="absolute -inset-2 rounded-full bg-brand-yellow/20 blur-md pointer-events-none" />
-                          
-                          {/* Outer circular gradient border that rotates, creating a circular sweep effect */}
-                          <div 
-                            className="absolute inset-0 rounded-full bg-gradient-to-tr from-brand-yellow via-amber-300 to-brand-yellow animate-spin pointer-events-none"
-                            style={{ animationDuration: '4s', boxShadow: '0 4px 16px rgba(255, 207, 38, 0.3)' }}
-                          />
-                          
-                          {/* Inner white mask to keep the rotating border thin and sharp */}
-                          <div className="absolute inset-[4px] rounded-full bg-white" />
-                          
-                          {/* Crisp static flag image container (relative z-10 for perfect overlay) */}
-                          <span 
-                            className="relative z-10 grid h-24 w-24 place-items-center overflow-hidden rounded-full border-2 border-white bg-white shadow-md"
-                          >
-                            <img src={flagFor(champion)} alt={champion} className="h-full w-full object-cover" />
+                        <div className="relative rounded-xl bg-gradient-to-br from-brand-yellow via-white to-brand-green p-[3px] shadow-lg shadow-brand-yellow/20">
+                          <span className="absolute inset-0 rounded-xl border border-white/70 pointer-events-none" />
+                          <span className="relative grid h-[72px] w-[108px] place-items-center overflow-hidden rounded-lg border border-brand-dark/10 bg-white shadow-sm">
+                            <img src={heroFlagFor(champion)} alt={champion} className="h-full w-full object-cover" loading="eager" decoding="async" />
                           </span>
                         </div>
                         <strong className="mt-3 block font-montserrat text-sm font-black text-brand-dark uppercase tracking-wider truncate max-w-full">
@@ -1887,6 +1962,7 @@ const BolaoPage: React.FC = () => {
   const finalMatch = bracket.final?.[0] ?? null;
   const thirdPlaceMatch = bracket.thirdPlace?.[0] ?? null;
   const champion = finalMatch ? resolvedWinner(finalMatch, draft.predictions[finalMatch.id]) : null;
+  const championFlagUrl = champion ? heroFlagFor(champion) : null;
   const isSubmitted = draft.submittedAt !== null;
 
   const isEmailValid = (email: string) => {
@@ -1895,6 +1971,10 @@ const BolaoPage: React.FC = () => {
 
   const nameValid = draft.participant.name.trim().length >= 2;
   const emailValid = isEmailValid(draft.participant.email.trim());
+  const researchQuestionsValid =
+    Boolean(draft.participant.expertiseLevel) &&
+    Boolean(draft.participant.footballFollowFrequency) &&
+    Boolean(draft.participant.cupPoolExperience);
   const nameError = nameTouched && !nameValid;
   const emailError = emailTouched && !emailValid;
 
@@ -1902,7 +1982,8 @@ const BolaoPage: React.FC = () => {
     completedMatches === TOTAL_MATCHES &&
     champion !== null &&
     nameValid &&
-    emailValid;
+    emailValid &&
+    researchQuestionsValid;
 
   // Fases empilhadas sequencialmente: o mata-mata só renderiza quando os grupos
   // estão completos e o bilhete quando o mata-mata (campeão) está definido e todos os jogos preenchidos.
@@ -1911,6 +1992,16 @@ const BolaoPage: React.FC = () => {
 
   const updateDraft = (updater: (draft: BolaoDraft) => BolaoDraft) => {
     setDraft((current) => ({ ...updater(current), lastSavedAt: new Date().toISOString() }));
+  };
+
+  const updateParticipant = (patch: Partial<Participant>) => {
+    updateDraft((current) => ({
+      ...current,
+      participant: {
+        ...current.participant,
+        ...patch,
+      },
+    }));
   };
 
   const resetDownstream = (predictions: Record<string, MatchPrediction>, stage: MatchStage) => {
@@ -2050,7 +2141,7 @@ const BolaoPage: React.FC = () => {
 
   const startNewTicket = () => {
     updateDraft(() => ({
-      participant: { name: '', email: '' },
+      participant: createInitialParticipant(),
       predictions: {},
       submittedAt: null,
       lastSavedAt: new Date().toISOString()
@@ -2062,7 +2153,7 @@ const BolaoPage: React.FC = () => {
   };
 
   const submitTicket = async () => {
-    if (!canSubmit || isSubmitted || isSubmitting) return;
+    if (!canSubmit || isSubmitting) return;
     setIsSubmitting(true);
     setSubmitError(null);
     setModalState('sending');
@@ -2072,6 +2163,10 @@ const BolaoPage: React.FC = () => {
       participant: {
         name: draft.participant.name.trim(),
         email: draft.participant.email.trim(),
+        expertiseLevel: draft.participant.expertiseLevel,
+        footballFollowFrequency: draft.participant.footballFollowFrequency,
+        cupPoolExperience: draft.participant.cupPoolExperience,
+        favoriteTeam: draft.participant.favoriteTeam.trim(),
       },
       submittedAt: new Date().toISOString(),
       champion,
@@ -2087,7 +2182,6 @@ const BolaoPage: React.FC = () => {
 
     try {
       await setDoc(doc(db, 'bolao2026', emailKey), payload);
-      updateDraft((current) => ({ ...current, submittedAt: payload.submittedAt }));
       setSubmitSuccess(true);
       setModalState('success');
     } catch (err: any) {
@@ -2157,11 +2251,11 @@ const BolaoPage: React.FC = () => {
           </SectionHeader>
         </div>
 
-        <div className="mx-auto grid max-w-[860px] gap-4">
+        <div className="mx-auto grid max-w-7xl gap-4">
           {/* Barra de grupos: fica apenas aqui, logo após o cabeçalho, sem ficar fixa ao rolar. */}
           <div className="rounded-lg border border-brand-dark/10 bg-white px-3 py-2 shadow-sm">
             <div className="overflow-x-auto">
-              <div className="grid min-w-[720px] grid-cols-12 gap-1">
+              <div className="grid grid-cols-6 gap-1 sm:grid-cols-12">
                 {GROUP_ORDER.map((letter) => {
                   const total = groupMatchesByLetter[letter]?.length ?? 0;
                   const complete = (groupMatchesByLetter[letter] ?? []).filter((match) => isResolved(match, draft.predictions[match.id])).length;
@@ -2186,7 +2280,7 @@ const BolaoPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,280px)] md:items-start">
+          <div className="grid gap-4 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:items-start">
           <div className="min-w-0">
             <GroupColumn
               letter={selectedGroup}
@@ -2468,10 +2562,10 @@ const BolaoPage: React.FC = () => {
       {!knockoutComplete && (
         <section className="mx-auto max-w-7xl scroll-mt-40 border-t-4 border-brand-dark/5 px-4 py-8">
           <SectionHeader
-            eyebrow="Envio — oficialize o seu bolão"
+            eyebrow="Envio dos palpites"
             title="Confirme os seus palpites"
             disabled
-            hint="Conclua o mata-mata e escolha o campeão para liberar o envio. É aqui que você confirma o seu bilhete e entra na disputa do bolão."
+            hint="Conclua o mata-mata e escolha o campeão para liberar o envio. É aqui que você confere seus palpites e entra na disputa do bolão."
           />
         </section>
       )}
@@ -2479,7 +2573,7 @@ const BolaoPage: React.FC = () => {
       {knockoutComplete && (
         <section className="mx-auto max-w-7xl scroll-mt-40 border-t-4 border-brand-yellow/30 px-4 py-8">
           <div className="grid gap-6">
-            <SectionHeader eyebrow="Envio — oficialize o seu bolão" title="Confirme os seus palpites">
+            <SectionHeader eyebrow="Envio dos palpites" title="Confirme os seus palpites">
               <ProgressPill label="Palpites preenchidos" done={completedMatches} total={TOTAL_MATCHES} />
               {isSubmitted && (
                 <span className="inline-flex flex-none items-center gap-1 rounded-md bg-brand-green/10 px-2 py-1 text-[10px] font-black uppercase text-brand-green">
@@ -2495,10 +2589,10 @@ const BolaoPage: React.FC = () => {
                   <Trophy className="mt-0.5 h-5 w-5 flex-none text-brand-green" />
                   <div>
                     <h3 className="font-montserrat text-sm font-black uppercase tracking-wide text-brand-dark">
-                      Oficialize seus palpites 🏆
+                      Envie seus palpites 🏆
                     </h3>
                     <p className="mt-2 text-xs leading-relaxed text-brand-dark/70">
-                      Seus palpites viram o seu bilhete oficial. Confira tudo com calma antes de enviar. Após oficializar, seu bilhete é trancado e passa a valer na disputa contra os demais.
+                      Confira tudo com calma antes de enviar. Depois do envio, seus palpites passam a valer na disputa contra os demais.
                     </p>
                   </div>
                 </div>
@@ -2547,7 +2641,7 @@ const BolaoPage: React.FC = () => {
                   disabled={isSubmitted}
                   onBlur={() => setNameTouched(true)}
                   onChange={(event) => {
-                    updateDraft((current) => ({ ...current, participant: { ...current.participant, name: event.target.value } }));
+                    updateParticipant({ name: event.target.value });
                     if (!nameTouched) setNameTouched(true);
                   }}
                   className={`rounded-lg border px-4 py-3 text-sm font-semibold outline-none transition focus:ring-4 disabled:opacity-50 ${
@@ -2580,7 +2674,7 @@ const BolaoPage: React.FC = () => {
                   disabled={isSubmitted}
                   onBlur={() => setEmailTouched(true)}
                   onChange={(event) => {
-                    updateDraft((current) => ({ ...current, participant: { ...current.participant, email: event.target.value } }));
+                    updateParticipant({ email: event.target.value });
                     if (!emailTouched) setEmailTouched(true);
                   }}
                   className={`rounded-lg border px-4 py-3 text-sm font-semibold outline-none transition focus:ring-4 disabled:opacity-50 ${
@@ -2607,8 +2701,76 @@ const BolaoPage: React.FC = () => {
               </div>
             </div>
 
+            <div className="mt-6 grid gap-4 rounded-lg border border-brand-dark/10 bg-brand-light p-4">
+              <div>
+                <span className="font-montserrat text-[10px] font-black uppercase tracking-[0.18em] text-brand-green">
+                  Perguntas rápidas para a pesquisa
+                </span>
+                <p className="mt-1 text-xs font-semibold leading-relaxed text-brand-dark/60">
+                  Respostas curtas ajudam a comparar diferentes perfis de palpiteiros.
+                </p>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <label className="grid gap-2">
+                  <span className="text-xs font-black uppercase tracking-[0.14em] text-brand-dark/45">Quanto você entende de futebol?</span>
+                  <select
+                    value={draft.participant.expertiseLevel}
+                    onChange={(event) => updateParticipant({ expertiseLevel: event.target.value })}
+                    className="rounded-lg border border-brand-dark/10 bg-white px-4 py-3 text-sm font-semibold outline-none transition focus:border-brand-green focus:ring-4 focus:ring-brand-green/10"
+                  >
+                    <option value="">Selecione</option>
+                    <option value="none">Não entendo nada</option>
+                    <option value="little">Entendo pouco</option>
+                    <option value="regular">Entendo razoavelmente</option>
+                    <option value="expert">Me considero especialista</option>
+                  </select>
+                </label>
+
+                <label className="grid gap-2">
+                  <span className="text-xs font-black uppercase tracking-[0.14em] text-brand-dark/45">Com que frequência acompanha futebol?</span>
+                  <select
+                    value={draft.participant.footballFollowFrequency}
+                    onChange={(event) => updateParticipant({ footballFollowFrequency: event.target.value })}
+                    className="rounded-lg border border-brand-dark/10 bg-white px-4 py-3 text-sm font-semibold outline-none transition focus:border-brand-green focus:ring-4 focus:ring-brand-green/10"
+                  >
+                    <option value="">Selecione</option>
+                    <option value="never">Nunca</option>
+                    <option value="rarely">Quase nunca</option>
+                    <option value="sometimes">Algumas vezes por mês</option>
+                    <option value="weekly">Toda semana</option>
+                  </select>
+                </label>
+
+                <label className="grid gap-2">
+                  <span className="text-xs font-black uppercase tracking-[0.14em] text-brand-dark/45">Você já participou de bolões de Copa antes?</span>
+                  <select
+                    value={draft.participant.cupPoolExperience}
+                    onChange={(event) => updateParticipant({ cupPoolExperience: event.target.value })}
+                    className="rounded-lg border border-brand-dark/10 bg-white px-4 py-3 text-sm font-semibold outline-none transition focus:border-brand-green focus:ring-4 focus:ring-brand-green/10"
+                  >
+                    <option value="">Selecione</option>
+                    <option value="never">Nunca participei</option>
+                    <option value="once">Já participei uma vez</option>
+                    <option value="some">Já participei algumas vezes</option>
+                    <option value="always">Participo sempre que tem Copa</option>
+                  </select>
+                </label>
+
+                <label className="grid gap-2">
+                  <span className="text-xs font-black uppercase tracking-[0.14em] text-brand-dark/45">Além do Brasil, vai torcer para mais quem nessa Copa? (opcional)</span>
+                  <input
+                    value={draft.participant.favoriteTeam}
+                    onChange={(event) => updateParticipant({ favoriteTeam: event.target.value })}
+                    className="rounded-lg border border-brand-dark/10 bg-white px-4 py-3 text-sm font-semibold outline-none transition focus:border-brand-green focus:ring-4 focus:ring-brand-green/10"
+                    placeholder="Ex: Argentina, Japão, Marrocos..."
+                  />
+                </label>
+              </div>
+            </div>
+
             <div className="mt-6 grid gap-3 rounded-lg bg-brand-light p-4">
-              <h2 className="text-2xl font-black">Resumo do bilhete</h2>
+              <h2 className="text-2xl font-black">Resumo dos palpites</h2>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="rounded-lg bg-white p-4">
                   <span className="text-[10px] font-black uppercase tracking-[0.16em] text-brand-dark/40">Palpites</span>
@@ -2616,7 +2778,16 @@ const BolaoPage: React.FC = () => {
                 </div>
                 <div className="rounded-lg bg-white p-4">
                   <span className="text-[10px] font-black uppercase tracking-[0.16em] text-brand-dark/40">Campeão</span>
-                  <strong className="mt-1 block truncate font-montserrat text-2xl font-black">{champion ?? '-'}</strong>
+                  <div className="mt-2 flex min-w-0 items-center gap-3">
+                    {championFlagUrl && (
+                      <img
+                        src={championFlagUrl}
+                        alt={`Bandeira de ${champion}`}
+                        className="h-9 w-12 flex-none rounded-md border border-brand-dark/10 object-cover"
+                      />
+                    )}
+                    <strong className="block truncate font-montserrat text-2xl font-black">{champion ?? '-'}</strong>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2624,33 +2795,11 @@ const BolaoPage: React.FC = () => {
 
           <aside className="grid content-start gap-4">
             <div className="rounded-lg border border-brand-dark/10 bg-white p-5 shadow-sm">
-              {isSubmitted ? (
-                <div className="flex flex-col items-center text-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-green/10 text-brand-green mb-3">
-                    <CheckCircle2 className="h-8 w-8" />
-                  </div>
-                  <h2 className="text-2xl font-black text-brand-dark">Bilhete oficializado</h2>
-                  <p className="mt-2 text-sm leading-relaxed text-brand-dark/60">
-                    Seus palpites foram registrados com sucesso no banco de dados e estão valendo no bolão. Boa sorte na disputa!
-                  </p>
-                  <button
-                    type="button"
-                    onClick={startNewTicket}
-                    className="mt-4 inline-flex items-center gap-2 rounded-lg border border-brand-green bg-white hover:bg-brand-green/5 text-brand-green px-4 py-2 text-xs font-black uppercase transition"
-                  >
-                    <Eraser className="h-4 w-4" />
-                    Fazer Outro Palpite
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <UserRound className="h-8 w-8 text-brand-green" />
-                  <h2 className="mt-4 text-2xl font-black">Pronto para enviar</h2>
-                  <p className="mt-3 text-sm leading-relaxed text-brand-dark/60">
-                    Ao oficializar, seus palpites são enviados e passam a valer no bolão. Confira tudo antes de confirmar — depois o bilhete fica trancado.
-                  </p>
-                </>
-              )}
+              <UserRound className="h-8 w-8 text-brand-green" />
+              <h2 className="mt-4 text-2xl font-black">Pronto para enviar</h2>
+              <p className="mt-3 text-sm leading-relaxed text-brand-dark/60">
+                Ao enviar, seus palpites são registrados e passam a valer no bolão. Confira tudo antes de confirmar.
+              </p>
             </div>
 
             {submitError && (
@@ -2682,29 +2831,6 @@ const BolaoPage: React.FC = () => {
               <Download className="h-5 w-5 opacity-40" />
               Exportar palpites (Em breve)
             </button>
-
-            {!canSubmit && !isSubmitted && (
-              <div className="rounded-lg border border-brand-yellow/40 bg-brand-yellow/10 p-4 text-xs font-semibold leading-relaxed text-brand-dark/75 flex flex-col gap-1.5">
-                <span className="font-bold flex items-center gap-1 text-brand-yellow-dark">
-                  <AlertCircle className="h-4 w-4 text-brand-yellow" />
-                  Pendências para liberação de envio:
-                </span>
-                <ul className="list-disc pl-5 space-y-0.5">
-                  {completedMatches < TOTAL_MATCHES && (
-                    <li>Falta preencher {TOTAL_MATCHES - completedMatches} {TOTAL_MATCHES - completedMatches === 1 ? 'partida' : 'partidas'} ({completedMatches}/{TOTAL_MATCHES} concluídas).</li>
-                  )}
-                  {champion === null && (
-                    <li>Falta definir o Campeão na chave do mata-mata.</li>
-                  )}
-                  {!nameValid && (
-                    <li>Insira o seu Nome (mínimo 2 caracteres).</li>
-                  )}
-                  {!emailValid && (
-                    <li>Insira um E-mail válido.</li>
-                  )}
-                </ul>
-              </div>
-            )}
           </aside>
           </div>
         </section>
@@ -2741,7 +2867,7 @@ const BolaoPage: React.FC = () => {
                   Enviando palpites...
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-brand-dark/60 max-w-xs">
-                  Estamos registrando seu bilhete oficial no banco de dados. Por favor, não feche esta página.
+                  Estamos registrando seus palpites no banco de dados. Por favor, não feche esta página.
                 </p>
               </div>
             )}
@@ -2757,7 +2883,7 @@ const BolaoPage: React.FC = () => {
                   Palpites Enviados!
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-brand-dark/70 font-semibold">
-                  Seu bilhete oficial foi registrado com sucesso no bolão 2026.
+                  Seus palpites foram registrados com sucesso no bolão 2026.
                 </p>
                 <p className="mt-2 text-xs leading-relaxed text-brand-dark/50 italic max-w-xs">
                   "Desejamos muita sorte na disputa! Que a ciência e a intuição estejam com você. Boa sorte!" 🏆⚽
@@ -2767,7 +2893,7 @@ const BolaoPage: React.FC = () => {
                   onClick={() => setModalState('none')}
                   className="mt-6 w-full rounded-lg bg-brand-green py-3 text-sm font-black uppercase text-white shadow-md transition hover:bg-brand-grad2"
                 >
-                  Entendido e Ver Bilhete
+                  Entendido
                 </button>
               </div>
             )}

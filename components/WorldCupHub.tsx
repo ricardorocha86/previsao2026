@@ -81,19 +81,42 @@ const WorldCupHub: React.FC = () => {
     return (100 / probability).toFixed(2);
   };
 
+  const teamGroupByName = useMemo(() => {
+    return (currentPrevisoesJogos as any[]).reduce((acc: Record<string, string>, jogo: any) => {
+      const group = jogo['Grupo'];
+      if (!group) return acc;
+
+      [jogo['Seleção A'], jogo['Seleção B']].forEach((teamName) => {
+        if (teamName) acc[teamName] = getGroupLetter(group);
+      });
+
+      return acc;
+    }, {});
+  }, [currentPrevisoesJogos]);
+
   const sortedData = useMemo(() => {
     let sortableData = [...(currentSimulacaoGeral as any[])];
     if (sortConfig !== null) {
       sortableData.sort((a, b) => {
-        const aValue = parsePercent(a[sortConfig.key]);
-        const bValue = parsePercent(b[sortConfig.key]);
-        if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
-        if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+        const getSortValue = (team: any) => {
+          if (sortConfig.key === 'Grupo') return teamGroupByName[team['Seleção']] || '';
+          if (sortConfig.key === 'Seleção') return team['Seleção'] || '';
+          return parsePercent(team[sortConfig.key]);
+        };
+
+        const aValue = getSortValue(a);
+        const bValue = getSortValue(b);
+        const comparison = typeof aValue === 'string' && typeof bValue === 'string'
+          ? aValue.localeCompare(bValue)
+          : aValue - bValue;
+
+        if (comparison < 0) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (comparison > 0) return sortConfig.direction === 'asc' ? 1 : -1;
         return 0;
       });
     }
     return sortableData;
-  }, [currentSimulacaoGeral, sortConfig]);
+  }, [currentSimulacaoGeral, sortConfig, teamGroupByName]);
 
   const filteredSimulacao = sortedData.filter((team: any) => 
     team['Seleção']?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -136,9 +159,11 @@ const WorldCupHub: React.FC = () => {
   };
 
   const requestSort = (key: string) => {
-    let direction: 'asc' | 'desc' = 'desc';
+    let direction: 'asc' | 'desc' = ['Grupo', 'Seleção'].includes(key) ? 'asc' : 'desc';
     if (sortConfig && sortConfig.key === key && sortConfig.direction === 'desc') {
       direction = 'asc';
+    } else if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
     }
     setSortConfig({ key, direction });
   };
@@ -233,14 +258,17 @@ const WorldCupHub: React.FC = () => {
           </div>
 
           <div className="bg-white rounded-2xl shadow-2xl border border-brand-dark/5 overflow-hidden overflow-x-auto overscroll-x-contain">
-            <table className="w-full text-left border-collapse min-w-[1200px]">
+            <table className="w-full text-left border-collapse min-w-[1080px]">
               <thead>
                 <tr className="bg-brand-dark text-white font-montserrat text-[10px] uppercase tracking-[0.25em]">
-                  <th className="p-4 cursor-pointer hover:bg-white/5 transition-colors sticky left-0 bg-brand-dark z-20" onClick={() => requestSort('Seleção')}>
+                  <th className="px-4 py-4 cursor-pointer hover:bg-white/5 transition-colors sticky left-0 bg-brand-dark z-20" onClick={() => requestSort('Seleção')}>
                     <div className="flex items-center">Seleção <SortIcon col="Seleção" /></div>
                   </th>
+                  <th className="w-10 px-2 py-4 text-center bg-brand-dark cursor-pointer hover:bg-white/5 transition-colors" onClick={() => requestSort('Grupo')}>
+                    <div className="flex items-center justify-center">Grupo <SortIcon col="Grupo" /></div>
+                  </th>
                   {['1º Grupo', '2º Grupo', '3º Grupo', '4º Grupo', 'Top 32', 'Oitavas', 'Quartas', 'Semi', 'Final', 'Campeão'].map((phase) => (
-                    <th key={phase} className="p-4 text-center cursor-pointer hover:bg-white/5 transition-colors" onClick={() => requestSort(phase)}>
+                    <th key={phase} className="px-3 py-4 text-center cursor-pointer hover:bg-white/5 transition-colors" onClick={() => requestSort(phase)}>
                       <div className="flex items-center justify-center">{phase} <SortIcon col={phase} /></div>
                     </th>
                   ))}
@@ -249,7 +277,7 @@ const WorldCupHub: React.FC = () => {
               <tbody className="divide-y divide-brand-dark/5">
                 {filteredSimulacao.map((team: any, idx) => (
                   <tr key={idx} className={`${theme.accentHoverBgSoft} transition-colors group`}>
-                    <td className="p-2.5 px-6 sticky left-0 bg-white group-hover:bg-[#F8FFF9] z-10 border-r border-brand-dark/5">
+                    <td className="p-2.5 px-4 sticky left-0 bg-white group-hover:bg-[#F8FFF9] z-10 border-r border-brand-dark/5">
                       <div className="flex items-center gap-3">
                         <span className="text-[10px] text-brand-dark/30 font-black w-6 tabular-nums font-opensans">{idx + 1}</span>
                         <div className="w-8 h-5 rounded-sm shadow-sm border border-brand-dark/5 overflow-hidden flex-shrink-0">
@@ -258,8 +286,11 @@ const WorldCupHub: React.FC = () => {
                         <span className="font-montserrat font-bold text-brand-dark uppercase tracking-tight text-sm">{team['Seleção']}</span>
                       </div>
                     </td>
+                    <td className="px-2 py-2.5 text-center font-montserrat text-xs font-bold text-brand-dark/55">
+                      {teamGroupByName[team['Seleção']] || '-'}
+                    </td>
                     {['1º Grupo', '2º Grupo', '3º Grupo', '4º Grupo', 'Top 32', 'Oitavas', 'Quartas', 'Semi', 'Final', 'Campeão'].map((phase) => (
-                      <td key={phase} className={`p-2.5 text-center text-sm font-bold tabular-nums font-opensans ${phase === 'Campeão' ? `${theme.accentText} ${theme.accentBgSoftClass} font-black text-base` : 'text-brand-dark/70'}`}>
+                      <td key={phase} className={`px-3 py-2.5 text-center text-sm font-bold tabular-nums font-opensans ${phase === 'Campeão' ? `${theme.accentText} ${theme.accentBgSoftClass} font-black text-base` : 'text-brand-dark/70'}`}>
                         {team[phase]}
                       </td>
                     ))}
