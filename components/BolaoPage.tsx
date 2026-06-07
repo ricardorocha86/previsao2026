@@ -16,6 +16,9 @@ import {
   Check,
   AlertCircle,
   Loader2,
+  RotateCcw,
+  ZoomIn,
+  ZoomOut,
 } from 'lucide-react';
 import { db } from '../lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
@@ -1312,17 +1315,22 @@ const KnockoutTeamRow: React.FC<{
 }> = ({ match, team, seed, side, prediction, winner, disabled, align, onScore, onPickWinner }) => {
   const code = teamCode(team);
   const selected = winner === team;
-  const flagButton = (
+  const teamButton = (
     <button
       type="button"
       disabled={disabled}
       onClick={() => onPickWinner(match, team)}
       title={`${team}${seed ? ` - ${seed}` : ''}`}
-      className="flex flex-none items-center justify-center disabled:cursor-not-allowed transition hover:scale-105"
+      className={`flex min-w-0 items-center gap-1 disabled:cursor-not-allowed transition hover:scale-[1.02] ${
+        align === 'right' ? 'flex-row-reverse justify-start text-left' : 'justify-start text-left'
+      }`}
     >
       <CompactFlag team={team} rectangular />
-      <span className="sr-only">{team}</span>
+      <span className="min-w-0 truncate font-montserrat text-[9px] font-black uppercase text-brand-dark/70">
+        {code}
+      </span>
       {seed && <small className="sr-only">{seed}</small>}
+      <span className="sr-only">{team}</span>
     </button>
   );
   const scoreInput = (
@@ -1333,30 +1341,22 @@ const KnockoutTeamRow: React.FC<{
       onChange={(value) => onScore(match, side, value)}
     />
   );
-  const codeLabel = (
-    <span className={`font-montserrat text-[10px] font-black uppercase tracking-wider ${align === 'right' ? 'text-left' : 'text-right'} text-brand-dark/70`}>
-      {code}
-    </span>
-  );
-
   return (
     <div
-      className={`grid items-center gap-1 rounded-md border px-1.5 py-0.5 transition-all duration-200 ${
+      className={`grid min-w-0 items-center gap-1 rounded-md border px-1 py-0.5 transition-all duration-200 ${
         selected
           ? 'border-brand-green bg-brand-green/15 shadow-sm ring-1 ring-brand-green/20'
           : 'border-brand-dark/10 bg-white hover:border-brand-green/30 hover:bg-brand-green/[0.01]'
-      } ${align === 'right' ? 'grid-cols-[24px_1fr_24px]' : 'grid-cols-[24px_1fr_24px]'}`}
+      } ${align === 'right' ? 'grid-cols-[22px_minmax(0,1fr)]' : 'grid-cols-[minmax(0,1fr)_22px]'}`}
     >
       {align === 'right' ? (
         <>
           {scoreInput}
-          {codeLabel}
-          {flagButton}
+          {teamButton}
         </>
       ) : (
         <>
-          {flagButton}
-          {codeLabel}
+          {teamButton}
           {scoreInput}
         </>
       )}
@@ -1562,6 +1562,35 @@ const CONNECTIONS: Connection[] = [
   { fromId: 'ko-semifinals-2', toId: 'ko-thirdPlace-1', side: 'right', isBronze: true },
 ];
 
+const BRACKET_BASE_WIDTH = 1140;
+const BRACKET_BASE_HEIGHT = 680;
+const BRACKET_MIN_ZOOM = 0.55;
+const BRACKET_MAX_ZOOM = 1.35;
+const BRACKET_ZOOM_STEP = 0.15;
+
+const knockoutMatchIdPrefixes = knockoutStages.map((stage) => `ko-${stage}`);
+
+const isKnockoutMatchId = (matchId: string) =>
+  knockoutMatchIdPrefixes.some((prefix) => matchId.startsWith(prefix));
+
+const downstreamMatchIds = (matchId: string) => {
+  const visited = new Set<string>();
+  const queue = [matchId];
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+    if (!current) continue;
+
+    CONNECTIONS.filter((connection) => connection.fromId === current).forEach((connection) => {
+      if (visited.has(connection.toId)) return;
+      visited.add(connection.toId);
+      queue.push(connection.toId);
+    });
+  }
+
+  return visited;
+};
+
 // Final em destaque: standoff horizontal de bandeiras (uma contra a outra),
 // um pouco maior que os demais confrontos do chaveamento.
 const FinalStandoff: React.FC<{
@@ -1672,6 +1701,7 @@ const KnockoutBracket: React.FC<{
 }> = ({ bracket, predictions, champion, disabled, onScore, onPenalty, onPickWinner }) => {
   const leftStages: KnockoutStage[] = ['roundOf32', 'roundOf16', 'quarterfinals', 'semifinals'];
   const rightStages: KnockoutStage[] = ['semifinals', 'quarterfinals', 'roundOf16', 'roundOf32'];
+  const [zoom, setZoom] = useState(1);
   const stageMatches = (stage: KnockoutStage, side: 'left' | 'right') => {
     const matches = bracket[stage] ?? [];
     const half = Math.ceil(roundSlots[stage] / 2);
@@ -1694,9 +1724,9 @@ const KnockoutBracket: React.FC<{
         if (id) {
           const rect = el.getBoundingClientRect();
           pos[id] = {
-            leftX: rect.left - parentRect.left,
-            rightX: rect.right - parentRect.left,
-            y: rect.top - parentRect.top + rect.height / 2,
+            leftX: (rect.left - parentRect.left) / zoom,
+            rightX: (rect.right - parentRect.left) / zoom,
+            y: (rect.top - parentRect.top + rect.height / 2) / zoom,
           };
         }
       });
@@ -1728,7 +1758,14 @@ const KnockoutBracket: React.FC<{
       observer.disconnect();
       window.removeEventListener('resize', measure);
     };
-  }, [bracket, predictions]);
+  }, [bracket, predictions, zoom]);
+
+  const changeZoom = (direction: -1 | 1) => {
+    setZoom((current) => {
+      const next = current + direction * BRACKET_ZOOM_STEP;
+      return Math.min(BRACKET_MAX_ZOOM, Math.max(BRACKET_MIN_ZOOM, Number(next.toFixed(2))));
+    });
+  };
 
   const getMatchWinner = (matchId: string) => {
     let match: CupMatch | undefined;
@@ -1838,8 +1875,53 @@ const KnockoutBracket: React.FC<{
   };
 
   return (
-    <div className="overflow-x-auto pb-4 pt-2">
-      <div ref={parentRef} className="relative min-w-[1140px] h-[680px] px-2">
+    <div>
+      <div className="mb-2 flex items-center justify-end gap-1">
+        <button
+          type="button"
+          onClick={() => changeZoom(-1)}
+          disabled={zoom <= BRACKET_MIN_ZOOM}
+          className="grid h-8 w-8 place-items-center rounded-md border border-brand-dark/10 bg-white text-brand-dark/60 transition hover:border-brand-green/40 hover:text-brand-green disabled:opacity-40"
+          aria-label="Diminuir zoom do mata-mata"
+          title="Diminuir zoom"
+        >
+          <ZoomOut className="h-4 w-4" />
+        </button>
+        <span className="min-w-[3.5rem] rounded-md bg-white px-2 py-1 text-center font-montserrat text-[10px] font-black text-brand-dark/50">
+          {Math.round(zoom * 100)}%
+        </span>
+        <button
+          type="button"
+          onClick={() => changeZoom(1)}
+          disabled={zoom >= BRACKET_MAX_ZOOM}
+          className="grid h-8 w-8 place-items-center rounded-md border border-brand-dark/10 bg-white text-brand-dark/60 transition hover:border-brand-green/40 hover:text-brand-green disabled:opacity-40"
+          aria-label="Aumentar zoom do mata-mata"
+          title="Aumentar zoom"
+        >
+          <ZoomIn className="h-4 w-4" />
+        </button>
+        <button
+          type="button"
+          onClick={() => setZoom(1)}
+          disabled={zoom === 1}
+          className="grid h-8 w-8 place-items-center rounded-md border border-brand-dark/10 bg-white text-brand-dark/60 transition hover:border-brand-green/40 hover:text-brand-green disabled:opacity-40"
+          aria-label="Restaurar zoom do mata-mata"
+          title="Restaurar zoom"
+        >
+          <RotateCcw className="h-4 w-4" />
+        </button>
+      </div>
+
+      <div className="overflow-x-auto overscroll-x-contain pb-4 pt-2">
+        <div
+          className="relative"
+          style={{ width: BRACKET_BASE_WIDTH * zoom, height: BRACKET_BASE_HEIGHT * zoom }}
+        >
+          <div
+            ref={parentRef}
+            className="relative h-[680px] w-[1140px] origin-top-left px-2"
+            style={{ transform: `scale(${zoom})` }}
+          >
         {/* SVG Conectores no fundo */}
         <svg className="absolute inset-0 pointer-events-none w-full h-full z-0">
           {CONNECTIONS.map((conn, idx) => renderConnection(conn, idx))}
@@ -1966,7 +2048,9 @@ const KnockoutBracket: React.FC<{
             />
           ))}
         </div>
+          </div>
       </div>
+    </div>
     </div>
   );
 };
@@ -2130,30 +2214,40 @@ const BolaoPage: React.FC = () => {
     if (inputKey) focusGroupScoreInput(inputKey);
   }, [selectedGroup, isSubmitted]);
 
-  const resetDownstream = (predictions: Record<string, MatchPrediction>, stage: MatchStage) => {
+  const removeOrphanPredictionSources = (
+    sources: Record<string, PredictionSource>,
+    predictions: Record<string, MatchPrediction>,
+  ) => {
+    const next = { ...sources };
+    Object.keys(next).forEach((matchId) => {
+      if (!predictions[matchId]) delete next[matchId];
+    });
+    return next;
+  };
+
+  const clearKnockoutPredictions = (predictions: Record<string, MatchPrediction>) => {
     const next = { ...predictions };
-    const clearStage = (target: MatchStage) => {
-      Object.keys(next).forEach((matchId) => {
-        if (matchId.startsWith(`ko-${target}`)) delete next[matchId];
-      });
-    };
+    Object.keys(next).forEach((matchId) => {
+      if (isKnockoutMatchId(matchId)) delete next[matchId];
+    });
+    return next;
+  };
 
-    if (stage === 'groups') {
-      ['roundOf32', 'roundOf16', 'quarterfinals', 'semifinals', 'thirdPlace', 'final'].forEach((target) => clearStage(target as MatchStage));
-    }
-    if (stage === 'roundOf32') ['roundOf16', 'quarterfinals', 'semifinals', 'thirdPlace', 'final'].forEach((target) => clearStage(target as MatchStage));
-    if (stage === 'roundOf16') ['quarterfinals', 'semifinals', 'thirdPlace', 'final'].forEach((target) => clearStage(target as MatchStage));
-    if (stage === 'quarterfinals') ['semifinals', 'thirdPlace', 'final'].forEach((target) => clearStage(target as MatchStage));
-    if (stage === 'semifinals') ['thirdPlace', 'final'].forEach((target) => clearStage(target as MatchStage));
+  const resetDownstream = (predictions: Record<string, MatchPrediction>, match: CupMatch) => {
+    if (match.stage === 'groups') return clearKnockoutPredictions(predictions);
 
+    const next = { ...predictions };
+    downstreamMatchIds(match.id).forEach((matchId) => {
+      delete next[matchId];
+    });
     return next;
   };
 
   const setScore = (match: CupMatch, side: 'homeGoals' | 'awayGoals', value: number | null) => {
     if (isSubmitted) return;
     updateDraft((current) => {
-      const predictions = resetDownstream(current.predictions, match.stage);
-      const predictionSources = { ...current.predictionSources };
+      const predictions = resetDownstream(current.predictions, match);
+      let predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       const currentPrediction = predictions[match.id] ?? emptyPrediction();
       const nextPrediction = {
         ...currentPrediction,
@@ -2207,8 +2301,8 @@ const BolaoPage: React.FC = () => {
   const setPenalty = (match: CupMatch, team: string) => {
     if (isSubmitted) return;
     updateDraft((current) => {
-      const predictions = resetDownstream(current.predictions, match.stage);
-      const predictionSources = { ...current.predictionSources };
+      const predictions = resetDownstream(current.predictions, match);
+      const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       predictions[match.id] = {
         ...(predictions[match.id] ?? emptyPrediction()),
         penaltyWinner: team,
@@ -2221,8 +2315,8 @@ const BolaoPage: React.FC = () => {
   const setKnockoutWinner = (match: CupMatch, team: string) => {
     if (isSubmitted || match.stage === 'groups') return;
     updateDraft((current) => {
-      const predictions = resetDownstream(current.predictions, match.stage);
-      const predictionSources = { ...current.predictionSources };
+      const predictions = resetDownstream(current.predictions, match);
+      const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       const homeWins = team === match.homeTeam;
       predictions[match.id] = {
         homeGoals: homeWins ? 1 : 0,
@@ -2245,17 +2339,20 @@ const BolaoPage: React.FC = () => {
     if (!stage) return;
     const matches = (bracket[stage] ?? []).filter(Boolean) as CupMatch[];
     updateDraft((current) => {
-      const predictions = resetDownstream(current.predictions, stage);
-      const predictionSources = { ...current.predictionSources };
+      let predictions = { ...current.predictions };
       matches.forEach((match) => {
         if (isResolved(match, predictions[match.id])) return;
+        predictions = resetDownstream(predictions, match);
         const homeWins = Math.random() < 0.5;
         predictions[match.id] = {
           homeGoals: homeWins ? 1 : 0,
           awayGoals: homeWins ? 0 : 1,
           penaltyWinner: null,
         };
-        predictionSources[match.id] = 'manual';
+      });
+      const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
+      matches.forEach((match) => {
+        if (isResolved(match, predictions[match.id])) predictionSources[match.id] = 'manual';
       });
       return { ...current, predictions, predictionSources };
     });
@@ -2264,8 +2361,8 @@ const BolaoPage: React.FC = () => {
   const fillGroup = (letter: string) => {
     if (isSubmitted) return;
     updateDraft((current) => {
-      const predictions = resetDownstream(current.predictions, 'groups');
-      const predictionSources = { ...current.predictionSources };
+      const predictions = clearKnockoutPredictions(current.predictions);
+      const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       (groupMatchesByLetter[letter] ?? []).forEach((match) => {
         predictions[match.id] = suggestedScore(match);
         delete predictionSources[match.id];
@@ -2277,8 +2374,8 @@ const BolaoPage: React.FC = () => {
   const fillAllGroups = () => {
     if (isSubmitted) return;
     updateDraft((current) => {
-      const predictions = resetDownstream(current.predictions, 'groups');
-      const predictionSources = { ...current.predictionSources };
+      const predictions = clearKnockoutPredictions(current.predictions);
+      const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       GROUP_MATCHES.forEach((match) => {
         predictions[match.id] = suggestedScore(match);
         delete predictionSources[match.id];
@@ -2290,8 +2387,8 @@ const BolaoPage: React.FC = () => {
   const fillSelectedGroupRandomly = () => {
     if (isSubmitted) return;
     updateDraft((current) => {
-      const predictions = resetDownstream(current.predictions, 'groups');
-      const predictionSources = { ...current.predictionSources };
+      const predictions = clearKnockoutPredictions(current.predictions);
+      const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       (groupMatchesByLetter[selectedGroup] ?? []).forEach((match) => {
         predictions[match.id] = randomGroupScore();
         predictionSources[match.id] = 'randomGroup';
@@ -2303,8 +2400,8 @@ const BolaoPage: React.FC = () => {
   const clearGroup = (letter: string) => {
     if (isSubmitted) return;
     updateDraft((current) => {
-      const predictions = resetDownstream(current.predictions, 'groups');
-      const predictionSources = { ...current.predictionSources };
+      const predictions = clearKnockoutPredictions(current.predictions);
+      const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       (groupMatchesByLetter[letter] ?? []).forEach((match) => {
         delete predictions[match.id];
         delete predictionSources[match.id];
@@ -2634,10 +2731,14 @@ const BolaoPage: React.FC = () => {
                   type="button"
                   disabled={isSubmitted}
                   onClick={() => {
-                    updateDraft((current) => ({
-                      ...current,
-                      predictions: resetDownstream(current.predictions, 'groups'),
-                    }));
+                    updateDraft((current) => {
+                      const predictions = clearKnockoutPredictions(current.predictions);
+                      return {
+                        ...current,
+                        predictions,
+                        predictionSources: removeOrphanPredictionSources(current.predictionSources, predictions),
+                      };
+                    });
                   }}
                   className="inline-flex items-center justify-center gap-2 rounded-lg border border-brand-dark/10 bg-white px-3 py-2 text-xs font-black uppercase text-brand-dark transition hover:border-brand-red/40 hover:text-brand-red disabled:opacity-50"
                 >
