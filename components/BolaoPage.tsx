@@ -1838,11 +1838,14 @@ const KnockoutBracket: React.FC<{
       return Math.min(maxZoom, Math.max(minZoom, Number(next.toFixed(2))));
     });
   };
+  // Desktop sem zoom: deixa o bracket crescer livremente (min-height em vez de altura
+  // fixa). Assim, quando os painéis de pênalti abrem e empurram um card para baixo, o
+  // canvas inteiro cresce, o viewport (altura auto) acompanha e nada fica cortado — sem
+  // o scroll vertical de 1-2px da altura fixa. Os conectores SVG são remedidos do DOM,
+  // então se realinham sozinhos. Com zoom > 1 mantém a altura limitada + scroll.
+  const growBracketVertically = isDesktopBracket && zoom === 1;
   const viewportHeight = isDesktopBracket
-    ? // Desktop sem zoom: altura livre (auto) para o bracket ocupar exatamente o que
-      // precisa, sem o scroll vertical de 1-2px que a altura fixa causava. Com zoom
-      // ampliado, limita a 72vh e libera o scroll para navegar a chave maior.
-      zoom === 1
+    ? zoom === 1
       ? 'auto'
       : `min(${BRACKET_BASE_HEIGHT}px, 72vh)`
     : zoom === 1
@@ -2011,12 +2014,14 @@ const KnockoutBracket: React.FC<{
           style={{
             width: `${zoom * 100}%`,
             minWidth: BRACKET_BASE_WIDTH * zoom,
-            height: BRACKET_BASE_HEIGHT * zoom,
+            ...(growBracketVertically
+              ? { minHeight: BRACKET_BASE_HEIGHT * zoom }
+              : { height: BRACKET_BASE_HEIGHT * zoom }),
           }}
         >
           <div
             ref={parentRef}
-            className="relative h-[680px] origin-top-left px-2"
+            className={`relative ${growBracketVertically ? 'min-h-[680px]' : 'h-[680px]'} origin-top-left px-2`}
             style={{
               width: `${100 / zoom}%`,
               minWidth: BRACKET_BASE_WIDTH,
@@ -2029,7 +2034,7 @@ const KnockoutBracket: React.FC<{
         </svg>
 
         {/* Chave de Colunas */}
-        <div className="grid grid-cols-[repeat(4,minmax(105px,1fr))_minmax(220px,1.5fr)_repeat(4,minmax(105px,1fr))] items-stretch gap-x-3 h-full relative z-10">
+        <div className={`grid grid-cols-[repeat(4,minmax(105px,1fr))_minmax(220px,1.5fr)_repeat(4,minmax(105px,1fr))] items-stretch gap-x-3 ${growBracketVertically ? 'min-h-[680px]' : 'h-full'} relative z-10`}>
           {leftStages.map((stage) => (
             <BracketRoundColumn
               key={`left-${stage}`}
