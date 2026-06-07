@@ -1800,6 +1800,12 @@ const KnockoutBracket: React.FC<{
       : isDesktopBracket
         ? `min(${BRACKET_BASE_HEIGHT}px, 72vh)`
         : Math.ceil(BRACKET_BASE_HEIGHT * zoom);
+  const bracketViewportClassName = isDesktopBracket
+    ? 'relative mt-2 min-w-0 max-w-full overflow-auto overscroll-contain rounded-lg'
+    : 'relative mt-2 min-w-0 max-w-full overflow-x-auto overflow-y-hidden overscroll-x-contain rounded-lg';
+  const bracketViewportStyle: React.CSSProperties = isDesktopBracket
+    ? { height: viewportHeight, touchAction: 'pan-x pan-y' }
+    : { touchAction: 'pan-x pan-y' };
 
   const getMatchWinner = (matchId: string) => {
     let match: CupMatch | undefined;
@@ -1947,8 +1953,8 @@ const KnockoutBracket: React.FC<{
       </div>
 
       <div
-        className="relative mt-2 min-w-0 max-w-full overflow-auto overscroll-contain rounded-lg"
-        style={{ height: viewportHeight, touchAction: 'pan-x pan-y' }}
+        className={bracketViewportClassName}
+        style={bracketViewportStyle}
       >
         <div
           className="relative"
