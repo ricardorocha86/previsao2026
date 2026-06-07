@@ -873,10 +873,12 @@ const ChampionFlagBadge: React.FC<{ team: string; compact?: boolean }> = ({ team
           <span className={`absolute ${playerPosition} h-12 w-11`}>
             <img
               src={easterEgg.src}
-              alt={easterEgg.player}
+              alt=""
+              aria-hidden="true"
               className="h-full w-full animate-player-pulse object-contain drop-shadow-[0_6px_8px_rgba(0,0,0,0.28)]"
-              loading="lazy"
+              loading="eager"
               decoding="async"
+              fetchPriority="high"
             />
           </span>
         )}
@@ -896,10 +898,12 @@ const ChampionFlagBadge: React.FC<{ team: string; compact?: boolean }> = ({ team
         <span className={`absolute ${playerPosition} z-10 h-[94px] w-[78px]`}>
           <img
             src={easterEgg.src}
-            alt={easterEgg.player}
+            alt=""
+            aria-hidden="true"
             className="h-full w-full animate-player-pulse object-contain drop-shadow-[0_12px_14px_rgba(0,0,0,0.35)]"
             loading="eager"
             decoding="async"
+            fetchPriority="high"
           />
         </span>
       )}
