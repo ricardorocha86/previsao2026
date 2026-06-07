@@ -1569,11 +1569,12 @@ const CONNECTIONS: Connection[] = [
   { fromId: 'ko-semifinals-2', toId: 'ko-thirdPlace-1', side: 'right', isBronze: true },
 ];
 
-const BRACKET_BASE_WIDTH = 1140;
+const BRACKET_BASE_WIDTH = 1180;
 const BRACKET_BASE_HEIGHT = 680;
-const BRACKET_MIN_ZOOM = 0.55;
-const BRACKET_MAX_ZOOM = 1.35;
+const BRACKET_MOBILE_MIN_ZOOM = 0.55;
+const BRACKET_DESKTOP_MAX_ZOOM = 1.45;
 const BRACKET_ZOOM_STEP = 0.15;
+const BRACKET_DESKTOP_QUERY = '(min-width: 768px)';
 
 const knockoutMatchIdPrefixes = knockoutStages.map((stage) => `ko-${stage}`);
 
@@ -1709,6 +1710,11 @@ const KnockoutBracket: React.FC<{
   const leftStages: KnockoutStage[] = ['roundOf32', 'roundOf16', 'quarterfinals', 'semifinals'];
   const rightStages: KnockoutStage[] = ['semifinals', 'quarterfinals', 'roundOf16', 'roundOf32'];
   const [zoom, setZoom] = useState(1);
+  const [isDesktopBracket, setIsDesktopBracket] = useState(() =>
+    typeof window === 'undefined' ? true : window.matchMedia(BRACKET_DESKTOP_QUERY).matches
+  );
+  const minZoom = isDesktopBracket ? 1 : BRACKET_MOBILE_MIN_ZOOM;
+  const maxZoom = isDesktopBracket ? BRACKET_DESKTOP_MAX_ZOOM : 1;
   const stageMatches = (stage: KnockoutStage, side: 'left' | 'right') => {
     const matches = bracket[stage] ?? [];
     const half = Math.ceil(roundSlots[stage] / 2);
@@ -1718,6 +1724,21 @@ const KnockoutBracket: React.FC<{
 
   const parentRef = useRef<HTMLDivElement>(null);
   const [positions, setPositions] = useState<Record<string, { leftX: number; rightX: number; y: number }>>({});
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const mediaQuery = window.matchMedia(BRACKET_DESKTOP_QUERY);
+    const syncDesktopState = () => setIsDesktopBracket(mediaQuery.matches);
+
+    syncDesktopState();
+    mediaQuery.addEventListener('change', syncDesktopState);
+    return () => mediaQuery.removeEventListener('change', syncDesktopState);
+  }, []);
+
+  useEffect(() => {
+    setZoom((current) => Math.min(maxZoom, Math.max(minZoom, current)));
+  }, [maxZoom, minZoom]);
 
   useLayoutEffect(() => {
     const measure = () => {
@@ -1770,9 +1791,15 @@ const KnockoutBracket: React.FC<{
   const changeZoom = (direction: -1 | 1) => {
     setZoom((current) => {
       const next = current + direction * BRACKET_ZOOM_STEP;
-      return Math.min(BRACKET_MAX_ZOOM, Math.max(BRACKET_MIN_ZOOM, Number(next.toFixed(2))));
+      return Math.min(maxZoom, Math.max(minZoom, Number(next.toFixed(2))));
     });
   };
+  const viewportHeight =
+    zoom === 1
+      ? BRACKET_BASE_HEIGHT
+      : isDesktopBracket
+        ? `min(${BRACKET_BASE_HEIGHT}px, 72vh)`
+        : Math.ceil(BRACKET_BASE_HEIGHT * zoom);
 
   const getMatchWinner = (matchId: string) => {
     let match: CupMatch | undefined;
@@ -1882,12 +1909,12 @@ const KnockoutBracket: React.FC<{
   };
 
   return (
-    <div>
+    <div className="min-w-0 max-w-full">
       <div className="mb-2 flex items-center justify-end gap-1">
         <button
           type="button"
           onClick={() => changeZoom(-1)}
-          disabled={zoom <= BRACKET_MIN_ZOOM}
+          disabled={zoom <= minZoom}
           className="grid h-8 w-8 place-items-center rounded-md border border-brand-dark/10 bg-white text-brand-dark/60 transition hover:border-brand-green/40 hover:text-brand-green disabled:opacity-40"
           aria-label="Diminuir zoom do mata-mata"
           title="Diminuir zoom"
@@ -1900,7 +1927,7 @@ const KnockoutBracket: React.FC<{
         <button
           type="button"
           onClick={() => changeZoom(1)}
-          disabled={zoom >= BRACKET_MAX_ZOOM}
+          disabled={zoom >= maxZoom}
           className="grid h-8 w-8 place-items-center rounded-md border border-brand-dark/10 bg-white text-brand-dark/60 transition hover:border-brand-green/40 hover:text-brand-green disabled:opacity-40"
           aria-label="Aumentar zoom do mata-mata"
           title="Aumentar zoom"
@@ -1919,15 +1946,26 @@ const KnockoutBracket: React.FC<{
         </button>
       </div>
 
-      <div className="overflow-x-auto overscroll-x-contain pb-4 pt-2">
+      <div
+        className="relative mt-2 min-w-0 max-w-full overflow-auto overscroll-contain rounded-lg"
+        style={{ height: viewportHeight, touchAction: 'pan-x pan-y' }}
+      >
         <div
           className="relative"
-          style={{ width: BRACKET_BASE_WIDTH * zoom, height: BRACKET_BASE_HEIGHT * zoom }}
+          style={{
+            width: `${zoom * 100}%`,
+            minWidth: BRACKET_BASE_WIDTH * zoom,
+            height: BRACKET_BASE_HEIGHT * zoom,
+          }}
         >
           <div
             ref={parentRef}
-            className="relative h-[680px] w-[1140px] origin-top-left px-2"
-            style={{ transform: `scale(${zoom})` }}
+            className="relative h-[680px] origin-top-left px-2"
+            style={{
+              width: `${100 / zoom}%`,
+              minWidth: BRACKET_BASE_WIDTH,
+              transform: `scale(${zoom})`,
+            }}
           >
         {/* SVG Conectores no fundo */}
         <svg className="absolute inset-0 pointer-events-none w-full h-full z-0">
