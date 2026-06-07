@@ -292,6 +292,9 @@ type PlayerEasterEggPlacement = 'right' | 'left' | 'top';
 const PLAYER_EASTER_EGGS: Record<string, { player: string; src: string; placement: PlayerEasterEggPlacement }> = {
   Argentina: { player: 'Messi', src: '/assets/easter-eggs/messi.png', placement: 'right' },
   Brasil: { player: 'Neymar', src: '/assets/easter-eggs/neymar.png', placement: 'left' },
+  Espanha: { player: 'Yamal', src: '/assets/easter-eggs/yamal.png', placement: 'right' },
+  Franca: { player: 'Mbappé', src: '/assets/easter-eggs/mbappe.png', placement: 'left' },
+  Inglaterra: { player: 'Harry Kane', src: '/assets/easter-eggs/kane.png', placement: 'left' },
   Portugal: { player: 'CR7', src: '/assets/easter-eggs/cr7.png', placement: 'right' },
 };
 
@@ -1125,10 +1128,10 @@ const CompactScoreInput: React.FC<{
   />
 );
 
-const CompactFlag: React.FC<{ team: string; rectangular?: boolean }> = ({ team, rectangular = false }) => (
+const CompactFlag: React.FC<{ team: string; rectangular?: boolean; square?: boolean }> = ({ team, rectangular = false, square = false }) => (
   <span
     className={`grid flex-none place-items-center overflow-hidden rounded-md border border-brand-dark/10 bg-white ${
-      rectangular ? 'h-4 w-6' : 'h-7 w-7 sm:h-8 sm:w-8'
+      square ? 'h-5 w-5' : rectangular ? 'h-4 w-6' : 'h-7 w-7 sm:h-8 sm:w-8'
     }`}
     title={team}
   >
@@ -1225,7 +1228,7 @@ const KnockoutScoreInput: React.FC<{
       const next = event.target.value.replace(/\D/g, '').slice(0, 1);
       onChange(next === '' ? null : Number(next));
     }}
-    className="h-5 w-6 rounded-md border border-brand-dark/15 bg-white text-center font-montserrat text-xs font-black text-brand-dark outline-none transition focus:border-brand-green focus:ring-2 focus:ring-brand-green/15 disabled:opacity-50"
+    className="h-[18px] w-5 rounded border border-brand-dark/15 bg-white text-center font-montserrat text-[11px] font-black leading-none text-brand-dark outline-none transition focus:border-brand-green focus:ring-2 focus:ring-brand-green/15 disabled:opacity-50"
     aria-label={label}
   />
 );
@@ -1325,7 +1328,7 @@ const KnockoutTeamRow: React.FC<{
         align === 'right' ? 'flex-row-reverse justify-start text-left' : 'justify-start text-left'
       }`}
     >
-      <CompactFlag team={team} rectangular />
+      <CompactFlag team={team} square />
       <span className="min-w-0 truncate font-montserrat text-[9px] font-black uppercase text-brand-dark/70">
         {code}
       </span>
@@ -1347,7 +1350,7 @@ const KnockoutTeamRow: React.FC<{
         selected
           ? 'border-brand-green bg-brand-green/15 shadow-sm ring-1 ring-brand-green/20'
           : 'border-brand-dark/10 bg-white hover:border-brand-green/30 hover:bg-brand-green/[0.01]'
-      } ${align === 'right' ? 'grid-cols-[22px_minmax(0,1fr)]' : 'grid-cols-[minmax(0,1fr)_22px]'}`}
+      } ${align === 'right' ? 'grid-cols-[20px_minmax(0,1fr)]' : 'grid-cols-[minmax(0,1fr)_20px]'}`}
     >
       {align === 'right' ? (
         <>
