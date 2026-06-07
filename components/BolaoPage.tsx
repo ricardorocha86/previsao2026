@@ -24,6 +24,7 @@ import { db } from '../lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import previsoesJogos from '../assets/previsoes_jogos.json';
 import flags from '../assets/flags.json';
+import forcaSelecoes from '../assets/forca_selecoes.json';
 
 type SourceMatch = Record<string, string>;
 type MatchStage = 'groups' | 'roundOf32' | 'roundOf16' | 'quarterfinals' | 'semifinals' | 'thirdPlace' | 'final';
@@ -800,22 +801,65 @@ const suggestedScore = (match: CupMatch): MatchPrediction => {
   return { homeGoals: away - home > 50 ? 0 : 1, awayGoals: away - home > 35 ? 2 : 1, penaltyWinner: null };
 };
 
-const randomGroupScore = (): MatchPrediction => {
-  const scores = [
-    [0, 0],
-    [1, 0],
-    [0, 1],
-    [1, 1],
-    [2, 0],
-    [0, 2],
-    [2, 1],
-    [1, 2],
-    [2, 2],
-    [3, 1],
-    [1, 3],
-  ];
-  const [homeGoals, awayGoals] = scores[Math.floor(Math.random() * scores.length)];
-  return { homeGoals, awayGoals, penaltyWinner: null };
+// Tabela de força das seleções (ELO normalizado para 0,1-1) e média de gols por partida,
+// carregadas de assets/forca_selecoes.json. Mesma estrutura da metodologia oficial
+// (compute_match_probabilities em forca_core.py): distribuímos a média de gols entre os
+// dois times proporcionalmente à força de cada um (share) e sorteamos uma Poisson por lado.
+const FORCAS_SELECOES = forcaSelecoes.forcas as Record<string, number>;
+const MEDIA_GOLS_COPA = forcaSelecoes.mediaGols ?? 3.0;
+const FORCA_PADRAO = 0.5; // seleção sem dado de Elo (ex.: vaga de repescagem ainda indefinida)
+const MAX_GOLS_SORTEIO = 7; // teto de segurança para evitar placares absurdos
+
+const forcaSelecao = (team: string): number => FORCAS_SELECOES[team] ?? FORCA_PADRAO;
+
+// Amostra uma Poisson(lambda) pelo algoritmo de Knuth (sem dependências externas).
+const samplePoisson = (lambda: number): number => {
+  if (lambda <= 0) return 0;
+  const limite = Math.exp(-lambda);
+  let k = 0;
+  let p = 1;
+  do {
+    k += 1;
+    p *= Math.random();
+  } while (p > limite);
+  return k - 1;
+};
+
+// Sorteia o placar de um jogo preservando a força de cada seleção. Pega a força (Elo
+// normalizado) de cada time, monta o share = força_casa / (força_casa + força_fora),
+// deriva lambda_casa/lambda_fora como média_gols * share e sorteia uma Poisson para cada
+// lado. Seleção forte marca mais e vence mais na proporção certa; a fraca ainda pode dar
+// zebra, mas com a probabilidade baixa correta — não mais com 9% fixo do sorteio uniforme.
+const randomScoreByStrength = (match: CupMatch): { homeGoals: number; awayGoals: number } => {
+  const forcaHome = forcaSelecao(match.homeTeam);
+  const forcaAway = forcaSelecao(match.awayTeam);
+
+  const total = forcaHome + forcaAway;
+  const shareHome = total > 0 ? forcaHome / total : 0.5;
+
+  const lambdaHome = MEDIA_GOLS_COPA * shareHome;
+  const lambdaAway = MEDIA_GOLS_COPA * (1 - shareHome);
+
+  const homeGoals = Math.min(samplePoisson(lambdaHome), MAX_GOLS_SORTEIO);
+  const awayGoals = Math.min(samplePoisson(lambdaAway), MAX_GOLS_SORTEIO);
+
+  return { homeGoals, awayGoals };
+};
+
+// Fase de grupos: empate é resultado válido, então não há pênaltis.
+const randomGroupScore = (match: CupMatch): MatchPrediction => ({
+  ...randomScoreByStrength(match),
+  penaltyWinner: null,
+});
+
+// Mata-mata: precisa de vencedor. Sorteia o placar pela força e, em caso de empate no
+// tempo normal, decide o classificado nos pênaltis de forma aleatória (50/50 entre os
+// dois times), independente da força — pênalti é loteria.
+const randomKnockoutScore = (match: CupMatch): MatchPrediction => {
+  const { homeGoals, awayGoals } = randomScoreByStrength(match);
+  const penaltyWinner =
+    homeGoals === awayGoals ? (Math.random() < 0.5 ? match.homeTeam : match.awayTeam) : null;
+  return { homeGoals, awayGoals, penaltyWinner };
 };
 
 const formatSaveTime = (value: string | null) => {
@@ -1794,14 +1838,20 @@ const KnockoutBracket: React.FC<{
       return Math.min(maxZoom, Math.max(minZoom, Number(next.toFixed(2))));
     });
   };
-  const viewportHeight =
-    zoom === 1
+  const viewportHeight = isDesktopBracket
+    ? // Desktop sem zoom: altura livre (auto) para o bracket ocupar exatamente o que
+      // precisa, sem o scroll vertical de 1-2px que a altura fixa causava. Com zoom
+      // ampliado, limita a 72vh e libera o scroll para navegar a chave maior.
+      zoom === 1
+      ? 'auto'
+      : `min(${BRACKET_BASE_HEIGHT}px, 72vh)`
+    : zoom === 1
       ? BRACKET_BASE_HEIGHT
-      : isDesktopBracket
-        ? `min(${BRACKET_BASE_HEIGHT}px, 72vh)`
-        : Math.ceil(BRACKET_BASE_HEIGHT * zoom);
+      : Math.ceil(BRACKET_BASE_HEIGHT * zoom);
   const bracketViewportClassName = isDesktopBracket
-    ? 'relative mt-2 min-w-0 max-w-full overflow-auto overscroll-contain rounded-lg'
+    ? zoom === 1
+      ? 'relative mt-2 min-w-0 max-w-full overflow-x-auto overflow-y-hidden overscroll-x-contain rounded-lg'
+      : 'relative mt-2 min-w-0 max-w-full overflow-auto overscroll-contain rounded-lg'
     : 'relative mt-2 min-w-0 max-w-full overflow-x-auto overflow-y-hidden overscroll-x-contain rounded-lg';
   const bracketViewportStyle: React.CSSProperties = isDesktopBracket
     ? { height: viewportHeight, touchAction: 'pan-x pan-y' }
@@ -2394,12 +2444,7 @@ const BolaoPage: React.FC = () => {
       matches.forEach((match) => {
         if (isResolved(match, predictions[match.id])) return;
         predictions = resetDownstream(predictions, match);
-        const homeWins = Math.random() < 0.5;
-        predictions[match.id] = {
-          homeGoals: homeWins ? 1 : 0,
-          awayGoals: homeWins ? 0 : 1,
-          penaltyWinner: null,
-        };
+        predictions[match.id] = randomKnockoutScore(match);
       });
       const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       matches.forEach((match) => {
@@ -2441,7 +2486,7 @@ const BolaoPage: React.FC = () => {
       const predictions = clearKnockoutPredictions(current.predictions);
       const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       (groupMatchesByLetter[selectedGroup] ?? []).forEach((match) => {
-        predictions[match.id] = randomGroupScore();
+        predictions[match.id] = randomGroupScore(match);
         predictionSources[match.id] = 'randomGroup';
       });
       return { ...current, predictions, predictionSources };
