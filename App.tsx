@@ -87,7 +87,6 @@ const PROJECT_NAV_ITEMS: Array<{ view: ViewState; label: string; mobileLabel?: s
   { view: 'science', label: 'Artigos Científicos', mobileLabel: 'Artigos Científicos' },
   { view: 'media', label: 'Destaques na Mídia', mobileLabel: 'Destaques na Mídia' },
   { view: 'team', label: 'Membros da Equipe', mobileLabel: 'Membros da Equipe' },
-  { view: 'methodology', label: 'Metodologia', mobileLabel: 'Metodologia' },
 ];
 
 const getViewFromLocation = (): ViewState => {
@@ -395,7 +394,6 @@ export default function App() {
               <button type="button" onClick={() => navigateTo('mapa')} className="text-left hover:text-brand-green transition">Mapa</button>
               <button type="button" onClick={() => navigateTo('simulador')} className="text-left hover:text-brand-green transition">Simulador</button>
               <button type="button" onClick={() => navigateTo('bolao')} className="text-left hover:text-brand-green transition">Bolão</button>
-              <button type="button" onClick={() => navigateTo('methodology')} className="text-left hover:text-brand-green transition">Metodologia</button>
               <button type="button" onClick={() => navigateTo('science')} className="text-left hover:text-brand-green transition">Pesquisa</button>
               <button type="button" onClick={() => navigateTo('media')} className="text-left hover:text-brand-green transition">Na mídia</button>
               <button type="button" onClick={() => navigateTo('team')} className="text-left hover:text-brand-green transition">Equipe</button>

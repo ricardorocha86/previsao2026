@@ -7,6 +7,7 @@ import simulacaoGeralBayes from '../assets/simulacao_geral_bayes.json';
 import previsoesJogos from '../assets/previsoes_jogos.json';
 import previsoesJogosInicioCopa from '../assets/previsoes_jogos_inicio_copa.json';
 import previsoesJogosBayes from '../assets/previsoes_jogos_bayes.json';
+import resultadosJogos from '../assets/resultados_jogos.json';
 import flags from '../assets/flags.json';
 import PageHeader from './PageHeader';
 
@@ -19,25 +20,194 @@ const GROUP_STYLE = {
 
 type StageId = 'inicio-copa' | 'pre-convocacao';
 
-// Etapas da simulação do Modelo de Força (Metodologia 1), da mais recente para a mais antiga.
+// Etapas da simulação do Modelo de Força (Metodologia 1), em ordem cronológica.
 const STAGES: Array<{ id: StageId; label: string; date: string; data: any[]; jogos: any[] }> = [
-  { id: 'inicio-copa', label: 'Início da Copa', date: '11/06/2026', data: simulacaoGeralInicioCopa as any[], jogos: previsoesJogosInicioCopa as any[] },
   { id: 'pre-convocacao', label: 'Pré-Convocação', date: '11/05/2026', data: simulacaoGeral as any[], jogos: previsoesJogos as any[] },
+  { id: 'inicio-copa', label: 'Início da Copa', date: '11/06/2026', data: simulacaoGeralInicioCopa as any[], jogos: previsoesJogosInicioCopa as any[] },
 ];
+
+// Etapa exibida por padrão: a mais recente já disponível.
+const DEFAULT_STAGE_ID: StageId = 'inicio-copa';
+
+// Etapas futuras em que o modelo ainda será rodado — exibidas desabilitadas até a simulação existir.
+// Datas conforme o calendário oficial da Copa 2026 (fim de cada rodada/fase).
+const UPCOMING_STAGES: Array<{ label: string; date: string }> = [
+  { label: 'Fim da 1ª Rodada', date: '17/06/2026' },
+  { label: 'Fim da 2ª Rodada', date: '23/06/2026' },
+  { label: 'Fim da Fase de Grupos', date: '27/06/2026' },
+  { label: 'Fim dos 16-avos', date: '03/07/2026' },
+  { label: 'Fim das Oitavas', date: '07/07/2026' },
+  { label: 'Fim das Quartas', date: '11/07/2026' },
+  { label: 'Fim das Semifinais', date: '15/07/2026' },
+];
+
+const getFlag = (teamName: string) => {
+  if (!teamName) return "https://flagcdn.com/w320/un.webp";
+  const normalized = teamName.trim();
+  return (flags as any)[normalized] || (flags as any)[normalized.replace('República ', '')] || "https://flagcdn.com/w320/un.webp";
+};
+
+const parsePercent = (val: any) => {
+  if (typeof val === 'string') {
+    const cleaned = val.replace('%', '').replace(',', '.').trim();
+    return parseFloat(cleaned) || 0;
+  }
+  return val || 0;
+};
+
+const formatFairOdd = (val: any) => {
+  const probability = parsePercent(val);
+  if (!probability) return '-';
+  return (100 / probability).toFixed(2);
+};
+
+function getGroupLetter(group: string) {
+  return group?.replace('Grupo ', '').trim() || '-';
+}
+
+const getShortBrasiliaTime = (value: string) => {
+  const match = value?.match(/\(([^/]+)/);
+  return match ? match[1].trim() : value;
+};
+
+const getShortVenue = (value: string) => {
+  return value?.split('–')[0]?.trim() || value;
+};
+
+const MESES_PT: Record<string, number> = {
+  janeiro: 0, fevereiro: 1, 'março': 2, abril: 3, maio: 4, junho: 5,
+  julho: 6, agosto: 7, setembro: 8, outubro: 9, novembro: 10, dezembro: 11,
+};
+
+// Timestamp do jogo (horário de Brasília) para ordenação cronológica.
+const parseDataHora = (jogo: any): number => {
+  const m = String(jogo['Data'] || '').match(/(\d{1,2}) de (\S+) de (\d{4})/);
+  if (!m) return 0;
+  const mes = MESES_PT[m[2].toLowerCase()] ?? 0;
+  const h = String(jogo['Horário Brasília'] || '').match(/(\d{1,2})h(\d{2})/);
+  return new Date(Number(m[3]), mes, Number(m[1]), h ? Number(h[1]) : 0, h ? Number(h[2]) : 0).getTime();
+};
+
+// Resultados oficiais ficam em arquivo separado: as previsões publicadas nunca são editadas após as partidas.
+const jogoKey = (jogo: any) => `${jogo['Seleção A']}|${jogo['Seleção B']}|${jogo['Data']}`;
+
+const RESULTADOS_MAP: Record<string, any> = (resultadosJogos as any[]).reduce((acc, r) => {
+  acc[jogoKey(r)] = r;
+  return acc;
+}, {} as Record<string, any>);
+
+const getResultado = (jogo: any) => {
+  const r = RESULTADOS_MAP[jogoKey(jogo)];
+  return r && r['Status'] === 'encerrado' ? r : undefined;
+};
+
+type Desfecho = 'A' | 'E' | 'B';
+
+const getDesfecho = (resultado: any): Desfecho =>
+  resultado['Placar A'] > resultado['Placar B'] ? 'A' : resultado['Placar A'] < resultado['Placar B'] ? 'B' : 'E';
+
+const JogoCard: React.FC<{ jogo: any; theme: any; showGroup?: boolean }> = ({ jogo, theme, showGroup }) => {
+  const resultado = getResultado(jogo);
+  const desfecho = resultado ? getDesfecho(resultado) : null;
+  const dimClass = (d: Desfecho) => (resultado && desfecho !== d ? 'opacity-35' : '');
+
+  return (
+    <div className="bg-white border border-brand-dark/5 p-5 rounded-3xl shadow-md hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] transition-all duration-500 group/card relative overflow-hidden">
+      {/* 3-COLUMN INFO HEADER */}
+      <div className="grid grid-cols-3 gap-2 mb-6 pb-4 border-b border-brand-dark/5 text-[9px] font-black uppercase tracking-tight text-brand-dark/35">
+        <div className="flex items-center gap-1.5 min-w-0">
+          {showGroup ? (
+            <>
+              <Trophy className={`w-3 h-3 flex-shrink-0 ${theme.accentText}`} />
+              <span className="truncate">{jogo['Grupo']}</span>
+            </>
+          ) : (
+            <>
+              <CalendarDays className={`w-3 h-3 flex-shrink-0 ${theme.accentText}`} />
+              <span className="truncate">{jogo['Data']?.split(',')[1] || jogo['Data']}</span>
+            </>
+          )}
+        </div>
+        <div className="flex items-center justify-center gap-1.5">
+          <Clock className={`w-3 h-3 flex-shrink-0 ${theme.accentText}`} />
+          <span>{getShortBrasiliaTime(jogo['Horário Brasília'])}</span>
+        </div>
+        <div className="flex items-center justify-end gap-1.5 min-w-0">
+          <MapPin className={`w-3 h-3 flex-shrink-0 ${theme.accentText}`} />
+          <span className="truncate text-right">{getShortVenue(jogo['Horário/Local'])}</span>
+        </div>
+      </div>
+
+      {/* TEAMS AND PROBABILITIES GRID */}
+      <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-2 mb-4">
+        <div className="flex flex-col items-center text-center gap-2">
+          <div className="w-16 h-10 rounded-xl border border-brand-dark/10 overflow-hidden shadow-sm group-hover/card:scale-110 transition-transform duration-500">
+            <img src={getFlag(jogo['Seleção A'])} className="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
+          </div>
+          <div className="space-y-1">
+            <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block h-7 flex items-center justify-center">{jogo['Seleção A']}</span>
+            <span className={`font-exo text-lg font-bold italic ${theme.accentText} block ${dimClass('A')}`}>{jogo['Vitória A']}</span>
+            <span className={`block text-[9px] font-montserrat font-bold tabular-nums text-brand-dark/30 ${dimClass('A')}`}>{formatFairOdd(jogo['Vitória A'])}</span>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center pt-2">
+          {resultado ? (
+            <>
+              <span className="text-[8px] font-montserrat font-black uppercase tracking-widest text-brand-dark/40 mb-1">Encerrado</span>
+              <div className="px-3.5 py-1.5 bg-brand-dark text-white rounded-2xl font-exo font-black text-xl tabular-nums shadow-md mb-3">
+                {resultado['Placar A']} <span className="opacity-40 text-sm font-bold">×</span> {resultado['Placar B']}
+              </div>
+            </>
+          ) : (
+            <div className="px-2.5 py-1 bg-brand-light rounded-full text-[9px] font-black text-brand-dark/25 mb-4">VS</div>
+          )}
+          <div className={`flex flex-col items-center ${resultado && desfecho === 'E' ? '' : 'opacity-40'} ${dimClass('E')}`}>
+            <span className="text-[8px] font-montserrat font-black uppercase tracking-widest mb-0.5">Empate</span>
+            <span className="font-exo text-sm font-bold italic text-brand-dark">{jogo['Empate']}</span>
+            <span className="mt-0.5 text-[8px] font-montserrat font-bold tabular-nums text-brand-dark/70">{formatFairOdd(jogo['Empate'])}</span>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center text-center gap-2">
+          <div className="w-16 h-10 rounded-xl border border-brand-dark/10 overflow-hidden shadow-sm group-hover/card:scale-110 transition-transform duration-500">
+            <img src={getFlag(jogo['Seleção B'])} className="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
+          </div>
+          <div className="space-y-1">
+            <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block h-7 flex items-center justify-center">{jogo['Seleção B']}</span>
+            <span className={`font-exo text-lg font-bold italic text-brand-blue block ${dimClass('B')}`}>{jogo['Vitória B']}</span>
+            <span className={`block text-[9px] font-montserrat font-bold tabular-nums text-brand-dark/30 ${dimClass('B')}`}>{formatFairOdd(jogo['Vitória B'])}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* MINIMALIST BAR */}
+      <div className="flex h-1 overflow-hidden bg-brand-light rounded-full">
+        <div style={{ width: jogo['Vitória A'] }} className={theme.barColor} />
+        <div style={{ width: jogo['Empate'] }} className="bg-brand-dark/10" />
+        <div style={{ width: jogo['Vitória B'] }} className="bg-brand-blue" />
+      </div>
+    </div>
+  );
+};
+
+type ViewMode = 'data' | 'grupos';
 
 const WorldCupHub: React.FC = () => {
   const [methodology, setMethodology] = useState<1 | 2>(1);
-  const [stageId, setStageId] = useState<StageId>(STAGES[0].id);
+  const [stageId, setStageId] = useState<StageId>(DEFAULT_STAGE_ID);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchTermJogos, setSearchTermJogos] = useState('');
   const [selectedGroup, setSelectedGroup] = useState('Grupo A');
-  
+  const [viewMode, setViewMode] = useState<ViewMode>('data');
+  const [selectedDate, setSelectedDate] = useState<string>('');
+
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>({
     key: 'Campeão',
     direction: 'desc'
   });
 
-  const currentStage = STAGES.find((s) => s.id === stageId) ?? STAGES[0];
+  const currentStage = STAGES.find((s) => s.id === stageId) ?? STAGES[STAGES.length - 1];
   const currentSimulacaoGeral = methodology === 1 ? currentStage.data : simulacaoGeralBayes;
   const currentPrevisoesJogos = methodology === 1 ? currentStage.jogos : previsoesJogosBayes;
   const theme = useMemo(() => {
@@ -73,25 +243,6 @@ const WorldCupHub: React.FC = () => {
       };
     }
   }, [methodology]);
-  const getFlag = (teamName: string) => {
-    if (!teamName) return "https://flagcdn.com/w320/un.webp";
-    const normalized = teamName.trim();
-    return (flags as any)[normalized] || (flags as any)[normalized.replace('República ', '')] || "https://flagcdn.com/w320/un.webp";
-  };
-
-  const parsePercent = (val: any) => {
-    if (typeof val === 'string') {
-      const cleaned = val.replace('%', '').replace(',', '.').trim();
-      return parseFloat(cleaned) || 0;
-    }
-    return val || 0;
-  };
-
-  const formatFairOdd = (val: any) => {
-    const probability = parsePercent(val);
-    if (!probability) return '-';
-    return (100 / probability).toFixed(2);
-  };
 
   const teamGroupByName = useMemo(() => {
     return (currentPrevisoesJogos as any[]).reduce((acc: Record<string, string>, jogo: any) => {
@@ -130,7 +281,7 @@ const WorldCupHub: React.FC = () => {
     return sortableData;
   }, [currentSimulacaoGeral, sortConfig, teamGroupByName]);
 
-  const filteredSimulacao = sortedData.filter((team: any) => 
+  const filteredSimulacao = sortedData.filter((team: any) =>
     team['Seleção']?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -139,9 +290,49 @@ const WorldCupHub: React.FC = () => {
       .sort((a: any, b: any) => getGroupLetter(a).localeCompare(getGroupLetter(b)));
   }, [currentPrevisoesJogos]);
 
-  // Com busca ativa, procura em todos os grupos; sem busca, exibe um grupo por vez.
+  const jogosComMeta = useMemo(() => {
+    return (currentPrevisoesJogos as any[]).map((jogo: any) => ({
+      jogo,
+      ts: parseDataHora(jogo),
+      resultado: getResultado(jogo),
+    }));
+  }, [currentPrevisoesJogos]);
+
+  // Datas únicas do calendário em ordem cronológica.
+  const dateOptions = useMemo(() => {
+    const porData = new Map<string, number>();
+    for (const item of jogosComMeta) {
+      const data = item.jogo['Data'] || 'Data a definir';
+      const atual = porData.get(data);
+      if (atual === undefined || item.ts < atual) porData.set(data, item.ts);
+    }
+    return [...porData.entries()].sort((a, b) => a[1] - b[1]).map(([data, ts]) => ({ data, ts }));
+  }, [jogosComMeta]);
+
+  const hojeTs = useMemo(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d.getTime();
+  }, []);
+
+  const isHoje = (ts: number) => {
+    const d = new Date(ts);
+    d.setHours(0, 0, 0, 0);
+    return d.getTime() === hojeTs;
+  };
+
+  // Dia exibido por padrão: o dia atual; sem jogos hoje, o próximo dia com jogos; após o fim, o último.
+  const defaultDate = useMemo(() => {
+    const hoje = dateOptions.find((o) => isHoje(o.ts));
+    const proxima = dateOptions.find((o) => o.ts >= hojeTs);
+    return (hoje ?? proxima ?? dateOptions[dateOptions.length - 1])?.data ?? '';
+  }, [dateOptions, hojeTs]);
+
+  const effectiveDate = selectedDate || defaultDate;
+
+  // Com busca ativa, procura em todos os grupos; sem busca, a aba define o recorte.
   const searchJogosAtivo = searchTermJogos.trim().length > 0;
-  const filteredJogos = (currentPrevisoesJogos as any[]).filter((jogo: any) => {
+  const filteredJogos = jogosComMeta.filter(({ jogo }) => {
     if (searchJogosAtivo) {
       const term = searchTermJogos.trim().toLowerCase();
       return (
@@ -150,7 +341,8 @@ const WorldCupHub: React.FC = () => {
         jogo['Grupo']?.toLowerCase().includes(term)
       );
     }
-    return jogo['Grupo'] === selectedGroup;
+    if (viewMode === 'grupos') return jogo['Grupo'] === selectedGroup;
+    return jogo['Data'] === effectiveDate;
   });
 
   const stepGroup = (delta: number) => {
@@ -159,27 +351,32 @@ const WorldCupHub: React.FC = () => {
     setSelectedGroup(groupOptions[next] as string);
   };
 
+  const isGroupedView = searchJogosAtivo || viewMode === 'grupos';
+
   const jogosPorGrupo = useMemo(() => {
-    return filteredJogos.reduce((acc: Record<string, any[]>, jogo: any) => {
-      const group = jogo['Grupo'] || 'Sem grupo';
+    if (!isGroupedView) return {};
+    return filteredJogos.reduce((acc: Record<string, any[]>, item) => {
+      const group = item.jogo['Grupo'] || 'Sem grupo';
       if (!acc[group]) acc[group] = [];
-      acc[group].push(jogo);
+      acc[group].push(item);
       return acc;
     }, {});
-  }, [filteredJogos]);
+  }, [filteredJogos, isGroupedView]);
 
-  function getGroupLetter(group: string) {
-    return group?.replace('Grupo ', '').trim() || '-';
-  }
+  // Vista por data exibe um dia por vez, com os jogos em ordem cronológica.
+  const jogosDoDia = useMemo(() => {
+    if (isGroupedView) return [];
+    return [...filteredJogos].sort((a, b) => a.ts - b.ts);
+  }, [filteredJogos, isGroupedView]);
 
-  const getShortBrasiliaTime = (value: string) => {
-    const match = value?.match(/\(([^/]+)/);
-    return match ? match[1].trim() : value;
+  const stepDate = (delta: number) => {
+    const idx = dateOptions.findIndex((o) => o.data === effectiveDate);
+    const next = (idx + delta + dateOptions.length) % dateOptions.length;
+    setSelectedDate(dateOptions[next].data);
   };
 
-  const getShortVenue = (value: string) => {
-    return value?.split('–')[0]?.trim() || value;
-  };
+  const shortDate = (ts: number) => new Date(ts).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+  const effectiveDateTs = dateOptions.find((o) => o.data === effectiveDate)?.ts ?? 0;
 
   const requestSort = (key: string) => {
     let direction: 'asc' | 'desc' = ['Grupo', 'Seleção'].includes(key) ? 'asc' : 'desc';
@@ -195,6 +392,11 @@ const WorldCupHub: React.FC = () => {
     if (sortConfig?.key !== col) return <ArrowUpDown className="w-3 h-3 ml-1 opacity-20" />;
     return sortConfig.direction === 'asc' ? <ArrowUp className={`w-3 h-3 ml-1 ${theme.accentText}`} /> : <ArrowDown className={`w-3 h-3 ml-1 ${theme.accentText}`} />;
   };
+
+  const VIEW_TABS: Array<{ id: ViewMode; label: string }> = [
+    { id: 'data', label: 'Por Data' },
+    { id: 'grupos', label: 'Por Grupo' },
+  ];
 
   return (
     <div className="min-h-screen bg-brand-light pb-24 font-opensans">
@@ -264,7 +466,7 @@ const WorldCupHub: React.FC = () => {
 
       {/* TABLES SECTION */}
       <div className="max-w-7xl mx-auto px-4 mt-16 space-y-32">
-        
+
         {/* PROBABILITIES TABLE - BRAND TYPOGRAPHY */}
         <section>
           <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-12 gap-8">
@@ -277,16 +479,31 @@ const WorldCupHub: React.FC = () => {
               {methodology === 1 && (
                 <div className="mt-6">
                   <span className="block text-[10px] font-montserrat font-black uppercase tracking-[0.25em] text-brand-dark/40 mb-2">Etapa da simulação</span>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                     {STAGES.map((s) => (
                       <button
                         key={s.id}
                         onClick={() => setStageId(s.id)}
-                        className="px-5 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest border-2 transition-all shadow-sm"
+                        className="px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest border-2 transition-all shadow-sm"
                         style={{
                           borderColor: stageId === s.id ? theme.accent : theme.accentBorder,
                           color: stageId === s.id ? '#ffffff' : theme.accent,
                           backgroundColor: stageId === s.id ? theme.accent : '#ffffff',
+                        }}
+                      >
+                        {s.label} · {s.date}
+                      </button>
+                    ))}
+                    {UPCOMING_STAGES.map((s) => (
+                      <button
+                        key={s.label}
+                        disabled
+                        title="Em breve — o modelo será rodado ao fim desta etapa"
+                        className="px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest border-2 shadow-sm cursor-not-allowed"
+                        style={{
+                          borderColor: 'rgba(42,52,46,0.12)',
+                          color: 'rgba(42,52,46,0.35)',
+                          backgroundColor: 'rgba(42,52,46,0.04)',
                         }}
                       >
                         {s.label} · {s.date}
@@ -362,41 +579,79 @@ const WorldCupHub: React.FC = () => {
               </p>
             )}
 
+            <div className="flex flex-wrap gap-2">
+              {VIEW_TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setViewMode(tab.id)}
+                  className="px-5 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest border-2 transition-all shadow-sm"
+                  style={{
+                    borderColor: viewMode === tab.id ? theme.accent : theme.accentBorder,
+                    color: viewMode === tab.id ? '#ffffff' : theme.accent,
+                    backgroundColor: viewMode === tab.id ? theme.accent : '#ffffff',
+                  }}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
             <div className="flex flex-col md:flex-row justify-between items-center gap-6 pb-6 border-b border-brand-dark/5">
-              <div className="flex flex-wrap justify-center md:justify-start gap-2">
-                {groupOptions.map((group: any) => (
-                  <button
-                    key={group}
-                    onClick={() => setSelectedGroup(group)}
-                    className="px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest border transition-all bg-white hover:-translate-y-0.5 shadow-sm"
-                    style={{
-                      borderColor: selectedGroup === group ? theme.accent : theme.accentBorder,
-                      color: selectedGroup === group ? '#ffffff' : theme.accent,
-                      backgroundColor: selectedGroup === group ? theme.accent : '#ffffff',
-                      transform: selectedGroup === group ? 'scale(1.05)' : 'none',
-                      boxShadow: selectedGroup === group ? `0 10px 15px -3px ${theme.accentSoft}` : 'none'
-                    }}
-                  >
-                    {getGroupLetter(group)}
-                  </button>
-                ))}
-              </div>
-              
+              {viewMode === 'grupos' ? (
+                <div className="flex flex-wrap justify-center md:justify-start gap-2">
+                  {groupOptions.map((group: any) => (
+                    <button
+                      key={group}
+                      onClick={() => setSelectedGroup(group)}
+                      className="px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest border transition-all bg-white hover:-translate-y-0.5 shadow-sm"
+                      style={{
+                        borderColor: selectedGroup === group ? theme.accent : theme.accentBorder,
+                        color: selectedGroup === group ? '#ffffff' : theme.accent,
+                        backgroundColor: selectedGroup === group ? theme.accent : '#ffffff',
+                        transform: selectedGroup === group ? 'scale(1.05)' : 'none',
+                        boxShadow: selectedGroup === group ? `0 10px 15px -3px ${theme.accentSoft}` : 'none'
+                      }}
+                    >
+                      {getGroupLetter(group)}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-wrap justify-center md:justify-start gap-2">
+                  {dateOptions.map(({ data, ts }) => (
+                    <button
+                      key={data}
+                      onClick={() => setSelectedDate(data)}
+                      className="px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest border transition-all bg-white hover:-translate-y-0.5 shadow-sm"
+                      style={{
+                        borderColor: effectiveDate === data ? theme.accent : theme.accentBorder,
+                        color: effectiveDate === data ? '#ffffff' : theme.accent,
+                        backgroundColor: effectiveDate === data ? theme.accent : '#ffffff',
+                        transform: effectiveDate === data ? 'scale(1.05)' : 'none',
+                        boxShadow: effectiveDate === data ? `0 10px 15px -3px ${theme.accentSoft}` : 'none'
+                      }}
+                    >
+                      {shortDate(ts)}{isHoje(ts) ? ' · Hoje' : ''}
+                    </button>
+                  ))}
+                </div>
+              )}
+
               <div className="relative w-full md:w-80">
                 <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-dark/30" />
-                <input 
-                  type="text" 
-                  placeholder="Buscar seleção no calendário..." 
-                  className={`w-full pl-14 pr-6 py-4 bg-white border-2 border-brand-dark/5 rounded-2xl text-sm outline-none ${theme.accentFocusBorder} transition-all shadow-md font-opensans`} 
-                  value={searchTermJogos} 
-                  onChange={(e) => setSearchTermJogos(e.target.value)} 
+                <input
+                  type="text"
+                  placeholder="Buscar seleção no calendário..."
+                  className={`w-full pl-14 pr-6 py-4 bg-white border-2 border-brand-dark/5 rounded-2xl text-sm outline-none ${theme.accentFocusBorder} transition-all shadow-md font-opensans`}
+                  value={searchTermJogos}
+                  onChange={(e) => setSearchTermJogos(e.target.value)}
                 />
               </div>
             </div>
           </div>
 
           <div className="space-y-10">
-             {Object.entries(jogosPorGrupo).map(([group, jogos]) => {
+             {isGroupedView && Object.entries(jogosPorGrupo).map(([group, itens]) => {
                return (
                  <div key={group} className="bg-white border-2 shadow-md overflow-hidden" style={{ borderColor: theme.accent, borderRadius: 16 }}>
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-6 py-5 border-b-2" style={{ backgroundColor: theme.accent, borderColor: theme.accent }}>
@@ -416,84 +671,56 @@ const WorldCupHub: React.FC = () => {
                     </div>
 
                     <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-5 p-5 md:p-6 bg-brand-light/20">
-                      {(jogos as any[]).map((jogo: any, idx: number) => (
-                        <div key={`${group}-${idx}`} className="bg-white border border-brand-dark/5 p-5 rounded-3xl shadow-md hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] transition-all duration-500 group/card relative overflow-hidden">
-                          {/* 3-COLUMN INFO HEADER */}
-                          <div className="grid grid-cols-3 gap-2 mb-6 pb-4 border-b border-brand-dark/5 text-[9px] font-black uppercase tracking-tight text-brand-dark/35">
-                            <div className="flex items-center gap-1.5 min-w-0">
-                              <CalendarDays className={`w-3 h-3 flex-shrink-0 ${theme.accentText}`} />
-                              <span className="truncate">{jogo['Data']?.split(',')[1] || jogo['Data']}</span>
-                            </div>
-                            <div className="flex items-center justify-center gap-1.5">
-                              <Clock className={`w-3 h-3 flex-shrink-0 ${theme.accentText}`} />
-                              <span>{getShortBrasiliaTime(jogo['Horário Brasília'])}</span>
-                            </div>
-                            <div className="flex items-center justify-end gap-1.5 min-w-0">
-                              <MapPin className={`w-3 h-3 flex-shrink-0 ${theme.accentText}`} />
-                              <span className="truncate text-right">{getShortVenue(jogo['Horário/Local'])}</span>
-                            </div>
-                          </div>
-
-                          {/* TEAMS AND PROBABILITIES GRID */}
-                          <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-2 mb-4">
-                            <div className="flex flex-col items-center text-center gap-2">
-                              <div className="w-16 h-10 rounded-xl border border-brand-dark/10 overflow-hidden shadow-sm group-hover/card:scale-110 transition-transform duration-500">
-                                <img src={getFlag(jogo['Seleção A'])} className="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
-                              </div>
-                              <div className="space-y-1">
-                                <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block h-7 flex items-center justify-center">{jogo['Seleção A']}</span>
-                                <span className={`font-exo text-lg font-bold italic ${theme.accentText} block`}>{jogo['Vitória A']}</span>
-                                <span className="block text-[9px] font-montserrat font-bold tabular-nums text-brand-dark/30">{formatFairOdd(jogo['Vitória A'])}</span>
-                              </div>
-                            </div>
-
-                            <div className="flex flex-col items-center pt-2">
-                              <div className="px-2.5 py-1 bg-brand-light rounded-full text-[9px] font-black text-brand-dark/25 mb-4">VS</div>
-                              <div className="flex flex-col items-center opacity-40">
-                                <span className="text-[8px] font-montserrat font-black uppercase tracking-widest mb-0.5">Empate</span>
-                                <span className="font-exo text-sm font-bold italic text-brand-dark">{jogo['Empate']}</span>
-                                <span className="mt-0.5 text-[8px] font-montserrat font-bold tabular-nums text-brand-dark/70">{formatFairOdd(jogo['Empate'])}</span>
-                              </div>
-                            </div>
-
-                            <div className="flex flex-col items-center text-center gap-2">
-                              <div className="w-16 h-10 rounded-xl border border-brand-dark/10 overflow-hidden shadow-sm group-hover/card:scale-110 transition-transform duration-500">
-                                <img src={getFlag(jogo['Seleção B'])} className="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
-                              </div>
-                              <div className="space-y-1">
-                                <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block h-7 flex items-center justify-center">{jogo['Seleção B']}</span>
-                                <span className="font-exo text-lg font-bold italic text-brand-blue block">{jogo['Vitória B']}</span>
-                                <span className="block text-[9px] font-montserrat font-bold tabular-nums text-brand-dark/30">{formatFairOdd(jogo['Vitória B'])}</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* MINIMALIST BAR */}
-                          <div className="flex h-1 overflow-hidden bg-brand-light rounded-full">
-                            <div style={{ width: jogo['Vitória A'] }} className={theme.barColor} />
-                            <div style={{ width: jogo['Empate'] }} className="bg-brand-dark/10" />
-                            <div style={{ width: jogo['Vitória B'] }} className="bg-brand-blue" />
-                          </div>
-                        </div>
+                      {(itens as any[]).map((item: any, idx: number) => (
+                        <JogoCard key={`${group}-${idx}`} jogo={item.jogo} theme={theme} />
                       ))}
                     </div>
                  </div>
                );
              })}
+             {!isGroupedView && jogosDoDia.length > 0 && (
+               <div className="bg-white border-2 shadow-md overflow-hidden" style={{ borderColor: theme.accent, borderRadius: 16 }}>
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-6 py-5 border-b-2" style={{ backgroundColor: theme.accent, borderColor: theme.accent }}>
+                    <div className="flex items-center gap-5">
+                      <div className="w-14 h-14 flex items-center justify-center bg-white shadow-inner flex-shrink-0" style={{ color: theme.accent, borderRadius: 12 }}>
+                        <CalendarDays className="w-7 h-7" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl md:text-2xl font-montserrat font-black text-white leading-none uppercase tracking-tight">{effectiveDate}</h3>
+                        <span className="block text-[10px] font-montserrat font-black uppercase tracking-widest text-white/70 mt-1.5">
+                          {jogosDoDia.length} {jogosDoDia.length === 1 ? 'jogo' : 'jogos'}{isHoje(effectiveDateTs) ? ' · Hoje' : ''}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="hidden md:flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/80">
+                      <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-white" /> Vitória A</span>
+                      <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-white/40" /> Empate</span>
+                      <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-brand-blue border border-white/20" /> Vitória B</span>
+                    </div>
+                  </div>
+                  <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-5 p-5 md:p-6 bg-brand-light/20">
+                    {jogosDoDia.map((item: any, idx: number) => (
+                      <JogoCard key={`${effectiveDate}-${idx}`} jogo={item.jogo} theme={theme} showGroup />
+                    ))}
+                  </div>
+               </div>
+             )}
              {!searchJogosAtivo && filteredJogos.length > 0 && (
                <div className="flex items-center justify-center gap-6 pt-2">
                  <button
-                   onClick={() => stepGroup(-1)}
-                   aria-label="Grupo anterior"
+                   onClick={() => (viewMode === 'grupos' ? stepGroup(-1) : stepDate(-1))}
+                   aria-label={viewMode === 'grupos' ? 'Grupo anterior' : 'Dia anterior'}
                    className="w-11 h-11 flex items-center justify-center rounded-full border border-brand-dark/10 bg-white text-brand-dark/40 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
                    style={{ color: theme.accent }}
                  >
                    <ChevronLeft className="w-5 h-5" />
                  </button>
-                 <span className="text-[11px] font-montserrat font-black uppercase tracking-widest text-brand-dark/40 min-w-[5.5rem] text-center">{selectedGroup}</span>
+                 <span className="text-[11px] font-montserrat font-black uppercase tracking-widest text-brand-dark/40 min-w-[5.5rem] text-center">
+                   {viewMode === 'grupos' ? selectedGroup : shortDate(effectiveDateTs)}
+                 </span>
                  <button
-                   onClick={() => stepGroup(1)}
-                   aria-label="Próximo grupo"
+                   onClick={() => (viewMode === 'grupos' ? stepGroup(1) : stepDate(1))}
+                   aria-label={viewMode === 'grupos' ? 'Próximo grupo' : 'Próximo dia'}
                    className="w-11 h-11 flex items-center justify-center rounded-full border border-brand-dark/10 bg-white text-brand-dark/40 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
                    style={{ color: theme.accent }}
                  >
@@ -504,7 +731,7 @@ const WorldCupHub: React.FC = () => {
              {filteredJogos.length === 0 && (
                <div className="bg-white border-2 border-dashed border-brand-dark/10 p-16 text-center rounded-[2rem]">
                  <p className="font-montserrat font-black uppercase text-brand-dark text-xl">Nenhum confronto encontrado</p>
-                 <p className="text-sm text-brand-dark/45 mt-2">Ajuste o filtro de grupo ou a busca por seleção.</p>
+                 <p className="text-sm text-brand-dark/45 mt-2">Ajuste o filtro de data, grupo ou a busca por seleção.</p>
                </div>
              )}
           </div>
