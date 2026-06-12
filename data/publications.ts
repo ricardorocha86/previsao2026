@@ -8,7 +8,7 @@ export const PUBLICATIONS: Publication[] = [
     journal: 'Frontiers in Sports and Active Living',
     authors: 'Gabriel G. Ribeiro, Lilia C. C. da Costa, Paulo H. Ferreira, Diego C. do Nascimento',
     publisher: 'Frontiers',
-    publisherLogo: '/assets/logos/frontiers-vector-logo.png',
+    publisherLogo: '/assets/logos/frontiers-vector-logo.webp',
     link: 'https://doi.org/10.3389/fspor.2025.1486928',
     abstract: ''
   },
@@ -19,7 +19,7 @@ export const PUBLICATIONS: Publication[] = [
     journal: 'Communications in Statistics: Case Studies, Data Analysis and Applications',
     authors: 'Francisco Louzada, Paulo H. Ferreira, Adriano Suzuki',
     publisher: 'Taylor & Francis',
-    publisherLogo: '/assets/logos/taylor francis logo.jpg',
+    publisherLogo: '/assets/logos/taylor-francis-logo.webp',
     link: 'https://doi.org/10.1080/23737484.2025.2522362',
     abstract: ''
   },
@@ -30,7 +30,7 @@ export const PUBLICATIONS: Publication[] = [
     journal: 'Axioms',
     authors: 'Paulo H. Ferreira, Francisco Louzada, Diego Nascimento',
     publisher: 'Axioms',
-    publisherLogo: '/assets/logos/axioms-logo.png',
+    publisherLogo: '/assets/logos/axioms-logo.webp',
     link: 'https://doi.org/10.3390/axioms10040276',
     abstract: ''
   },
@@ -41,7 +41,7 @@ export const PUBLICATIONS: Publication[] = [
     journal: 'Expert Systems with Applications',
     authors: 'Francisco Louzada, Anderson Ara',
     publisher: 'ScienceDirect',
-    publisherLogo: '/assets/logos/science-direct logo.png',
+    publisherLogo: '/assets/logos/science-direct-logo.webp',
     link: 'https://doi.org/10.1016/j.eswa.2015.09.007',
     abstract: ''
   },
@@ -62,7 +62,7 @@ export const PUBLICATIONS: Publication[] = [
     journal: 'Springer Proceedings in Mathematics & Statistics',
     authors: 'Francisco Louzada, Adriano Suzuki, Anderson Ara',
     publisher: 'Springer',
-    publisherLogo: '/assets/logos/springer.png',
+    publisherLogo: '/assets/logos/springer.webp',
     link: 'https://doi.org/10.1007/978-3-319-12454-4_12',
     abstract: ''
   },
@@ -73,8 +73,19 @@ export const PUBLICATIONS: Publication[] = [
     journal: 'Journal of Data Science',
     authors: 'Francisco Louzada, Adriano Suzuki',
     publisher: 'Journal of Data Science',
-    publisherLogo: '/assets/logos/jds.png',
+    publisherLogo: '/assets/logos/jds.webp',
     link: 'https://doi.org/10.6339/JDS.201404_12(2).0002',
+    abstract: ''
+  },
+  {
+    id: '8',
+    year: 2010,
+    title: 'A Bayesian approach for predicting match outcomes: The 2006 (Association) Football World Cup',
+    journal: 'Journal of the Operational Research Society',
+    authors: 'Adriano K. Suzuki, Luis E. B. Salasar, Jose G. Leite, Francisco Louzada-Neto',
+    publisher: 'Taylor & Francis',
+    publisherLogo: '/assets/logos/taylor-francis-logo.webp',
+    link: 'https://doi.org/10.1057/jors.2009.127',
     abstract: ''
   }
 ];

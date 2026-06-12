@@ -1,10 +1,12 @@
 import React, { Suspense, lazy, useEffect, useState } from 'react';
-import { ArrowUpRight, ChevronDown, Instagram, Mail, Menu, X } from 'lucide-react';
+import { ArrowUpRight, ChevronDown, Instagram, Mail, Menu, ShieldCheck, X } from 'lucide-react';
 import { Logo } from './components/Logo';
 import Hero from './components/Hero';
 import HomeOverview from './components/HomeOverview';
+import HexaCallout from './components/HexaCallout';
+import LegalModal, { LegalTab } from './components/LegalModal';
 
-type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology';
+type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa';
 
 const WorldCupHub = lazy(() => import('./components/WorldCupHub'));
 const MapPage = lazy(() => import('./components/MapPage'));
@@ -14,6 +16,7 @@ const TeamPage = lazy(() => import('./components/TeamPage'));
 const SciencePage = lazy(() => import('./components/SciencePage'));
 const MediaPage = lazy(() => import('./components/MediaPage'));
 const MethodologyPage = lazy(() => import('./components/MethodologyPage'));
+const HexaPage = lazy(() => import('./components/HexaPage'));
 
 const ROUTES: Record<ViewState, string> = {
   home: '/',
@@ -25,10 +28,55 @@ const ROUTES: Record<ViewState, string> = {
   science: '/pesquisa',
   media: '/midia',
   team: '/equipe',
+  hexa: '/caminho-do-hexa',
+};
+
+const DEFAULT_DESCRIPTION =
+  'Previsões probabilísticas para a Copa do Mundo 2026 com metodologia científica. Projeto acadêmico de pesquisa e divulgação científica em modelagem estatística do futebol.';
+
+const PAGE_META: Record<ViewState, { title: string; description: string }> = {
+  home: { title: 'Previsão Esportiva - Copa do Mundo 2026 🏆', description: DEFAULT_DESCRIPTION },
+  copa: {
+    title: 'Previsões Copa do Mundo 2026 | Previsão Esportiva',
+    description: 'Probabilidades de cada seleção avançar de fase e ser campeã da Copa do Mundo 2026, a partir de simulação estatística do torneio.',
+  },
+  mapa: {
+    title: 'Mapa das Seleções | Previsão Esportiva',
+    description: 'Explore dados das 48 seleções classificadas para a Copa do Mundo 2026 em um mapa interativo.',
+  },
+  simulador: {
+    title: 'Simulador Interativo | Previsão Esportiva',
+    description: 'Simule partidas e cenários da Copa do Mundo 2026 com os modelos estatísticos do Previsão Esportiva.',
+  },
+  bolao: {
+    title: 'Bolão Copa do Mundo 2026 | Previsão Esportiva',
+    description: 'Faça seus palpites para a Copa do Mundo 2026 e participe do bolão do projeto Previsão Esportiva.',
+  },
+  methodology: {
+    title: 'Metodologia | Previsão Esportiva',
+    description: 'Como transformamos dados de seleções em probabilidades: o modelo estatístico do Previsão Esportiva, passo a passo.',
+  },
+  science: {
+    title: 'Artigos Científicos | Previsão Esportiva',
+    description: 'Publicações acadêmicas que fundamentam a metodologia estatística do projeto Previsão Esportiva.',
+  },
+  media: {
+    title: 'Na Mídia | Previsão Esportiva',
+    description: 'Cobertura jornalística e repercussão pública das previsões científicas do projeto Previsão Esportiva.',
+  },
+  team: {
+    title: 'Equipe de Pesquisa | Previsão Esportiva',
+    description: 'Conheça os pesquisadores e as instituições por trás do projeto Previsão Esportiva.',
+  },
+  hexa: {
+    title: 'O Caminho Rumo ao Hexa 🇧🇷 | Previsão Esportiva',
+    description: 'Rodamos a Copa do Mundo de 2026 um milhão de vezes. Uma análise, número por número, do caminho do Brasil rumo ao hexa e do que o modelo revelou sobre o torneio.',
+  },
 };
 
 // Reordered as requested: Copa 2026, Bolão, Mapa, Simulador (Metodologia moved to dropdown)
 const NAV_ITEMS: Array<{ view: ViewState; label: string; mobileLabel?: string }> = [
+  { view: 'hexa', label: '🇧🇷 Hexa' },
   { view: 'copa', label: '🏆 Copa 2026' },
   { view: 'bolao', label: '⚽ Bolão' },
   { view: 'mapa', label: '🗺️ Mapa' },
@@ -53,6 +101,9 @@ export default function App() {
   const [currentView, setCurrentView] = useState<ViewState>(() => getViewFromLocation());
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
+  const [legalModal, setLegalModal] = useState<{ open: boolean; tab: LegalTab }>({ open: false, tab: 'terms' });
+
+  const openLegal = (tab: LegalTab) => setLegalModal({ open: true, tab });
 
   useEffect(() => {
     const syncView = () => setCurrentView(getViewFromLocation());
@@ -63,6 +114,13 @@ export default function App() {
       window.removeEventListener('hashchange', syncView);
     };
   }, []);
+
+  useEffect(() => {
+    const meta = PAGE_META[currentView] ?? PAGE_META.home;
+    document.title = meta.title;
+    const descTag = document.querySelector('meta[name="description"]');
+    if (descTag) descTag.setAttribute('content', meta.description);
+  }, [currentView]);
 
   const navigateTo = (view: ViewState) => {
     const targetPath = ROUTES[view];
@@ -251,6 +309,7 @@ export default function App() {
         {currentView === 'home' && (
           <>
             <Hero onNavigate={(view) => navigateTo(view)} />
+            <HexaCallout onNavigate={() => navigateTo('hexa')} />
             <HomeOverview onNavigate={(view) => navigateTo(view)} />
           </>
         )}
@@ -265,6 +324,7 @@ export default function App() {
             {currentView === 'science' && <SciencePage />}
             {currentView === 'media' && <MediaPage />}
             {currentView === 'methodology' && <MethodologyPage />}
+            {currentView === 'hexa' && <HexaPage />}
           </Suspense>
         )}
       </main>
@@ -298,8 +358,12 @@ export default function App() {
               <Logo className="h-16 mb-5 origin-left" />
             </button>
             <p className="max-w-lg text-sm leading-relaxed text-brand-dark/68">
-              Projeto acadêmico dedicado à pesquisa, análise probabilística e divulgação científica no futebol.
-              As informações são apresentadas para fins de estudo, comunicação pública e acompanhamento esportivo.
+              O Previsão Esportiva é um projeto acadêmico de pesquisa e divulgação científica dedicado à análise
+              probabilística do futebol, reunindo pesquisadores de diferentes universidades brasileiras.
+            </p>
+            <p className="mt-4 max-w-lg text-xs leading-relaxed text-brand-dark/45">
+              As probabilidades têm finalidade informativa, educacional e científica. O projeto não possui vínculo
+              com casas de apostas e não constitui aconselhamento de apostas.
             </p>
           </div>
 
@@ -327,6 +391,7 @@ export default function App() {
             <h4 className="text-brand-dark font-montserrat font-bold uppercase tracking-wider mb-5 text-sm">Navegação</h4>
             <div className="grid grid-cols-2 gap-3 text-sm text-brand-dark/68">
               <button type="button" onClick={() => navigateTo('copa')} className="text-left hover:text-brand-green transition">Resultados</button>
+              <button type="button" onClick={() => navigateTo('hexa')} className="text-left hover:text-brand-green transition">Rumo ao Hexa</button>
               <button type="button" onClick={() => navigateTo('mapa')} className="text-left hover:text-brand-green transition">Mapa</button>
               <button type="button" onClick={() => navigateTo('simulador')} className="text-left hover:text-brand-green transition">Simulador</button>
               <button type="button" onClick={() => navigateTo('bolao')} className="text-left hover:text-brand-green transition">Bolão</button>
@@ -338,13 +403,54 @@ export default function App() {
           </div>
         </div>
 
+        <div className="border-t border-brand-dark/10">
+          <div className="max-w-[1080px] mx-auto px-4 py-8">
+            <p className="mb-4 font-montserrat text-[11px] font-bold uppercase tracking-widest text-brand-dark/40">
+              Instituições parceiras
+            </p>
+            <div className="flex flex-wrap gap-2.5">
+              {['USP', 'UFBA', 'UFMT', 'UFRJ', 'UFPR', 'UFSCar', 'NEOMA Business School'].map((inst) => (
+                <span
+                  key={inst}
+                  className="rounded-lg border border-brand-dark/10 bg-brand-light px-3 py-2 font-montserrat text-xs font-bold uppercase tracking-wide text-brand-dark/55"
+                >
+                  {inst}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
         <div className="border-t border-brand-dark/10 bg-brand-light">
-          <div className="max-w-[1080px] mx-auto px-4 py-5 flex flex-col gap-2 text-xs text-brand-dark/55 md:flex-row md:items-center md:justify-between">
-            <span>© 2026 Previsão Esportiva</span>
+          <div className="max-w-[1080px] mx-auto px-4 py-5 flex flex-col gap-3 text-xs text-brand-dark/55 md:flex-row md:items-center md:justify-between">
+            <span>© 2026 Projeto Previsão Esportiva. Todos os direitos reservados.</span>
+            <div className="flex items-center gap-5">
+              <button
+                type="button"
+                onClick={() => openLegal('terms')}
+                className="transition-colors hover:text-brand-green"
+              >
+                Termos de Uso
+              </button>
+              <button
+                type="button"
+                onClick={() => openLegal('privacy')}
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-brand-green"
+              >
+                <ShieldCheck className="h-3.5 w-3.5" />
+                Política de Privacidade
+              </button>
+            </div>
           </div>
         </div>
       </footer>
       )}
+
+      <LegalModal
+        open={legalModal.open}
+        initialTab={legalModal.tab}
+        onClose={() => setLegalModal((prev) => ({ ...prev, open: false }))}
+      />
     </div>
   );
 }

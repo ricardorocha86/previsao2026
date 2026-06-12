@@ -148,7 +148,7 @@ const MapPage: React.FC = () => {
 
       const fillCard = (t: any) => {
         const q = (sel: string) => card.querySelector(sel) as HTMLElement;
-        (q('[data-c="flag"]') as HTMLImageElement).src = `https://flagcdn.com/w160/${t.iso2}.png`;
+        (q('[data-c="flag"]') as HTMLImageElement).src = `https://flagcdn.com/w160/${t.iso2}.webp`;
         q('[data-c="name"]').textContent = t.nome;
         const cb = q('[data-c="conf"]');
         cb.textContent = t.conf;
@@ -180,7 +180,7 @@ const MapPage: React.FC = () => {
         stars.textContent = t.titulos > 0 ? '★'.repeat(t.titulos) : '';
         stars.style.color = '#f4c430';
         (card.querySelector('.mp-card-top') as HTMLElement).style.backgroundImage =
-          `url(https://flagcdn.com/w320/${t.iso2}.png)`;
+          `url(https://flagcdn.com/w320/${t.iso2}.webp)`;
         const st = q('[data-c="status"]');
         if (t.titulos > 0) {
           st.className = 'mp-badge-status mp-badge-champ';

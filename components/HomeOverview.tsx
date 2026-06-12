@@ -29,7 +29,7 @@ const HomeOverview: React.FC<HomeOverviewProps> = ({ onNavigate }) => {
   const cards = useMemo(() => {
     return Array.from({ length: 10 }, (_, i) => 
       methodology === 1 
-        ? `/assets/cards/card_${i + 1}.png` 
+        ? `/assets/cards/card_${i + 1}.webp`
         : `/assets/cards/card_m2_${i + 1}.webp`
     );
   }, [methodology]);
@@ -131,7 +131,7 @@ const HomeOverview: React.FC<HomeOverviewProps> = ({ onNavigate }) => {
             {/* DECORATIVE IMAGE */}
             <div className="relative bg-brand-dark overflow-hidden min-h-[260px] lg:min-h-full">
               <img 
-                src="/assets/copa_previsoes_hero.png" 
+                src="/assets/copa_previsoes_hero.webp"
                 alt="Previsões Copa 2026" 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
@@ -152,7 +152,7 @@ const HomeOverview: React.FC<HomeOverviewProps> = ({ onNavigate }) => {
               {/* IMAGE CONTAINER */}
               <div className="h-[180px] bg-brand-dark overflow-hidden relative border-b border-brand-dark/5">
                 <img 
-                  src="/assets/simulator_ui_mockup.png" 
+                  src="/assets/simulator_ui_mockup.webp"
                   alt="Simulador Interativo" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
@@ -186,7 +186,7 @@ const HomeOverview: React.FC<HomeOverviewProps> = ({ onNavigate }) => {
               {/* IMAGE CONTAINER */}
               <div className="h-[180px] bg-brand-dark overflow-hidden relative border-b border-brand-dark/5">
                 <img 
-                  src="/assets/bracket_tournament_illustration.png" 
+                  src="/assets/bracket_tournament_illustration.webp"
                   alt="Bolão Copa 2026" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
@@ -220,7 +220,7 @@ const HomeOverview: React.FC<HomeOverviewProps> = ({ onNavigate }) => {
               {/* IMAGE CONTAINER */}
               <div className="h-[180px] bg-brand-dark overflow-hidden relative border-b border-brand-dark/5">
                 <img 
-                  src="/assets/world_map_soccer.png" 
+                  src="/assets/world_map_soccer.webp"
                   alt="Mapa de Seleções" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />

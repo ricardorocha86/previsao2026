@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
 import { MEDIA_MENTIONS } from '../data/mediaMentions';
-import { ExternalLink, Newspaper, TrendingUp, Calendar, Play, Tv, MonitorPlay } from 'lucide-react';
-import { MediaMention } from '../types';
+import { ExternalLink, Newspaper, TrendingUp, Play, Tv, MonitorPlay } from 'lucide-react';
+import { MediaMention, MediaEdition } from '../types';
 import PageHeader from './PageHeader';
 
 const G1_LINK = 'https://g1.globo.com/sp/sao-paulo/bom-dia-sp/video/grupo-usa-inteligencia-artificial-para-simular-resultados-da-copa-11178283.ghtml';
-const G1_THUMBNAIL = '/assets/g1-destaque.jpg';
+const G1_THUMBNAIL = '/assets/g1-destaque.webp';
+
+const EDITION_ORDER: MediaEdition[] = ['2026', '2022', '2018', '2014', 'projeto'];
+const EDITION_LABELS: Record<MediaEdition, string> = {
+  '2026': 'Copa do Mundo 2026',
+  '2022': 'Copa do Mundo 2022 · Catar',
+  '2018': 'Copa do Mundo 2018 · Rússia',
+  '2014': 'Copa do Mundo 2014 · Brasil',
+  projeto: 'Cobertura do projeto',
+};
 
 interface MediaCardProps {
   item: MediaMention;
@@ -13,53 +22,53 @@ interface MediaCardProps {
 
 const MediaCard: React.FC<MediaCardProps> = ({ item }) => {
   const [imgError, setImgError] = useState(false);
-  const showImage = item.imageUrl && !imgError;
+  const showImage = Boolean(item.imageUrl) && !imgError;
 
   return (
     <a
       href={item.link}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-green/10 border border-brand-dark/8 hover:border-brand-green/40"
+      className="group flex min-h-[116px] items-stretch bg-white rounded-2xl overflow-hidden shadow-sm border border-brand-dark/8 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-green/10 hover:border-brand-green/40"
     >
-      <div className="relative h-44 overflow-hidden flex-shrink-0">
+      {/* FOTO DA MATÉRIA (OG) OU INDICADOR DA FONTE À ESQUERDA */}
+      <div className="relative w-28 sm:w-36 flex-shrink-0 overflow-hidden bg-gradient-to-br from-brand-dark via-brand-dark to-[#0b2a11]">
         {showImage ? (
           <img
             src={item.imageUrl}
             alt={item.title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
+            referrerPolicy="no-referrer"
             onError={() => setImgError(true)}
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-brand-light via-white to-brand-light">
-            <Newspaper className="w-10 h-10 text-brand-green/25 mb-2" />
-            <span className="text-xs text-brand-dark/25 uppercase tracking-widest font-montserrat">{item.outlet}</span>
-          </div>
+          <>
+            <div className="absolute inset-0 opacity-[0.08] bg-[radial-gradient(circle_at_25%_20%,white,transparent_45%)]" />
+            <div className="relative flex h-full flex-col items-center justify-center gap-1.5 px-2 py-5 text-center">
+              <Newspaper className="h-5 w-5 sm:h-6 sm:w-6 text-brand-green" />
+              <span className="font-montserrat text-[9px] sm:text-[11px] font-black uppercase tracking-tight text-white leading-tight line-clamp-2">
+                {item.outlet}
+              </span>
+            </div>
+          </>
         )}
-
-        <div className="absolute top-3 left-3">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/90 backdrop-blur-sm border border-brand-green/20 rounded-full text-[10px] font-bold uppercase tracking-wider text-brand-green shadow-sm">
-            <TrendingUp className="w-3 h-3" />
-            {item.outlet}
-          </div>
-        </div>
-
-        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <div className="p-1.5 bg-white/90 backdrop-blur-sm rounded-full text-brand-dark/60 border border-brand-dark/10 shadow-sm">
-            <ExternalLink className="w-3 h-3" />
-          </div>
-        </div>
       </div>
 
-      <div className="p-5 flex flex-col flex-1">
-        <div className="flex items-center gap-1.5 mb-3 text-[10px] font-montserrat text-brand-green/80 uppercase tracking-widest">
-          <Calendar className="w-3 h-3" />
-          {item.date}
+      {/* INSTITUIÇÃO + TÍTULO + LINK À DIREITA */}
+      <div className="flex flex-1 min-w-0 flex-col justify-center gap-1.5 p-4 sm:px-5 sm:py-4">
+        <div className="flex items-center gap-1.5 text-[10px] font-montserrat font-bold text-brand-green uppercase tracking-widest">
+          <TrendingUp className="w-3 h-3 flex-shrink-0" />
+          <span className="truncate">{item.outlet}</span>
         </div>
-        <h3 className="text-sm font-montserrat font-bold leading-snug text-brand-dark group-hover:text-brand-grad2 transition-colors line-clamp-3 flex-1">
+        <h3 className="text-sm font-montserrat font-bold leading-snug text-brand-dark group-hover:text-brand-grad2 transition-colors line-clamp-2">
           {item.title}
         </h3>
-        <div className="mt-4 w-6 h-0.5 bg-brand-green rounded-full transform origin-left group-hover:scale-x-[2.5] transition-transform duration-300"></div>
+        <span className="mt-1 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-brand-dark/40 group-hover:text-brand-green transition-colors">
+          Abrir matéria
+          <ExternalLink className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </span>
       </div>
     </a>
   );
@@ -158,7 +167,7 @@ const MediaPage: React.FC = () => {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 pt-16">
+      <div className="max-w-6xl mx-auto px-4 pt-16">
         <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-12 border-b border-brand-dark/10 pb-8">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-brand-green/10 text-brand-green rounded-xl border border-brand-green/20">
@@ -175,10 +184,27 @@ const MediaPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {MEDIA_MENTIONS.map((item) => (
-            <MediaCard key={item.id} item={item} />
-          ))}
+        <div className="space-y-14">
+          {EDITION_ORDER.map((ed) => {
+            const items = MEDIA_MENTIONS.filter((m) => m.edition === ed);
+            if (items.length === 0) return null;
+            return (
+              <section key={ed}>
+                <div className="flex items-center gap-3 mb-6">
+                  <h3 className="font-montserrat text-lg font-black uppercase tracking-tight text-brand-dark">
+                    {EDITION_LABELS[ed]}
+                  </h3>
+                  <span className="font-montserrat text-[11px] font-bold text-brand-dark/35">{items.length}</span>
+                  <div className="h-px flex-1 bg-brand-dark/10" />
+                </div>
+                <div className="grid gap-4 md:grid-cols-2">
+                  {items.map((item) => (
+                    <MediaCard key={item.id} item={item} />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
         </div>
       </div>
     </div>

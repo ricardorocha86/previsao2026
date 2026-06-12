@@ -1,7 +1,7 @@
 import React from 'react';
 import { Trophy, GraduationCap } from 'lucide-react';
-import bannerImage from '../assets/banner2.png';
-import logoImage from '../assets/LogoMPrevisao.png';
+import bannerImage from '../assets/banner2.webp';
+import logoImage from '../assets/LogoMPrevisao.webp';
 
 type HomeViewTarget = 'copa' | 'methodology' | 'science' | 'media' | 'team';
 

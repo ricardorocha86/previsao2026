@@ -37,12 +37,14 @@ export interface Publication {
   abstract: string;
 }
 
+export type MediaEdition = '2026' | '2022' | '2018' | '2014' | 'projeto';
+
 export interface MediaMention {
   id: string;
   outlet: string;
   logo: string; // text representation or url
-  date: string;
   title: string;
   link: string;
-  imageUrl: string; // Added for the cover layout
+  edition: MediaEdition;
+  imageUrl?: string; // imagem de divulgação (og:image) da matéria; ausente => usa o indicador
 }

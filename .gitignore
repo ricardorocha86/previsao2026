@@ -30,3 +30,4 @@ painel-bolao-firestore/
 *.njsproj
 *.sln
 *.sw?
+.vercel

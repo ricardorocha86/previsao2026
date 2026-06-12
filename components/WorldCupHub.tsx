@@ -1,9 +1,11 @@
 
 import React, { useState, useMemo } from 'react';
-import { Trophy, Search, ArrowUpDown, ArrowUp, ArrowDown, Clock, CalendarDays, MapPin, TrendingUp, Network } from 'lucide-react';
+import { Trophy, Search, ArrowUpDown, ArrowUp, ArrowDown, Clock, CalendarDays, MapPin, TrendingUp, Network, ChevronLeft, ChevronRight } from 'lucide-react';
 import simulacaoGeral from '../assets/simulacao_geral.json';
+import simulacaoGeralInicioCopa from '../assets/simulacao_geral_inicio_copa.json';
 import simulacaoGeralBayes from '../assets/simulacao_geral_bayes.json';
 import previsoesJogos from '../assets/previsoes_jogos.json';
+import previsoesJogosInicioCopa from '../assets/previsoes_jogos_inicio_copa.json';
 import previsoesJogosBayes from '../assets/previsoes_jogos_bayes.json';
 import flags from '../assets/flags.json';
 import PageHeader from './PageHeader';
@@ -15,19 +17,29 @@ const GROUP_STYLE = {
   border: 'rgba(32,153,39,0.24)',
 };
 
+type StageId = 'inicio-copa' | 'pre-convocacao';
+
+// Etapas da simulação do Modelo de Força (Metodologia 1), da mais recente para a mais antiga.
+const STAGES: Array<{ id: StageId; label: string; date: string; data: any[]; jogos: any[] }> = [
+  { id: 'inicio-copa', label: 'Início da Copa', date: '11/06/2026', data: simulacaoGeralInicioCopa as any[], jogos: previsoesJogosInicioCopa as any[] },
+  { id: 'pre-convocacao', label: 'Pré-Convocação', date: '11/05/2026', data: simulacaoGeral as any[], jogos: previsoesJogos as any[] },
+];
+
 const WorldCupHub: React.FC = () => {
   const [methodology, setMethodology] = useState<1 | 2>(1);
+  const [stageId, setStageId] = useState<StageId>(STAGES[0].id);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchTermJogos, setSearchTermJogos] = useState('');
-  const [selectedGroup, setSelectedGroup] = useState('Todos');
+  const [selectedGroup, setSelectedGroup] = useState('Grupo A');
   
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>({
     key: 'Campeão',
     direction: 'desc'
   });
 
-  const currentSimulacaoGeral = methodology === 1 ? simulacaoGeral : simulacaoGeralBayes;
-  const currentPrevisoesJogos = methodology === 1 ? previsoesJogos : previsoesJogosBayes;
+  const currentStage = STAGES.find((s) => s.id === stageId) ?? STAGES[0];
+  const currentSimulacaoGeral = methodology === 1 ? currentStage.data : simulacaoGeralBayes;
+  const currentPrevisoesJogos = methodology === 1 ? currentStage.jogos : previsoesJogosBayes;
   const theme = useMemo(() => {
     if (methodology === 1) {
       return {
@@ -62,9 +74,9 @@ const WorldCupHub: React.FC = () => {
     }
   }, [methodology]);
   const getFlag = (teamName: string) => {
-    if (!teamName) return "https://flagcdn.com/w320/un.png";
+    if (!teamName) return "https://flagcdn.com/w320/un.webp";
     const normalized = teamName.trim();
-    return (flags as any)[normalized] || (flags as any)[normalized.replace('República ', '')] || "https://flagcdn.com/w320/un.png";
+    return (flags as any)[normalized] || (flags as any)[normalized.replace('República ', '')] || "https://flagcdn.com/w320/un.webp";
   };
 
   const parsePercent = (val: any) => {
@@ -127,14 +139,25 @@ const WorldCupHub: React.FC = () => {
       .sort((a: any, b: any) => getGroupLetter(a).localeCompare(getGroupLetter(b)));
   }, [currentPrevisoesJogos]);
 
+  // Com busca ativa, procura em todos os grupos; sem busca, exibe um grupo por vez.
+  const searchJogosAtivo = searchTermJogos.trim().length > 0;
   const filteredJogos = (currentPrevisoesJogos as any[]).filter((jogo: any) => {
-    const matchesSearch =
-      jogo['Seleção A']?.toLowerCase().includes(searchTermJogos.toLowerCase()) ||
-      jogo['Seleção B']?.toLowerCase().includes(searchTermJogos.toLowerCase()) ||
-      jogo['Grupo']?.toLowerCase().includes(searchTermJogos.toLowerCase());
-    const matchesGroup = selectedGroup === 'Todos' || jogo['Grupo'] === selectedGroup;
-    return matchesSearch && matchesGroup;
+    if (searchJogosAtivo) {
+      const term = searchTermJogos.trim().toLowerCase();
+      return (
+        jogo['Seleção A']?.toLowerCase().includes(term) ||
+        jogo['Seleção B']?.toLowerCase().includes(term) ||
+        jogo['Grupo']?.toLowerCase().includes(term)
+      );
+    }
+    return jogo['Grupo'] === selectedGroup;
   });
+
+  const stepGroup = (delta: number) => {
+    const idx = groupOptions.indexOf(selectedGroup);
+    const next = (idx + delta + groupOptions.length) % groupOptions.length;
+    setSelectedGroup(groupOptions[next] as string);
+  };
 
   const jogosPorGrupo = useMemo(() => {
     return filteredJogos.reduce((acc: Record<string, any[]>, jogo: any) => {
@@ -244,14 +267,36 @@ const WorldCupHub: React.FC = () => {
         
         {/* PROBABILITIES TABLE - BRAND TYPOGRAPHY */}
         <section>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-8">
+          <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-12 gap-8">
             <div className="max-w-4xl">
-              <h2 className="text-4xl md:text-6xl font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none mb-4">
-                Simulação <span className={`${theme.accentText} italic whitespace-nowrap`}>Pré-Torneio</span>
+              {/* Fonte fluida com teto calibrado para "Pré-Convocação" (rótulo mais largo) caber sem quebra de linha */}
+              <h2 className="text-[length:clamp(1.5rem,5.5vw,3.2rem)] whitespace-nowrap font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none mb-4">
+                Simulação <span className={`${theme.accentText} italic`}>{methodology === 1 ? currentStage.label : 'Pré-Torneio'}</span>
               </h2>
-              <p className="text-brand-dark/50 font-light text-lg font-opensans">Simulação realizada em 30/04/2026. O torneio foi simulado 1 milhão de vezes e as probabilidades representam a frequência dos acontecimentos.</p>
+              <p className="text-brand-dark/50 font-light text-lg font-opensans">Simulação realizada em {methodology === 1 ? currentStage.date : '30/04/2026'}. O torneio foi simulado 1 milhão de vezes e as probabilidades representam a frequência dos acontecimentos.</p>
+              {methodology === 1 && (
+                <div className="mt-6">
+                  <span className="block text-[10px] font-montserrat font-black uppercase tracking-[0.25em] text-brand-dark/40 mb-2">Etapa da simulação</span>
+                  <div className="flex flex-wrap gap-2">
+                    {STAGES.map((s) => (
+                      <button
+                        key={s.id}
+                        onClick={() => setStageId(s.id)}
+                        className="px-5 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest border-2 transition-all shadow-sm"
+                        style={{
+                          borderColor: stageId === s.id ? theme.accent : theme.accentBorder,
+                          color: stageId === s.id ? '#ffffff' : theme.accent,
+                          backgroundColor: stageId === s.id ? theme.accent : '#ffffff',
+                        }}
+                      >
+                        {s.label} · {s.date}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="relative w-full md:w-96">
+            <div className="relative w-full xl:w-96">
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-dark/30" />
               <input type="text" placeholder="Filtrar seleção..." className={`w-full pl-14 pr-8 py-5 bg-white border-2 border-brand-dark/5 rounded-3xl text-sm outline-none ${theme.accentFocusBorder} transition-all shadow-sm font-opensans`} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
             </div>
@@ -304,18 +349,21 @@ const WorldCupHub: React.FC = () => {
         {/* GAMES LIST - COMPACT GROUPED DISPLAY */}
         <section>
           <div className="mb-10 space-y-6">
-            <h2 className="text-4xl md:text-6xl font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none mb-4">
-              Agenda de <span className={`${theme.accentText} italic whitespace-nowrap`}>Confrontos</span>
+            <h2 className="text-[length:clamp(1.5rem,5.5vw,3.2rem)] whitespace-nowrap font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none mb-4">
+              Agenda de <span className={`${theme.accentText} italic`}>Confrontos</span>
             </h2>
-            
+
+            {methodology === 1 && (
+              <p
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-montserrat font-black uppercase tracking-widest border"
+                style={{ color: theme.accent, borderColor: theme.accentBorder, backgroundColor: theme.accentSoft }}
+              >
+                Probabilidades da etapa {currentStage.label} · simulação de {currentStage.date}
+              </p>
+            )}
+
             <div className="flex flex-col md:flex-row justify-between items-center gap-6 pb-6 border-b border-brand-dark/5">
               <div className="flex flex-wrap justify-center md:justify-start gap-2">
-                <button
-                  onClick={() => setSelectedGroup('Todos')}
-                  className={`px-6 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest border transition-all ${selectedGroup === 'Todos' ? 'bg-brand-dark text-white border-brand-dark shadow-lg scale-105' : `bg-white text-brand-dark/50 border-brand-dark/10 ${theme.accentHoverBorderSoft} shadow-sm`}`}
-                >
-                  Todos
-                </button>
                 {groupOptions.map((group: any) => (
                   <button
                     key={group}
@@ -432,6 +480,27 @@ const WorldCupHub: React.FC = () => {
                  </div>
                );
              })}
+             {!searchJogosAtivo && filteredJogos.length > 0 && (
+               <div className="flex items-center justify-center gap-6 pt-2">
+                 <button
+                   onClick={() => stepGroup(-1)}
+                   aria-label="Grupo anterior"
+                   className="w-11 h-11 flex items-center justify-center rounded-full border border-brand-dark/10 bg-white text-brand-dark/40 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+                   style={{ color: theme.accent }}
+                 >
+                   <ChevronLeft className="w-5 h-5" />
+                 </button>
+                 <span className="text-[11px] font-montserrat font-black uppercase tracking-widest text-brand-dark/40 min-w-[5.5rem] text-center">{selectedGroup}</span>
+                 <button
+                   onClick={() => stepGroup(1)}
+                   aria-label="Próximo grupo"
+                   className="w-11 h-11 flex items-center justify-center rounded-full border border-brand-dark/10 bg-white text-brand-dark/40 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+                   style={{ color: theme.accent }}
+                 >
+                   <ChevronRight className="w-5 h-5" />
+                 </button>
+               </div>
+             )}
              {filteredJogos.length === 0 && (
                <div className="bg-white border-2 border-dashed border-brand-dark/10 p-16 text-center rounded-[2rem]">
                  <p className="font-montserrat font-black uppercase text-brand-dark text-xl">Nenhum confronto encontrado</p>

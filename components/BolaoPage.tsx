@@ -19,9 +19,11 @@ import {
   RotateCcw,
   ZoomIn,
   ZoomOut,
+  ShieldCheck,
 } from 'lucide-react';
 import { db } from '../lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
+import LegalModal, { LegalTab } from './LegalModal';
 import previsoesJogos from '../assets/previsoes_jogos.json';
 import flags from '../assets/flags.json';
 import forcaSelecoes from '../assets/forca_selecoes.json';
@@ -281,22 +283,22 @@ const normalizedTeamName = (team: string) =>
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
 
-const flagFor = (team: string) => FLAGS[team] || 'https://flagcdn.com/w320/un.png';
+const flagFor = (team: string) => FLAGS[team] || 'https://flagcdn.com/w320/un.webp';
 
 const heroFlagFor = (team: string) => {
   const code = FLAGCDN_CODE_OVERRIDES[normalizedTeamName(team)];
-  return code ? `https://flagcdn.com/w640/${code}.png` : flagFor(team);
+  return code ? `https://flagcdn.com/w640/${code}.webp` : flagFor(team);
 };
 
 type PlayerEasterEggPlacement = 'right' | 'left' | 'top';
 
 const PLAYER_EASTER_EGGS: Record<string, { player: string; src: string; placement: PlayerEasterEggPlacement }> = {
-  Argentina: { player: 'Messi', src: '/assets/easter-eggs/messi.png', placement: 'right' },
-  Brasil: { player: 'Neymar', src: '/assets/easter-eggs/neymar.png', placement: 'left' },
-  Espanha: { player: 'Yamal', src: '/assets/easter-eggs/yamal.png', placement: 'right' },
-  Franca: { player: 'Mbappé', src: '/assets/easter-eggs/mbappe.png', placement: 'left' },
-  Inglaterra: { player: 'Harry Kane', src: '/assets/easter-eggs/kane.png', placement: 'left' },
-  Portugal: { player: 'CR7', src: '/assets/easter-eggs/cr7.png', placement: 'right' },
+  Argentina: { player: 'Messi', src: '/assets/easter-eggs/messi.webp', placement: 'right' },
+  Brasil: { player: 'Neymar', src: '/assets/easter-eggs/neymar.webp', placement: 'left' },
+  Espanha: { player: 'Yamal', src: '/assets/easter-eggs/yamal.webp', placement: 'right' },
+  Franca: { player: 'Mbappé', src: '/assets/easter-eggs/mbappe.webp', placement: 'left' },
+  Inglaterra: { player: 'Harry Kane', src: '/assets/easter-eggs/kane.webp', placement: 'left' },
+  Portugal: { player: 'CR7', src: '/assets/easter-eggs/cr7.webp', placement: 'right' },
 };
 
 const playerEasterEggFor = (team: string) => PLAYER_EASTER_EGGS[normalizedTeamName(team)] ?? null;
@@ -2230,6 +2232,10 @@ const BolaoPage: React.FC = () => {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [modalState, setModalState] = useState<'none' | 'sending' | 'success' | 'error'>('none');
+  const [acceptedTerms, setAcceptedTerms] = useState(true);
+  const [legalModal, setLegalModal] = useState<{ open: boolean; tab: LegalTab }>({ open: false, tab: 'terms' });
+
+  const openLegal = (tab: LegalTab) => setLegalModal({ open: true, tab });
 
   useEffect(() => {
     localBolaoRepository.saveDraft({ ...draft, lastSavedAt: new Date().toISOString() });
@@ -2271,7 +2277,8 @@ const BolaoPage: React.FC = () => {
     champion !== null &&
     nameValid &&
     emailValid &&
-    researchQuestionsValid;
+    researchQuestionsValid &&
+    acceptedTerms;
 
   // Fases empilhadas sequencialmente: o mata-mata só renderiza quando os grupos
   // estão completos e o bilhete quando o mata-mata (campeão) está definido e todos os jogos preenchidos.
@@ -2990,10 +2997,10 @@ const BolaoPage: React.FC = () => {
                   <Gift className="mt-0.5 h-5 w-5 flex-none text-brand-yellow" />
                   <div>
                     <h3 className="font-montserrat text-sm font-black uppercase tracking-wide text-brand-dark">
-                      Tem prêmio em jogo! 🍫
+                      Tem prêmio em jogo 🍫
                     </h3>
                     <p className="mt-2 text-xs leading-relaxed text-brand-dark/70">
-                      Quem fizer mais pontos leva um saco de bombons Sonho de Valsa! A glória do campeonato e o chocolate especial esperam pelo melhor palpiteiro do grupo.
+                      O participante com a maior pontuação leva uma caixa de bombons Sonho de Valsa. Em jogo estão a glória do grupo e o chocolate.
                     </p>
                   </div>
                 </div>
@@ -3004,10 +3011,10 @@ const BolaoPage: React.FC = () => {
                   <Sparkles className="mt-0.5 h-5 w-5 flex-none text-brand-blue" />
                   <div>
                     <h3 className="font-montserrat text-sm font-black uppercase tracking-wide text-brand-dark">
-                      Em nome da Ciência 🧪
+                      Você contribui com a ciência 🧪
                     </h3>
                     <p className="mt-2 text-xs leading-relaxed text-brand-dark/70">
-                      Seus palpites alimentam modelos de análise bayesiana da nossa pesquisa. Ao participar, você ajuda a aprimorar modelos de previsão estatística esportiva.
+                      Com o seu consentimento, os palpites e respostas são usados de forma anonimizada em nossa pesquisa para aprimorar modelos de previsão estatística no esporte.
                     </p>
                   </div>
                 </div>
@@ -3190,6 +3197,48 @@ const BolaoPage: React.FC = () => {
               </div>
             )}
 
+            <div className="rounded-lg border border-brand-dark/10 bg-white p-4">
+              <div className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-brand-green">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                Consentimento
+              </div>
+              <div className="flex items-start gap-3">
+                <input
+                  id="acceptTerms"
+                  type="checkbox"
+                  checked={acceptedTerms}
+                  disabled={isSubmitted}
+                  onChange={(event) => setAcceptedTerms(event.target.checked)}
+                  className="mt-0.5 h-4 w-4 flex-none cursor-pointer accent-brand-green disabled:opacity-50"
+                />
+                <p className="text-xs leading-relaxed text-brand-dark/65">
+                  Li e aceito os{' '}
+                  <button
+                    type="button"
+                    onClick={() => openLegal('terms')}
+                    className="font-bold text-brand-green underline underline-offset-2 hover:text-brand-grad2"
+                  >
+                    Termos de Uso
+                  </button>{' '}
+                  e a{' '}
+                  <button
+                    type="button"
+                    onClick={() => openLegal('privacy')}
+                    className="font-bold text-brand-green underline underline-offset-2 hover:text-brand-grad2"
+                  >
+                    Política de Privacidade
+                  </button>
+                  , e autorizo o uso dos meus dados para o bolão e para a pesquisa científica do projeto.
+                </p>
+              </div>
+              {!acceptedTerms && (
+                <p className="mt-2 flex items-center gap-1 text-[10px] font-bold text-red-500">
+                  <AlertCircle className="h-3 w-3" />
+                  É necessário aceitar os termos para enviar os palpites.
+                </p>
+              )}
+            </div>
+
             <button
               type="button"
               disabled={!canSubmit || isSubmitted || isSubmitting}
@@ -3315,6 +3364,12 @@ const BolaoPage: React.FC = () => {
           </div>
         </div>
       )}
+
+      <LegalModal
+        open={legalModal.open}
+        initialTab={legalModal.tab}
+        onClose={() => setLegalModal((prev) => ({ ...prev, open: false }))}
+      />
     </div>
   );
 };

@@ -73,60 +73,6 @@ service cloud.firestore {
         && fillMetadata.usedRandomGroupFill == (fillMetadata.randomGroupMatchCount > 0);
     }
 
-    function validScorePrediction(prediction) {
-      return prediction is map
-        && prediction.keys().hasAll(['homeGoals', 'awayGoals', 'penaltyWinner'])
-        && prediction.keys().hasOnly(['homeGoals', 'awayGoals', 'penaltyWinner'])
-        && prediction.homeGoals is int
-        && prediction.awayGoals is int
-        && prediction.homeGoals >= 0
-        && prediction.homeGoals <= 30
-        && prediction.awayGoals >= 0
-        && prediction.awayGoals <= 30
-        && (
-          prediction.penaltyWinner == null
-          || (
-            prediction.penaltyWinner is string
-            && prediction.penaltyWinner.size() >= 1
-            && prediction.penaltyWinner.size() <= 80
-          )
-        );
-    }
-
-    function validPredictionItem(item) {
-      return item is map
-        && item.keys().hasAll([
-          'matchId',
-          'stage',
-          'label',
-          'homeTeam',
-          'awayTeam',
-          'prediction'
-        ])
-        && item.keys().hasOnly([
-          'matchId',
-          'stage',
-          'label',
-          'homeTeam',
-          'awayTeam',
-          'prediction'
-        ])
-        && validRequiredString(item.matchId, 3, 120)
-        && item.stage in [
-          'groups',
-          'roundOf32',
-          'roundOf16',
-          'quarterfinals',
-          'semifinals',
-          'thirdPlace',
-          'final'
-        ]
-        && validRequiredString(item.label, 1, 80)
-        && validRequiredString(item.homeTeam, 1, 80)
-        && validRequiredString(item.awayTeam, 1, 80)
-        && validScorePrediction(item.prediction);
-    }
-
     function validSubmissionId(submissionId) {
       return submissionId is string
         && submissionId.size() <= 254
@@ -158,9 +104,7 @@ service cloud.firestore {
         && request.resource.data.submittedAt.matches('^\\d{4}-\\d{2}-\\d{2}T.*Z$')
         && validRequiredString(request.resource.data.champion, 1, 80)
         && request.resource.data.predictions is list
-        && request.resource.data.predictions.size() == 104
-        && validPredictionItem(request.resource.data.predictions[0])
-        && validPredictionItem(request.resource.data.predictions[103]);
+        && request.resource.data.predictions.size() == 104;
     }
 
     match /bolao2026/{submissionId} {

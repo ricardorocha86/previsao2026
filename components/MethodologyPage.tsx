@@ -121,6 +121,11 @@ const MethodologyPage: React.FC = () => {
             <p><strong className="text-brand-dark">Unidade básica:</strong> partida</p>
             <p><strong className="text-brand-dark">Resultado final:</strong> probabilidades de campanha</p>
           </div>
+          <p className="mt-5 text-sm leading-relaxed text-brand-dark/55">
+            Esta nota descreve o <strong className="text-brand-dark">Modelo de Força (Metodologia 1)</strong>. A
+            documentação da <strong className="text-brand-dark">Edição Bayesiana (Metodologia 2)</strong> será
+            publicada em breve.
+          </p>
         </header>
 
         <section className="border-b border-brand-dark/15 py-10">
