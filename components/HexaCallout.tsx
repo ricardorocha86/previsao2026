@@ -6,12 +6,6 @@ interface HexaCalloutProps {
   onNavigate: () => void;
 }
 
-const STATS = [
-  { value: '5º', label: 'favorito ao título' },
-  { value: '8,3%', label: 'de chance de hexa' },
-  { value: '1 milhão', label: 'de Copas simuladas' },
-];
-
 const HexaCallout: React.FC<HexaCalloutProps> = ({ onNavigate }) => {
   return (
     <section className="relative overflow-hidden bg-brand-dark">
@@ -41,16 +35,6 @@ const HexaCallout: React.FC<HexaCalloutProps> = ({ onNavigate }) => {
             Veja, número por número, até onde o Brasil chega, quem são os carrascos da Seleção e o
             que o modelo revelou sobre o favoritismo, as zebras e a taça.
           </p>
-
-          {/* mini-stats */}
-          <div className="mt-8 flex flex-wrap gap-3">
-            {STATS.map((s) => (
-              <div key={s.label} className="rounded-xl border border-white/10 bg-white/5 px-5 py-3">
-                <p className="font-montserrat text-2xl font-black leading-none text-brand-yellow">{s.value}</p>
-                <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-white/55">{s.label}</p>
-              </div>
-            ))}
-          </div>
 
           <button
             type="button"

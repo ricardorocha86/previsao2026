@@ -1,6 +1,30 @@
 import { MediaMention } from '../types';
 
+/**
+ * Matéria em destaque (mais recente). Usada tanto no topo da página "Na Mídia"
+ * quanto na chamada de destaque da página inicial.
+ */
+export const FEATURED_ARTICLE = {
+  outlet: 'G1 · Globo',
+  section: 'Educação',
+  date: '13 de junho de 2026',
+  title: 'Probabilidade do hexa: qual a chance de o Brasil ser campeão? A matemática pode ter a resposta',
+  summary:
+    'Pesquisadores e professores calculam que a chance de a Seleção Brasileira vencer a Copa do Mundo de 2026 seja de menos de 10%. As simulações consideram diversos fatores para chegar a uma estimativa.',
+  link: 'https://g1.globo.com/educacao/noticia/2026/06/13/probabilidade-do-hexa-qual-a-chance-do-brasil-ser-campeao-a-matematica-pode-ter-a-resposta.ghtml',
+  image: '/assets/previsao-g1-hexa.jpg',
+} as const;
+
 export const MEDIA_MENTIONS: MediaMention[] = [
+  {
+    id: '28',
+    outlet: 'G1',
+    logo: 'G1',
+    edition: '2026',
+    title: 'Probabilidade do hexa: qual a chance de o Brasil ser campeão? A matemática pode ter a resposta',
+    link: 'https://g1.globo.com/educacao/noticia/2026/06/13/probabilidade-do-hexa-qual-a-chance-do-brasil-ser-campeao-a-matematica-pode-ter-a-resposta.ghtml',
+    imageUrl: '/assets/previsao-g1-hexa.jpg',
+  },
   {
     id: '20',
     outlet: 'Folha de S.Paulo',

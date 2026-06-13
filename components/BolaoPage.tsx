@@ -25,6 +25,7 @@ import { db } from '../lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import LegalModal, { LegalTab } from './LegalModal';
 import previsoesJogos from '../assets/previsoes_jogos.json';
+import resultadosJogos from '../assets/resultados_jogos.json';
 import flags from '../assets/flags.json';
 import forcaSelecoes from '../assets/forca_selecoes.json';
 
@@ -54,7 +55,7 @@ interface MatchPrediction {
   penaltyWinner: string | null;
 }
 
-type PredictionSource = 'manual' | 'randomGroup';
+type PredictionSource = 'manual' | 'randomGroup' | 'official';
 
 interface FillMetadata {
   usedRandomGroupFill: boolean;
@@ -345,6 +346,56 @@ const groupMatchesByLetter = GROUP_MATCHES.reduce<Record<string, CupMatch[]>>((a
   acc[letter] = [...(acc[letter] ?? []), match];
   return acc;
 }, {});
+
+// Resultados oficiais de jogos já encerrados (mesma fonte do site de previsões).
+// Casamos cada partida da fase de grupos pelo par de seleções + data e travamos o palpite
+// com o placar real, fora da edição e do preenchimento aleatório.
+interface OfficialResult {
+  'Seleção A': string;
+  'Seleção B': string;
+  Data: string;
+  'Placar A': number;
+  'Placar B': number;
+  Status: string;
+}
+
+const officialResultKey = (home: string, away: string, date: string) => `${home}|${away}|${date}`;
+
+const OFFICIAL_RESULTS_BY_ID: Record<string, MatchPrediction> = (() => {
+  const byKey = new Map<string, OfficialResult>();
+  (resultadosJogos as OfficialResult[]).forEach((result) => {
+    if (result.Status === 'encerrado') {
+      byKey.set(officialResultKey(result['Seleção A'], result['Seleção B'], result.Data), result);
+    }
+  });
+
+  const map: Record<string, MatchPrediction> = {};
+  GROUP_MATCHES.forEach((match) => {
+    const result = byKey.get(officialResultKey(match.homeTeam, match.awayTeam, match.date ?? ''));
+    if (result) {
+      map[match.id] = { homeGoals: result['Placar A'], awayGoals: result['Placar B'], penaltyWinner: null };
+    }
+  });
+  return map;
+})();
+
+const LOCKED_MATCH_IDS = new Set(Object.keys(OFFICIAL_RESULTS_BY_ID));
+
+const isLockedMatch = (matchId: string) => LOCKED_MATCH_IDS.has(matchId);
+
+// Força os placares oficiais nas predições, sobrescrevendo qualquer palpite salvo para jogos já encerrados.
+const withOfficialResults = (predictions: Record<string, MatchPrediction>): Record<string, MatchPrediction> => ({
+  ...predictions,
+  ...OFFICIAL_RESULTS_BY_ID,
+});
+
+const withOfficialSources = (sources: Record<string, PredictionSource>): Record<string, PredictionSource> => {
+  const next = { ...sources };
+  LOCKED_MATCH_IDS.forEach((id) => {
+    next[id] = 'official';
+  });
+  return next;
+};
 
 const buildFillMetadata = (predictionSources: Record<string, PredictionSource>): FillMetadata => {
   const randomGroupMatchCount = GROUP_MATCHES.filter((match) => predictionSources[match.id] === 'randomGroup').length;
@@ -1146,16 +1197,17 @@ const CompactScoreInput: React.FC<{
   label: string;
   value: number | null;
   disabled?: boolean;
+  official?: boolean;
   inputKey?: string;
   onChange: (value: number | null) => void;
-}> = ({ label, value, disabled = false, inputKey, onChange }) => (
+}> = ({ label, value, disabled = false, official = false, inputKey, onChange }) => (
   <input
     type="text"
     inputMode="numeric"
     pattern="[0-9]*"
     maxLength={1}
     value={value ?? ''}
-    disabled={disabled}
+    disabled={disabled || official}
     data-group-score-input={inputKey}
     onKeyDown={(event) => {
       if (/^[0-9]$/.test(event.key)) {
@@ -1173,7 +1225,11 @@ const CompactScoreInput: React.FC<{
       const next = event.target.value.replace(/\D/g, '').slice(-1);
       onChange(next === '' ? null : Number(next));
     }}
-    className="h-8 w-8 rounded-md border border-brand-dark/15 bg-white text-center font-montserrat text-sm font-black text-brand-dark outline-none transition focus:border-brand-green focus:ring-2 focus:ring-brand-green/15 disabled:opacity-50 sm:h-9 sm:w-9"
+    className={`h-8 w-8 rounded-md border text-center font-montserrat text-sm font-black outline-none transition focus:border-brand-green focus:ring-2 focus:ring-brand-green/15 sm:h-9 sm:w-9 ${
+      official
+        ? 'border-brand-green/50 bg-brand-green/10 text-brand-green disabled:opacity-100 cursor-not-allowed'
+        : 'border-brand-dark/15 bg-white text-brand-dark disabled:opacity-50'
+    }`}
     aria-label={label}
   />
 );
@@ -1290,33 +1346,47 @@ const GroupMatchRow: React.FC<{
   homeInputKey: string;
   awayInputKey: string;
   onScore: (match: CupMatch, side: 'homeGoals' | 'awayGoals', value: number | null) => void;
-}> = ({ match, prediction, disabled, homeInputKey, awayInputKey, onScore }) => (
-  <div className="grid grid-cols-[minmax(0,1fr)_28px_32px_12px_32px_28px_minmax(0,1fr)] items-center gap-1.5 border-t border-brand-dark/8 py-2 first:border-t-0 sm:grid-cols-[minmax(0,1fr)_32px_36px_14px_36px_32px_minmax(0,1fr)] sm:gap-2">
-    <span className="min-w-0 text-right text-[10px] font-bold uppercase leading-tight text-brand-dark [overflow-wrap:anywhere] sm:text-[11px]">
-      {match.homeTeam}
-    </span>
-    <CompactFlag team={match.homeTeam} />
-    <CompactScoreInput
-      label={`${match.homeTeam} gols`}
-      value={prediction.homeGoals}
-      disabled={disabled}
-      inputKey={homeInputKey}
-      onChange={(value) => onScore(match, 'homeGoals', value)}
-    />
-    <span className="text-center font-montserrat text-[10px] font-black uppercase text-brand-dark/35">x</span>
-    <CompactScoreInput
-      label={`${match.awayTeam} gols`}
-      value={prediction.awayGoals}
-      disabled={disabled}
-      inputKey={awayInputKey}
-      onChange={(value) => onScore(match, 'awayGoals', value)}
-    />
-    <CompactFlag team={match.awayTeam} />
-    <span className="min-w-0 text-left text-[10px] font-bold uppercase leading-tight text-brand-dark [overflow-wrap:anywhere] sm:text-[11px]">
-      {match.awayTeam}
-    </span>
-  </div>
-);
+}> = ({ match, prediction, disabled, homeInputKey, awayInputKey, onScore }) => {
+  const locked = isLockedMatch(match.id);
+  return (
+    <div
+      className={`grid grid-cols-[minmax(0,1fr)_28px_32px_12px_32px_28px_minmax(0,1fr)] items-center gap-1.5 border-t border-brand-dark/8 py-2 first:border-t-0 sm:grid-cols-[minmax(0,1fr)_32px_36px_14px_36px_32px_minmax(0,1fr)] sm:gap-2 ${
+        locked ? 'rounded-md bg-brand-green/5' : ''
+      }`}
+      title={locked ? 'Resultado oficial — jogo já encerrado' : undefined}
+    >
+      <span className="min-w-0 text-right text-[10px] font-bold uppercase leading-tight text-brand-dark [overflow-wrap:anywhere] sm:text-[11px]">
+        {match.homeTeam}
+      </span>
+      <CompactFlag team={match.homeTeam} />
+      <CompactScoreInput
+        label={`${match.homeTeam} gols`}
+        value={prediction.homeGoals}
+        disabled={disabled}
+        official={locked}
+        inputKey={homeInputKey}
+        onChange={(value) => onScore(match, 'homeGoals', value)}
+      />
+      {locked ? (
+        <Lock className="mx-auto h-3 w-3 text-brand-green" aria-label="Resultado oficial" />
+      ) : (
+        <span className="text-center font-montserrat text-[10px] font-black uppercase text-brand-dark/35">x</span>
+      )}
+      <CompactScoreInput
+        label={`${match.awayTeam} gols`}
+        value={prediction.awayGoals}
+        disabled={disabled}
+        official={locked}
+        inputKey={awayInputKey}
+        onChange={(value) => onScore(match, 'awayGoals', value)}
+      />
+      <CompactFlag team={match.awayTeam} />
+      <span className="min-w-0 text-left text-[10px] font-bold uppercase leading-tight text-brand-dark [overflow-wrap:anywhere] sm:text-[11px]">
+        {match.awayTeam}
+      </span>
+    </div>
+  );
+};
 
 const GroupColumn: React.FC<{
   letter: string;
@@ -2222,8 +2292,15 @@ const ProgressPill: React.FC<{ label: string; done: number; total: number }> = (
 
 const BolaoPage: React.FC = () => {
   const [draft, setDraft] = useState<BolaoDraft>(() => {
-    if (typeof window === 'undefined') return createInitialDraft();
-    return localBolaoRepository.loadDraft() ?? createInitialDraft();
+    const base = typeof window === 'undefined'
+      ? createInitialDraft()
+      : localBolaoRepository.loadDraft() ?? createInitialDraft();
+    // Jogos já encerrados entram travados com o placar oficial, mesmo em rascunhos antigos.
+    return {
+      ...base,
+      predictions: withOfficialResults(base.predictions),
+      predictionSources: withOfficialSources(base.predictionSources),
+    };
   });
   const [selectedGroup, setSelectedGroup] = useState('A');
   const [nameTouched, setNameTouched] = useState(false);
@@ -2357,7 +2434,7 @@ const BolaoPage: React.FC = () => {
   };
 
   const setScore = (match: CupMatch, side: 'homeGoals' | 'awayGoals', value: number | null) => {
-    if (isSubmitted) return;
+    if (isSubmitted || isLockedMatch(match.id)) return;
     updateDraft((current) => {
       const predictions = resetDownstream(current.predictions, match);
       let predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
@@ -2412,7 +2489,7 @@ const BolaoPage: React.FC = () => {
   };
 
   const setPenalty = (match: CupMatch, team: string) => {
-    if (isSubmitted) return;
+    if (isSubmitted || isLockedMatch(match.id)) return;
     updateDraft((current) => {
       const predictions = resetDownstream(current.predictions, match);
       const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
@@ -2472,6 +2549,7 @@ const BolaoPage: React.FC = () => {
       const predictions = clearKnockoutPredictions(current.predictions);
       const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       (groupMatchesByLetter[letter] ?? []).forEach((match) => {
+        if (isLockedMatch(match.id)) return; // jogo encerrado: placar oficial permanece
         predictions[match.id] = suggestedScore(match);
         delete predictionSources[match.id];
       });
@@ -2485,6 +2563,7 @@ const BolaoPage: React.FC = () => {
       const predictions = clearKnockoutPredictions(current.predictions);
       const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       GROUP_MATCHES.forEach((match) => {
+        if (isLockedMatch(match.id)) return; // jogo encerrado: placar oficial permanece
         predictions[match.id] = suggestedScore(match);
         delete predictionSources[match.id];
       });
@@ -2498,6 +2577,7 @@ const BolaoPage: React.FC = () => {
       const predictions = clearKnockoutPredictions(current.predictions);
       const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       (groupMatchesByLetter[selectedGroup] ?? []).forEach((match) => {
+        if (isLockedMatch(match.id)) return; // jogo encerrado: placar oficial permanece
         predictions[match.id] = randomGroupScore(match);
         predictionSources[match.id] = 'randomGroup';
       });
@@ -2511,6 +2591,7 @@ const BolaoPage: React.FC = () => {
       const predictions = clearKnockoutPredictions(current.predictions);
       const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       (groupMatchesByLetter[letter] ?? []).forEach((match) => {
+        if (isLockedMatch(match.id)) return; // jogo encerrado: placar oficial permanece
         delete predictions[match.id];
         delete predictionSources[match.id];
       });
@@ -2520,7 +2601,13 @@ const BolaoPage: React.FC = () => {
 
   const clearAll = () => {
     if (isSubmitted) return;
-    updateDraft((current) => ({ ...current, predictions: {}, predictionSources: {}, submittedAt: null }));
+    // Limpa os palpites, mas mantém os resultados oficiais travados.
+    updateDraft((current) => ({
+      ...current,
+      predictions: withOfficialResults({}),
+      predictionSources: withOfficialSources({}),
+      submittedAt: null,
+    }));
     setNameTouched(false);
     setEmailTouched(false);
   };

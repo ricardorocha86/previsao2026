@@ -4,6 +4,7 @@ import { Logo } from './components/Logo';
 import Hero from './components/Hero';
 import HomeOverview from './components/HomeOverview';
 import HexaCallout from './components/HexaCallout';
+import MediaHighlight from './components/MediaHighlight';
 import LegalModal, { LegalTab } from './components/LegalModal';
 
 type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa';
@@ -308,6 +309,7 @@ export default function App() {
         {currentView === 'home' && (
           <>
             <Hero onNavigate={(view) => navigateTo(view)} />
+            <MediaHighlight onNavigate={() => navigateTo('media')} />
             <HexaCallout onNavigate={() => navigateTo('hexa')} />
             <HomeOverview onNavigate={(view) => navigateTo(view)} />
           </>

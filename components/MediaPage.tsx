@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { MEDIA_MENTIONS } from '../data/mediaMentions';
-import { ExternalLink, Newspaper, TrendingUp, Play, Tv, MonitorPlay } from 'lucide-react';
+import { MEDIA_MENTIONS, FEATURED_ARTICLE } from '../data/mediaMentions';
+import { ExternalLink, Newspaper, TrendingUp, Play, Tv, MonitorPlay, Sparkles, CalendarDays, ArrowUpRight } from 'lucide-react';
 import { MediaMention, MediaEdition } from '../types';
 import PageHeader from './PageHeader';
 
@@ -76,6 +76,7 @@ const MediaCard: React.FC<MediaCardProps> = ({ item }) => {
 
 const MediaPage: React.FC = () => {
   const [featuredImageError, setFeaturedImageError] = useState(false);
+  const [articleImageError, setArticleImageError] = useState(false);
 
   return (
     <div className="bg-brand-light min-h-screen pb-24 text-brand-dark">
@@ -89,7 +90,85 @@ const MediaPage: React.FC = () => {
       />
 
       <section className="w-full bg-white border-y border-brand-dark/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 space-y-10">
+          {/* MATÉRIA EM DESTAQUE (MAIS RECENTE) */}
+          <a
+            href={FEATURED_ARTICLE.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group grid overflow-hidden bg-white border border-brand-dark/10 shadow-xl shadow-brand-dark/5 transition-all duration-300 hover:-translate-y-1 hover:border-brand-green/40 hover:shadow-2xl hover:shadow-brand-green/10 lg:grid-cols-[minmax(0,1fr)_minmax(360px,1fr)]"
+          >
+            <div className="flex flex-col justify-between gap-8 p-6 sm:p-8 lg:p-10">
+              <div className="space-y-6">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="inline-flex items-center gap-2 bg-brand-green px-3 py-1.5 text-[11px] font-bold uppercase tracking-widest text-white">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    Matéria em destaque
+                  </span>
+                  <span className="inline-flex items-center gap-2 text-[11px] font-montserrat uppercase tracking-widest text-brand-dark/45">
+                    <CalendarDays className="h-3.5 w-3.5" />
+                    {FEATURED_ARTICLE.outlet} · {FEATURED_ARTICLE.section} · {FEATURED_ARTICLE.date}
+                  </span>
+                </div>
+
+                <div className="space-y-4">
+                  <h2 className="max-w-3xl text-2xl font-montserrat font-bold leading-tight text-brand-dark sm:text-3xl lg:text-[2.6rem] lg:leading-[1.05]">
+                    {FEATURED_ARTICLE.title}
+                  </h2>
+                  <p className="max-w-2xl text-base leading-relaxed text-brand-dark/65">
+                    {FEATURED_ARTICLE.summary}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-4 border-t border-brand-dark/10 pt-6">
+                <span className="inline-flex items-center gap-2 text-sm font-montserrat font-bold uppercase tracking-wider text-brand-green">
+                  Ler matéria no G1
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
+                <span className="inline-flex items-center gap-2 text-xs font-semibold text-brand-dark/45 transition-colors group-hover:text-brand-green">
+                  Abrir matéria
+                  <ExternalLink className="h-4 w-4" />
+                </span>
+              </div>
+            </div>
+
+            <div className="relative min-h-[260px] bg-brand-dark lg:min-h-full">
+              {!articleImageError ? (
+                <img
+                  src={FEATURED_ARTICLE.image}
+                  alt={FEATURED_ARTICLE.title}
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
+                  onError={() => setArticleImageError(true)}
+                />
+              ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-brand-dark p-8 text-center">
+                  <div className="mb-5 flex h-16 w-16 items-center justify-center border border-white/20 bg-white/10 text-white">
+                    <Newspaper className="h-8 w-8" />
+                  </div>
+                  <div className="font-montserrat text-xs font-bold uppercase tracking-widest text-white/60">Imagem indisponível</div>
+                  <div className="mt-2 text-lg font-montserrat font-bold uppercase text-white">G1 · Educação</div>
+                </div>
+              )}
+
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/70 via-brand-dark/10 to-transparent"></div>
+              <div className="absolute left-5 top-5 bg-brand-red px-3 py-1.5 text-xs font-montserrat font-bold uppercase tracking-widest text-white">
+                G1
+              </div>
+              <div className="absolute right-5 top-5 inline-flex items-center gap-1.5 bg-brand-neon px-3 py-1.5 text-xs font-montserrat font-black uppercase tracking-widest text-brand-dark shadow-lg">
+                <Sparkles className="h-3.5 w-3.5" />
+                Novo
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between gap-4 p-5">
+                <span className="text-xs font-montserrat font-bold uppercase tracking-widest text-white">Reportagem</span>
+                <span className="text-xs text-white/70">{FEATURED_ARTICLE.date}</span>
+              </div>
+            </div>
+          </a>
+
+          {/* VÍDEO EM DESTAQUE (TV GLOBO / BOM DIA SP) */}
           <a
             href={G1_LINK}
             target="_blank"
@@ -101,7 +180,7 @@ const MediaPage: React.FC = () => {
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="inline-flex items-center gap-2 border border-brand-green/20 bg-brand-green/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-widest text-brand-green">
                     <Tv className="h-3.5 w-3.5" />
-                    Matéria em destaque
+                    Vídeo em destaque
                   </span>
                   <span className="inline-flex items-center gap-2 text-[11px] font-montserrat uppercase tracking-widest text-brand-dark/45">
                     <MonitorPlay className="h-3.5 w-3.5" />
