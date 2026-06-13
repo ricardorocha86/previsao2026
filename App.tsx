@@ -6,6 +6,7 @@ import HomeOverview from './components/HomeOverview';
 import HexaCallout from './components/HexaCallout';
 import MediaHighlight from './components/MediaHighlight';
 import LegalModal, { LegalTab } from './components/LegalModal';
+import { Analytics } from '@vercel/analytics/react';
 
 type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa';
 
@@ -31,6 +32,8 @@ const ROUTES: Record<ViewState, string> = {
   team: '/equipe',
   hexa: '/caminho-do-hexa',
 };
+
+const SITE_ORIGIN = 'https://www.previsaoesportiva.com.br';
 
 const DEFAULT_DESCRIPTION =
   'Previsões probabilísticas para a Copa do Mundo 2026 com metodologia científica. Projeto acadêmico de pesquisa e divulgação científica em modelagem estatística do futebol.';
@@ -117,9 +120,24 @@ export default function App() {
 
   useEffect(() => {
     const meta = PAGE_META[currentView] ?? PAGE_META.home;
+    const path = ROUTES[currentView] ?? '/';
+    const url = path === '/' ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}${path}`;
+
     document.title = meta.title;
-    const descTag = document.querySelector('meta[name="description"]');
-    if (descTag) descTag.setAttribute('content', meta.description);
+
+    const setMeta = (selector: string, value: string) => {
+      const el = document.querySelector(selector);
+      if (el) el.setAttribute('content', value);
+    };
+    setMeta('meta[name="description"]', meta.description);
+    setMeta('meta[property="og:title"]', meta.title);
+    setMeta('meta[property="og:description"]', meta.description);
+    setMeta('meta[property="og:url"]', url);
+    setMeta('meta[name="twitter:title"]', meta.title);
+    setMeta('meta[name="twitter:description"]', meta.description);
+
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) canonical.setAttribute('href', url);
   }, [currentView]);
 
   const navigateTo = (view: ViewState) => {
@@ -451,6 +469,8 @@ export default function App() {
         initialTab={legalModal.tab}
         onClose={() => setLegalModal((prev) => ({ ...prev, open: false }))}
       />
+
+      <Analytics />
     </div>
   );
 }
