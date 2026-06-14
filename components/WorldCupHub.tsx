@@ -89,15 +89,27 @@ const parseDataHora = (jogo: any): number => {
 };
 
 // Resultados oficiais ficam em arquivo separado: as previsões publicadas nunca são editadas após as partidas.
-const jogoKey = (jogo: any) => `${jogo['Seleção A']}|${jogo['Seleção B']}|${jogo['Data']}`;
+// Na fase de grupos, cada par de seleções joga uma única vez; por isso não dependemos da data.
+const jogoPairKey = (teamA: string, teamB: string) => `${teamA}|${teamB}`;
+
+const reverseResultado = (resultado: any) => ({
+  ...resultado,
+  'Seleção A': resultado['Seleção B'],
+  'Seleção B': resultado['Seleção A'],
+  'Placar A': resultado['Placar B'],
+  'Placar B': resultado['Placar A'],
+});
 
 const RESULTADOS_MAP: Record<string, any> = (resultadosJogos as any[]).reduce((acc, r) => {
-  acc[jogoKey(r)] = r;
+  if (r['Status'] === 'encerrado') {
+    acc[jogoPairKey(r['Seleção A'], r['Seleção B'])] = r;
+    acc[jogoPairKey(r['Seleção B'], r['Seleção A'])] = reverseResultado(r);
+  }
   return acc;
 }, {} as Record<string, any>);
 
 const getResultado = (jogo: any) => {
-  const r = RESULTADOS_MAP[jogoKey(jogo)];
+  const r = RESULTADOS_MAP[jogoPairKey(jogo['Seleção A'], jogo['Seleção B'])];
   return r && r['Status'] === 'encerrado' ? r : undefined;
 };
 

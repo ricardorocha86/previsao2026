@@ -348,8 +348,8 @@ const groupMatchesByLetter = GROUP_MATCHES.reduce<Record<string, CupMatch[]>>((a
 }, {});
 
 // Resultados oficiais de jogos já encerrados (mesma fonte do site de previsões).
-// Casamos cada partida da fase de grupos pelo par de seleções + data e travamos o palpite
-// com o placar real, fora da edição e do preenchimento aleatório.
+// Na fase de grupos, cada par de seleções joga uma única vez; por isso não dependemos da data.
+// O placar real fica fora da edição e do preenchimento aleatório.
 interface OfficialResult {
   'Seleção A': string;
   'Seleção B': string;
@@ -359,21 +359,30 @@ interface OfficialResult {
   Status: string;
 }
 
-const officialResultKey = (home: string, away: string, date: string) => `${home}|${away}|${date}`;
+const officialResultKey = (home: string, away: string) => `${home}|${away}`;
 
 const OFFICIAL_RESULTS_BY_ID: Record<string, MatchPrediction> = (() => {
-  const byKey = new Map<string, OfficialResult>();
+  const byKey = new Map<string, MatchPrediction>();
   (resultadosJogos as OfficialResult[]).forEach((result) => {
     if (result.Status === 'encerrado') {
-      byKey.set(officialResultKey(result['Seleção A'], result['Seleção B'], result.Data), result);
+      byKey.set(officialResultKey(result['Seleção A'], result['Seleção B']), {
+        homeGoals: result['Placar A'],
+        awayGoals: result['Placar B'],
+        penaltyWinner: null,
+      });
+      byKey.set(officialResultKey(result['Seleção B'], result['Seleção A']), {
+        homeGoals: result['Placar B'],
+        awayGoals: result['Placar A'],
+        penaltyWinner: null,
+      });
     }
   });
 
   const map: Record<string, MatchPrediction> = {};
   GROUP_MATCHES.forEach((match) => {
-    const result = byKey.get(officialResultKey(match.homeTeam, match.awayTeam, match.date ?? ''));
+    const result = byKey.get(officialResultKey(match.homeTeam, match.awayTeam));
     if (result) {
-      map[match.id] = { homeGoals: result['Placar A'], awayGoals: result['Placar B'], penaltyWinner: null };
+      map[match.id] = result;
     }
   });
   return map;
