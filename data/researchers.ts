@@ -38,6 +38,11 @@ export const RESEARCHERS: Researcher[] = [
     linkedin: 'https://www.linkedin.com/in/fernandomoraesds/',
     lattes: 'http://lattes.cnpq.br/5446300739482164',
   },
+  {
+    id: '22', name: 'Luis Ernesto Bueno Salasar', coord: true,
+    affiliation: 'UFSCar', image: '/assets/fotos/luis-ernesto-salasar.webp',
+    lattes: 'http://lattes.cnpq.br/5464564215528609',
+  },
   // Membros
   {
     id: '5', name: 'David Franco Regalado',

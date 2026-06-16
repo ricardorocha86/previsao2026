@@ -20,6 +20,8 @@ import {
   ZoomIn,
   ZoomOut,
   ShieldCheck,
+  Share2,
+  X,
 } from 'lucide-react';
 import { db } from '../lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
@@ -28,6 +30,8 @@ import previsoesJogos from '../assets/previsoes_jogos.json';
 import resultadosJogos from '../assets/resultados_jogos.json';
 import flags from '../assets/flags.json';
 import forcaSelecoes from '../assets/forca_selecoes.json';
+import { toPng } from 'html-to-image';
+import { buildShareCardInnerHTML, getMontserratEmbedCSS, CARD_W, CARD_H, STAGE_W, STAGE_H, STAGE_OFFSET_X, STAGE_OFFSET_Y, type ShareCardData, type SCMatch } from './shareCard';
 
 type SourceMatch = Record<string, string>;
 type MatchStage = 'groups' | 'roundOf32' | 'roundOf16' | 'quarterfinals' | 'semifinals' | 'thirdPlace' | 'final';
@@ -232,6 +236,7 @@ const TEAM_CODE_OVERRIDES: Record<string, string> = {
 const FLAGCDN_CODE_OVERRIDES: Record<string, string> = {
   'Africa do Sul': 'za',
   'Alemanha': 'de',
+  'Arabia Saudita': 'sa',
   'Argelia': 'dz',
   'Argentina': 'ar',
   'Australia': 'au',
@@ -295,7 +300,7 @@ type PlayerEasterEggPlacement = 'right' | 'left' | 'top';
 
 const PLAYER_EASTER_EGGS: Record<string, { player: string; src: string; placement: PlayerEasterEggPlacement }> = {
   Argentina: { player: 'Messi', src: '/assets/easter-eggs/messi.webp', placement: 'right' },
-  Brasil: { player: 'Neymar', src: '/assets/easter-eggs/neymar.webp', placement: 'left' },
+  Brasil: { player: 'Endrick', src: '/assets/easter-eggs/endrick-19-trophy.webp', placement: 'left' },
   Espanha: { player: 'Yamal', src: '/assets/easter-eggs/yamal.webp', placement: 'right' },
   Franca: { player: 'Mbappé', src: '/assets/easter-eggs/mbappe.webp', placement: 'left' },
   Inglaterra: { player: 'Harry Kane', src: '/assets/easter-eggs/kane.webp', placement: 'left' },
@@ -2320,6 +2325,14 @@ const BolaoPage: React.FC = () => {
   const [modalState, setModalState] = useState<'none' | 'sending' | 'success' | 'error'>('none');
   const [acceptedTerms, setAcceptedTerms] = useState(true);
   const [legalModal, setLegalModal] = useState<{ open: boolean; tab: LegalTab }>({ open: false, tab: 'terms' });
+  const shareCardRef = useRef<HTMLDivElement>(null);
+  const [cardPng, setCardPng] = useState<string | null>(null);
+  const [isGeneratingCard, setIsGeneratingCard] = useState(false);
+  const [cardError, setCardError] = useState(false);
+  const [cardModalOpen, setCardModalOpen] = useState(false);
+  const prevKnockoutRef = useRef<boolean | null>(null);
+  const cardPopupSeenRef = useRef(false);
+  const lastGenHtmlRef = useRef('');
 
   const openLegal = (tab: LegalTab) => setLegalModal({ open: true, tab });
 
@@ -2353,8 +2366,7 @@ const BolaoPage: React.FC = () => {
   const emailValid = isEmailValid(draft.participant.email.trim());
   const researchQuestionsValid =
     Boolean(draft.participant.expertiseLevel) &&
-    Boolean(draft.participant.footballFollowFrequency) &&
-    Boolean(draft.participant.cupPoolExperience);
+    Boolean(draft.participant.footballFollowFrequency);
   const nameError = nameTouched && !nameValid;
   const emailError = emailTouched && !emailValid;
 
@@ -2370,6 +2382,101 @@ const BolaoPage: React.FC = () => {
   // estão completos e o bilhete quando o mata-mata (campeão) está definido e todos os jogos preenchidos.
   const knockoutComplete = champion !== null && completedMatches === TOTAL_MATCHES;
   const groupsRef = useRef<HTMLElement>(null);
+
+  // ----- Card compartilhável (baixar minha simulação) -----
+  const shareCardData = useMemo<ShareCardData | null>(() => {
+    if (!knockoutComplete || !finalMatch || !champion) return null;
+    const isoFor = (team: string) => FLAGCDN_CODE_OVERRIDES[normalizedTeamName(team)] ?? 'un';
+    const matchN = (id: string) => Number(id.match(/-(\d+)$/)?.[1] ?? 0);
+    const sortByN = (arr: CupMatch[]) => [...arr].sort((a, b) => matchN(a.id) - matchN(b.id));
+    const toSc = (m: CupMatch): SCMatch => ({
+      home: m.homeTeam,
+      away: m.awayTeam,
+      homeIso: isoFor(m.homeTeam),
+      awayIso: isoFor(m.awayTeam),
+      winner: resolvedWinner(m, getPrediction(draft.predictions, m.id)),
+    });
+    const finalPred = getPrediction(draft.predictions, finalMatch.id);
+    const champIsHome = champion === finalMatch.homeTeam;
+    const g = (v: number | null) => (v == null ? '' : String(v));
+    const finalScore: [string, string] = champIsHome
+      ? [g(finalPred.homeGoals), g(finalPred.awayGoals)]
+      : [g(finalPred.awayGoals), g(finalPred.homeGoals)];
+    let third: ShareCardData['third'] = null;
+    if (thirdPlaceMatch) {
+      const tw = resolvedWinner(thirdPlaceMatch, getPrediction(draft.predictions, thirdPlaceMatch.id));
+      if (tw) {
+        const tl = tw === thirdPlaceMatch.homeTeam ? thirdPlaceMatch.awayTeam : thirdPlaceMatch.homeTeam;
+        third = { winner: tw, winnerIso: isoFor(tw), loser: tl, loserIso: isoFor(tl) };
+      }
+    }
+    return {
+      roundOf32: sortByN(bracket.roundOf32 ?? []).map(toSc),
+      roundOf16: sortByN(bracket.roundOf16 ?? []).map(toSc),
+      quarterfinals: sortByN(bracket.quarterfinals ?? []).map(toSc),
+      semifinals: sortByN(bracket.semifinals ?? []).map(toSc),
+      final: toSc(finalMatch),
+      finalScore,
+      third,
+      champion,
+      championIso: isoFor(champion),
+      participantName: draft.participant.name,
+    };
+  }, [knockoutComplete, bracket, draft.predictions, draft.participant.name, champion, finalMatch, thirdPlaceMatch]);
+
+  const shareCardHtml = useMemo(() => (shareCardData ? buildShareCardInnerHTML(shareCardData) : ''), [shareCardData]);
+
+  // Gera o PNG do card (sem baixar). Mostrado no popup e na coluna do card.
+  const generateCard = async () => {
+    if (!shareCardRef.current) return;
+    setIsGeneratingCard(true);
+    setCardError(false);
+    try {
+      const fonts = (document as { fonts?: { ready?: Promise<unknown> } }).fonts;
+      if (fonts?.ready) { try { await fonts.ready; } catch { /* ignore */ } }
+      const fontEmbedCSS = await getMontserratEmbedCSS();
+      // pixelRatio 1 = 1122x1402 nativo (4:5, tamanho da arte)
+      const opts = { width: CARD_W, height: CARD_H, pixelRatio: 1, backgroundColor: '#ffffff', fontEmbedCSS, skipFonts: !fontEmbedCSS };
+      const dataUrl = await toPng(shareCardRef.current, opts);
+      setCardPng(dataUrl);
+    } catch (err) {
+      console.error('Erro ao gerar o card da simulação:', err);
+      setCardError(true);
+    } finally {
+      setIsGeneratingCard(false);
+    }
+  };
+
+  // Baixa o card já gerado.
+  const downloadCard = () => {
+    if (!cardPng) return;
+    const link = document.createElement('a');
+    link.download = `minha-simulacao-${normalizeSlug(draft.participant.name || 'copa-2026')}.png`;
+    link.href = cardPng;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
+
+  // Ao concluir o mata-mata (transição), abre o popup do card uma vez por sessão.
+  useEffect(() => {
+    const prev = prevKnockoutRef.current;
+    prevKnockoutRef.current = knockoutComplete;
+    if (prev === null) return; // 1º render: não abre popup mesmo se já estava completo
+    if (knockoutComplete && !prev && !cardPopupSeenRef.current) {
+      setCardModalOpen(true);
+      cardPopupSeenRef.current = true;
+    }
+  }, [knockoutComplete]);
+
+  // Gera/atualiza o card sempre que o chaveamento muda (estando completo).
+  useEffect(() => {
+    if (!knockoutComplete || !shareCardHtml || isGeneratingCard) return;
+    if (shareCardHtml === lastGenHtmlRef.current) return;
+    lastGenHtmlRef.current = shareCardHtml;
+    void generateCard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [knockoutComplete, shareCardHtml, isGeneratingCard]);
 
   const updateDraft = (updater: (draft: BolaoDraft) => BolaoDraft) => {
     setDraft((current) => ({ ...updater(current), lastSavedAt: new Date().toISOString() }));
@@ -3060,66 +3167,58 @@ const BolaoPage: React.FC = () => {
         </section>
       )}
 
-      {knockoutComplete && (
+      {knockoutComplete && !cardModalOpen && (
         <section className="mx-auto max-w-7xl scroll-mt-40 border-t-4 border-brand-yellow/30 px-4 py-8">
-          <div className="grid gap-6">
-            <SectionHeader eyebrow="Envio dos palpites" title="Confirme os seus palpites">
-              <ProgressPill label="Palpites preenchidos" done={completedMatches} total={TOTAL_MATCHES} />
-              {isSubmitted && (
-                <span className="inline-flex flex-none items-center gap-1 rounded-md bg-brand-green/10 px-2 py-1 text-[10px] font-black uppercase text-brand-green">
-                  <Lock className="h-3 w-3" />
-                  Oficial
+          <div className="grid gap-6 lg:grid-cols-3 lg:items-start">
+            {/* Coluna 1 (proporção 1): o card gerado do mata-mata */}
+            <div className="lg:col-span-1">
+              <div className="rounded-2xl border-2 border-brand-green/30 bg-gradient-to-br from-brand-green/5 via-white to-brand-yellow/10 p-5 shadow-lg">
+                <span className="inline-flex items-center gap-2 rounded-full bg-brand-green/10 px-3 py-1 text-[11px] font-black uppercase tracking-widest text-brand-green">
+                  <Share2 className="h-3.5 w-3.5" /> Seu card pra compartilhar
                 </span>
-              )}
-            </SectionHeader>
-
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="rounded-lg border border-brand-green/30 bg-brand-green/5 p-5 flex flex-col justify-between">
-                <div className="flex items-start gap-3">
-                  <Trophy className="mt-0.5 h-5 w-5 flex-none text-brand-green" />
-                  <div>
-                    <h3 className="font-montserrat text-sm font-black uppercase tracking-wide text-brand-dark">
-                      Envie seus palpites 🏆
-                    </h3>
-                    <p className="mt-2 text-xs leading-relaxed text-brand-dark/70">
-                      Confira tudo com calma antes de enviar. Depois do envio, seus palpites passam a valer na disputa contra os demais.
-                    </p>
-                  </div>
+                <div className="mt-4 overflow-hidden rounded-xl border border-brand-dark/10 shadow-2xl">
+                  {cardPng ? (
+                    <img src={cardPng} alt="Card da minha simulação do mata-mata" className="block w-full" />
+                  ) : (
+                    <div className="flex aspect-[1122/1402] w-full items-center justify-center bg-brand-light">
+                      <Loader2 className="h-8 w-8 animate-spin text-brand-green" />
+                    </div>
+                  )}
                 </div>
-              </div>
-
-              <div className="rounded-lg border border-brand-yellow/50 bg-brand-yellow/10 p-5 flex flex-col justify-between">
-                <div className="flex items-start gap-3">
-                  <Gift className="mt-0.5 h-5 w-5 flex-none text-brand-yellow" />
-                  <div>
-                    <h3 className="font-montserrat text-sm font-black uppercase tracking-wide text-brand-dark">
-                      Tem prêmio em jogo 🍫
-                    </h3>
-                    <p className="mt-2 text-xs leading-relaxed text-brand-dark/70">
-                      O participante com a maior pontuação leva uma caixa de bombons Sonho de Valsa. Em jogo estão a glória do grupo e o chocolate.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-lg border border-brand-blue/20 bg-brand-blue/5 p-5 flex flex-col justify-between">
-                <div className="flex items-start gap-3">
-                  <Sparkles className="mt-0.5 h-5 w-5 flex-none text-brand-blue" />
-                  <div>
-                    <h3 className="font-montserrat text-sm font-black uppercase tracking-wide text-brand-dark">
-                      Você contribui com a ciência 🧪
-                    </h3>
-                    <p className="mt-2 text-xs leading-relaxed text-brand-dark/70">
-                      Com o seu consentimento, os palpites e respostas são usados de forma anonimizada em nossa pesquisa para aprimorar modelos de previsão estatística no esporte.
-                    </p>
-                  </div>
-                </div>
+                <button
+                  type="button"
+                  onClick={downloadCard}
+                  disabled={!cardPng || isGeneratingCard}
+                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-green px-5 py-3.5 text-sm font-black uppercase tracking-wide text-white shadow-lg shadow-brand-green/25 transition hover:bg-brand-grad2 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  <Download className="h-5 w-5" /> Baixar imagem
+                </button>
+                {cardError && (
+                  <p className="mt-2 text-center text-xs font-bold text-red-600">
+                    Erro ao gerar o card.{' '}
+                    <button type="button" onClick={generateCard} className="underline underline-offset-2">Tentar de novo</button>
+                  </p>
+                )}
               </div>
             </div>
-          </div>
 
-          <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
-          <div className="rounded-lg border border-brand-dark/10 bg-white p-5 shadow-sm">
+            {/* Coluna 2 (proporção 2): confirmar e enviar os palpites */}
+            <div className="grid content-start gap-6 lg:col-span-2">
+              <SectionHeader eyebrow="Envio dos palpites" title="Confirme os seus palpites">
+                <ProgressPill label="Palpites preenchidos" done={completedMatches} total={TOTAL_MATCHES} />
+                {isSubmitted && (
+                  <span className="inline-flex flex-none items-center gap-1 rounded-md bg-brand-green/10 px-2 py-1 text-[10px] font-black uppercase text-brand-green">
+                    <Lock className="h-3 w-3" />
+                    Oficial
+                  </span>
+                )}
+              </SectionHeader>
+
+              <p className="text-sm leading-relaxed text-brand-dark/70">
+                Confira tudo com calma e envie: seus palpites passam a valer na disputa pela caixa de bombons Sonho de Valsa 🍫 — e, com o seu consentimento, ajudam de forma anonimizada a nossa pesquisa de previsão estatística no esporte.
+              </p>
+
+              <div className="rounded-lg border border-brand-dark/10 bg-white p-5 shadow-sm">
             <span className="font-montserrat text-[10px] font-black uppercase tracking-[0.18em] text-brand-green">
               Dados do participante
             </span>
@@ -3191,99 +3290,37 @@ const BolaoPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="mt-6 grid gap-4 rounded-lg border border-brand-dark/10 bg-brand-light p-4">
-              <div>
-                <span className="font-montserrat text-[10px] font-black uppercase tracking-[0.18em] text-brand-green">
-                  Perguntas rápidas para a pesquisa
-                </span>
-                <p className="mt-1 text-xs font-semibold leading-relaxed text-brand-dark/60">
-                  Respostas curtas ajudam a comparar diferentes perfis de palpiteiros.
-                </p>
-              </div>
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <label className="grid gap-2">
+                <span className="text-xs font-black uppercase tracking-[0.14em] text-brand-dark/45">Quanto você entende de futebol?</span>
+                <select
+                  value={draft.participant.expertiseLevel}
+                  onChange={(event) => updateParticipant({ expertiseLevel: event.target.value })}
+                  className="rounded-lg border border-brand-dark/10 bg-white px-4 py-3 text-sm font-semibold outline-none transition focus:border-brand-green focus:ring-4 focus:ring-brand-green/10"
+                >
+                  <option value="">Selecione</option>
+                  <option value="none">Não entendo nada</option>
+                  <option value="little">Entendo pouco</option>
+                  <option value="regular">Entendo razoavelmente</option>
+                  <option value="expert">Me considero especialista</option>
+                </select>
+              </label>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <label className="grid gap-2">
-                  <span className="text-xs font-black uppercase tracking-[0.14em] text-brand-dark/45">Quanto você entende de futebol?</span>
-                  <select
-                    value={draft.participant.expertiseLevel}
-                    onChange={(event) => updateParticipant({ expertiseLevel: event.target.value })}
-                    className="rounded-lg border border-brand-dark/10 bg-white px-4 py-3 text-sm font-semibold outline-none transition focus:border-brand-green focus:ring-4 focus:ring-brand-green/10"
-                  >
-                    <option value="">Selecione</option>
-                    <option value="none">Não entendo nada</option>
-                    <option value="little">Entendo pouco</option>
-                    <option value="regular">Entendo razoavelmente</option>
-                    <option value="expert">Me considero especialista</option>
-                  </select>
-                </label>
-
-                <label className="grid gap-2">
-                  <span className="text-xs font-black uppercase tracking-[0.14em] text-brand-dark/45">Com que frequência acompanha futebol?</span>
-                  <select
-                    value={draft.participant.footballFollowFrequency}
-                    onChange={(event) => updateParticipant({ footballFollowFrequency: event.target.value })}
-                    className="rounded-lg border border-brand-dark/10 bg-white px-4 py-3 text-sm font-semibold outline-none transition focus:border-brand-green focus:ring-4 focus:ring-brand-green/10"
-                  >
-                    <option value="">Selecione</option>
-                    <option value="never">Nunca</option>
-                    <option value="rarely">Quase nunca</option>
-                    <option value="sometimes">Algumas vezes por mês</option>
-                    <option value="weekly">Toda semana</option>
-                  </select>
-                </label>
-
-                <label className="grid gap-2">
-                  <span className="text-xs font-black uppercase tracking-[0.14em] text-brand-dark/45">Você já participou de bolões de Copa antes?</span>
-                  <select
-                    value={draft.participant.cupPoolExperience}
-                    onChange={(event) => updateParticipant({ cupPoolExperience: event.target.value })}
-                    className="rounded-lg border border-brand-dark/10 bg-white px-4 py-3 text-sm font-semibold outline-none transition focus:border-brand-green focus:ring-4 focus:ring-brand-green/10"
-                  >
-                    <option value="">Selecione</option>
-                    <option value="never">Nunca participei</option>
-                    <option value="once">Já participei uma vez</option>
-                    <option value="some">Já participei algumas vezes</option>
-                    <option value="always">Participo sempre que tem Copa</option>
-                  </select>
-                </label>
-
-                <label className="grid gap-2">
-                  <span className="text-xs font-black uppercase tracking-[0.14em] text-brand-dark/45">Além do Brasil, vai torcer para mais quem nessa Copa? (opcional)</span>
-                  <input
-                    value={draft.participant.favoriteTeam}
-                    onChange={(event) => updateParticipant({ favoriteTeam: event.target.value })}
-                    className="rounded-lg border border-brand-dark/10 bg-white px-4 py-3 text-sm font-semibold outline-none transition focus:border-brand-green focus:ring-4 focus:ring-brand-green/10"
-                    placeholder="Ex: Argentina, Japão, Marrocos..."
-                  />
-                </label>
-              </div>
+              <label className="grid gap-2">
+                <span className="text-xs font-black uppercase tracking-[0.14em] text-brand-dark/45">Com que frequência acompanha futebol?</span>
+                <select
+                  value={draft.participant.footballFollowFrequency}
+                  onChange={(event) => updateParticipant({ footballFollowFrequency: event.target.value })}
+                  className="rounded-lg border border-brand-dark/10 bg-white px-4 py-3 text-sm font-semibold outline-none transition focus:border-brand-green focus:ring-4 focus:ring-brand-green/10"
+                >
+                  <option value="">Selecione</option>
+                  <option value="never">Nunca</option>
+                  <option value="rarely">Quase nunca</option>
+                  <option value="sometimes">Algumas vezes por mês</option>
+                  <option value="weekly">Toda semana</option>
+                </select>
+              </label>
             </div>
-
-            <div className="mt-6 grid gap-3 rounded-lg bg-brand-light p-4">
-              <h2 className="text-2xl font-black">Resumo dos palpites</h2>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-lg bg-white p-4">
-                  <span className="text-[10px] font-black uppercase tracking-[0.16em] text-brand-dark/40">Palpites</span>
-                  <strong className="mt-1 block font-montserrat text-2xl font-black">{completedMatches}/{TOTAL_MATCHES}</strong>
-                </div>
-                <div className="rounded-lg bg-white p-4">
-                  <span className="text-[10px] font-black uppercase tracking-[0.16em] text-brand-dark/40">Campeão</span>
-                  <div className="mt-2 flex min-w-0 items-center gap-3">
-                    {champion && <ChampionFlagBadge team={champion} compact />}
-                    <strong className="block truncate font-montserrat text-2xl font-black">{champion ?? '-'}</strong>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <aside className="grid content-start gap-4">
-            <div className="rounded-lg border border-brand-dark/10 bg-white p-5 shadow-sm">
-              <UserRound className="h-8 w-8 text-brand-green" />
-              <h2 className="mt-4 text-2xl font-black">Pronto para enviar</h2>
-              <p className="mt-3 text-sm leading-relaxed text-brand-dark/60">
-                Ao enviar, seus palpites são registrados e passam a valer no bolão. Confira tudo antes de confirmar.
-              </p>
             </div>
 
             {submitError && (
@@ -3294,10 +3331,6 @@ const BolaoPage: React.FC = () => {
             )}
 
             <div className="rounded-lg border border-brand-dark/10 bg-white p-4">
-              <div className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-brand-green">
-                <ShieldCheck className="h-3.5 w-3.5" />
-                Consentimento
-              </div>
               <div className="flex items-start gap-3">
                 <input
                   id="acceptTerms"
@@ -3323,8 +3356,8 @@ const BolaoPage: React.FC = () => {
                     className="font-bold text-brand-green underline underline-offset-2 hover:text-brand-grad2"
                   >
                     Política de Privacidade
-                  </button>
-                  , e autorizo o uso dos meus dados para o bolão e para a pesquisa científica do projeto.
+                  </button>{' '}
+                  e autorizo o uso dos meus dados no bolão e na pesquisa.
                 </p>
               </div>
               {!acceptedTerms && (
@@ -3348,18 +3381,75 @@ const BolaoPage: React.FC = () => {
               )}
               {isSubmitting ? 'Enviando...' : isSubmitted ? 'Palpites enviados' : 'Enviar e entrar no bolão'}
             </button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Popup do card: aparece ao concluir o mata-mata; ao fechar, libera a seção de baixo. */}
+      {cardModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-dark/60 backdrop-blur-md animate-fade-in">
+          <style>{`
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+            @keyframes zoomIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+            .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
+            .animate-zoom-in { animation: zoomIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+          `}</style>
+          <div className="relative max-h-[92vh] w-full max-w-sm overflow-y-auto rounded-2xl border border-brand-dark/10 bg-white p-6 shadow-2xl animate-zoom-in">
+            <button
+              type="button"
+              onClick={() => setCardModalOpen(false)}
+              aria-label="Fechar"
+              className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-brand-dark/5 text-brand-dark/60 transition hover:bg-brand-dark/10 hover:text-brand-dark"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            <div className="text-center">
+              <span className="inline-flex items-center gap-2 rounded-full bg-brand-green/10 px-3 py-1 text-[11px] font-black uppercase tracking-widest text-brand-green">
+                <Sparkles className="h-3.5 w-3.5" /> Sua simulação está pronta
+              </span>
+              <h3 className="mt-3 font-montserrat text-xl font-black uppercase tracking-wide text-brand-dark md:text-2xl">
+                Compartilhe nas suas redes sociais
+              </h3>
+            </div>
+
+            <div className="mt-5 overflow-hidden rounded-xl border border-brand-dark/10 shadow-xl">
+              {cardPng ? (
+                <img src={cardPng} alt="Card da minha simulação do mata-mata" className="block w-full" />
+              ) : (
+                <div className="flex aspect-[1122/1402] w-full flex-col items-center justify-center gap-3 bg-brand-light">
+                  <Loader2 className="h-8 w-8 animate-spin text-brand-green" />
+                  <span className="text-xs font-bold uppercase tracking-wide text-brand-dark/50">Gerando seu card...</span>
+                </div>
+              )}
+            </div>
+
+            {cardError && (
+              <p className="mt-3 text-center text-xs font-bold text-red-600">
+                Não foi possível gerar o card.{' '}
+                <button type="button" onClick={generateCard} className="underline underline-offset-2">Tentar de novo</button>
+              </p>
+            )}
 
             <button
               type="button"
-              disabled
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-brand-dark/5 bg-brand-light px-5 py-4 text-sm font-black uppercase text-brand-dark/35 cursor-not-allowed"
+              onClick={downloadCard}
+              disabled={!cardPng || isGeneratingCard}
+              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-green px-6 py-4 text-base font-black uppercase tracking-wide text-white shadow-xl shadow-brand-green/30 transition hover:scale-[1.02] hover:bg-brand-grad2 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <Download className="h-5 w-5 opacity-40" />
-              Exportar palpites (Em breve)
+              <Download className="h-5 w-5" /> Baixar imagem
             </button>
-          </aside>
+
+            <button
+              type="button"
+              onClick={() => setCardModalOpen(false)}
+              className="mt-3 w-full text-center text-xs font-bold uppercase tracking-wide text-brand-dark/50 transition hover:text-brand-dark"
+            >
+              Continuar para o envio
+            </button>
           </div>
-        </section>
+        </div>
       )}
 
       {modalState !== 'none' && (
@@ -3466,6 +3556,28 @@ const BolaoPage: React.FC = () => {
         initialTab={legalModal.tab}
         onClose={() => setLegalModal((prev) => ({ ...prev, open: false }))}
       />
+
+      {/* Card do mata-mata renderizado fora da tela; serve de fonte para o PNG.
+          A arte fixa (template) é o fundo; o chaveamento entra num palco posicionado. */}
+      {shareCardHtml && (
+        <div aria-hidden="true" style={{ position: 'fixed', top: 0, left: '-20000px', width: CARD_W, height: CARD_H, pointerEvents: 'none', zIndex: -1 }}>
+          <div
+            ref={shareCardRef}
+            style={{ width: CARD_W, height: CARD_H, position: 'relative', overflow: 'hidden', fontFamily: 'Montserrat, Arial, sans-serif', background: '#ffffff' }}
+          >
+            <img
+              src="/assets/card-template.webp"
+              alt=""
+              crossOrigin="anonymous"
+              style={{ position: 'absolute', top: 0, left: 0, width: CARD_W, height: CARD_H, zIndex: 0, display: 'block' }}
+            />
+            <div
+              style={{ position: 'absolute', left: STAGE_OFFSET_X, top: STAGE_OFFSET_Y, width: STAGE_W, height: STAGE_H, zIndex: 1 }}
+              dangerouslySetInnerHTML={{ __html: shareCardHtml }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

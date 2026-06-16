@@ -1,0 +1,18 @@
+{
+  "_descricao": "Fonte padronizada de bandeiras HD em WebP (flagcdn w1280) para as 48 seleções da Copa 2026. Arquivo por código ISO-2: /flags/<iso2>.webp. Mapa nome->iso2 igual ao FLAGCDN_CODE_OVERRIDES em components/BolaoPage.tsx.",
+  "_fonte": "https://flagcdn.com/w1280/<iso2>.webp",
+  "teams": {
+    "Espanha": "es", "Argentina": "ar", "França": "fr", "Inglaterra": "gb-eng",
+    "Brasil": "br", "Portugal": "pt", "Colômbia": "co", "Holanda": "nl",
+    "Equador": "ec", "Croácia": "hr", "Alemanha": "de", "Noruega": "no",
+    "Japão": "jp", "Turquia": "tr", "Uruguai": "uy", "Suíça": "ch",
+    "Senegal": "sn", "Bélgica": "be", "México": "mx", "Paraguai": "py",
+    "Áustria": "at", "Marrocos": "ma", "Canadá": "ca", "Austrália": "au",
+    "Escócia": "gb-sct", "Irã": "ir", "Coreia do Sul": "kr", "Argélia": "dz",
+    "Panamá": "pa", "Uzbequistão": "uz", "Tcheca": "cz", "Estados Unidos": "us",
+    "Suécia": "se", "Jordânia": "jo", "Egito": "eg", "Costa do Marfim": "ci",
+    "RD do Congo": "cd", "Tunísia": "tn", "Iraque": "iq", "Bósnia e Herzegovina": "ba",
+    "Nova Zelândia": "nz", "Arábia Saudita": "sa", "Cabo Verde": "cv", "Haiti": "ht",
+    "África do Sul": "za", "Gana": "gh", "Curaçau": "cw", "Catar": "qa"
+  }
+}
