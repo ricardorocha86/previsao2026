@@ -37,7 +37,7 @@ export interface Publication {
   abstract: string;
 }
 
-export type MediaEdition = '2026' | '2022' | '2018' | '2014' | 'projeto';
+export type MediaEdition = '2026' | '2022' | '2018' | '2014' | '2010' | 'projeto';
 
 export interface MediaMention {
   id: string;

@@ -7,12 +7,13 @@ import PageHeader from './PageHeader';
 const G1_LINK = 'https://g1.globo.com/sp/sao-paulo/bom-dia-sp/video/grupo-usa-inteligencia-artificial-para-simular-resultados-da-copa-11178283.ghtml';
 const G1_THUMBNAIL = '/assets/g1-destaque.webp';
 
-const EDITION_ORDER: MediaEdition[] = ['2026', '2022', '2018', '2014', 'projeto'];
+const EDITION_ORDER: MediaEdition[] = ['2026', '2022', '2018', '2014', '2010', 'projeto'];
 const EDITION_LABELS: Record<MediaEdition, string> = {
   '2026': 'Copa do Mundo 2026',
   '2022': 'Copa do Mundo 2022 · Catar',
   '2018': 'Copa do Mundo 2018 · Rússia',
   '2014': 'Copa do Mundo 2014 · Brasil',
+  '2010': 'Copa do Mundo 2010 · África do Sul',
   projeto: 'Cobertura do projeto',
 };
 

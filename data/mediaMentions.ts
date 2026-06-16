@@ -52,6 +52,14 @@ export const MEDIA_MENTIONS: MediaMention[] = [
     imageUrl: 'https://analisereal.com/wp-content/uploads/2014/06/boxplot.png',
   },
   {
+    id: '8',
+    outlet: 'EPTV',
+    logo: 'EPTV',
+    edition: '2010',
+    title: 'Prof. Louzada-Neto dá entrevista na EPTV explicando modelo estatístico de previsão',
+    link: 'https://www.facebook.com/share/v/1DXw96kvMG/',
+  },
+  {
     id: '12',
     outlet: 'G1',
     logo: 'G1',
@@ -102,6 +110,14 @@ export const MEDIA_MENTIONS: MediaMention[] = [
     title: 'Copa do Mundo: plataforma interativa feita por estatísticos prevê resultados de jogos',
     link: 'https://g1.globo.com/sp/sao-carlos-regiao/noticia/2022/11/23/copa-do-mundo-plataforma-interativa-feita-por-estatisticos-preve-resultados-de-jogos-veja.ghtml',
     imageUrl: 'https://s2-g1.glbimg.com/E65ZAqT5Obx9OmabcQbV9s9EIOk=/1440x0/filters:format(jpeg)/https://i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/o/K/qMbs8wTeeq70mqtg25yw/000-32mw2ry.jpg',
+  },
+  {
+    id: '3',
+    outlet: 'GE · Globo',
+    logo: 'GE',
+    edition: '2022',
+    title: 'Previsão estatística aponta Brasil com 63% de chances de vencer Croácia e 21% de levar hexa',
+    link: 'https://ge.globo.com/sp/ribeirao-preto-e-regiao/copa-do-mundo/noticia/2022/12/09/previsao-estatistica-aponta-brasil-com-63percent-de-chances-de-vencer-croacia-e-21percent-de-levar-hexa.ghtml',
   },
   {
     id: '9',
