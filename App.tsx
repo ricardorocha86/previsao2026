@@ -7,6 +7,7 @@ import HexaCallout from './components/HexaCallout';
 import MediaHighlight from './components/MediaHighlight';
 import LegalModal, { LegalTab } from './components/LegalModal';
 import { Analytics } from '@vercel/analytics/react';
+import resultadosJogos from './assets/resultados_jogos.json';
 
 type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa';
 
@@ -34,6 +35,51 @@ const ROUTES: Record<ViewState, string> = {
 };
 
 const SITE_ORIGIN = 'https://www.previsaoesportiva.com.br';
+
+// Progresso da Copa: jogos encerrados de um total de 104 partidas do torneio.
+const TOTAL_JOGOS_COPA = 104;
+const JOGOS_ENCERRADOS = (resultadosJogos as Array<{ Status?: string }>).filter(
+  (jogo) => jogo.Status === 'encerrado',
+).length;
+const PCT_COPA_CONCLUIDA = Math.round((JOGOS_ENCERRADOS / TOTAL_JOGOS_COPA) * 100);
+
+const CopaProgressBadge: React.FC = () => {
+  const radius = 11;
+  const circumference = 2 * Math.PI * radius;
+  const dashOffset = circumference * (1 - JOGOS_ENCERRADOS / TOTAL_JOGOS_COPA);
+
+  return (
+    <div
+      className="hidden sm:flex items-center gap-2.5"
+      aria-label={`${JOGOS_ENCERRADOS} de ${TOTAL_JOGOS_COPA} jogos encerrados, ${PCT_COPA_CONCLUIDA}% da Copa concluída`}
+    >
+      <svg width="28" height="28" viewBox="0 0 28 28" className="-rotate-90 flex-shrink-0" aria-hidden="true">
+        <circle cx="14" cy="14" r={radius} fill="none" stroke="#2E2E2E" strokeOpacity="0.1" strokeWidth="2.5" />
+        <circle
+          cx="14"
+          cy="14"
+          r={radius}
+          fill="none"
+          stroke="#209927"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={dashOffset}
+        />
+      </svg>
+      <span className="flex flex-col leading-snug">
+        <span className="font-montserrat text-[10px] font-bold uppercase tracking-widest text-brand-dark/55">
+          Copa do Mundo 2026
+        </span>
+        <span className="font-montserrat text-[10.5px] text-brand-green">
+          <span className="font-bold">{PCT_COPA_CONCLUIDA}% concluída</span>
+          {' '}
+          <span className="font-normal opacity-60">({JOGOS_ENCERRADOS}/{TOTAL_JOGOS_COPA})</span>
+        </span>
+      </span>
+    </div>
+  );
+};
 
 const DEFAULT_DESCRIPTION =
   'Previsões probabilísticas para a Copa do Mundo 2026 com metodologia científica. Projeto acadêmico de pesquisa e divulgação científica em modelagem estatística do futebol.';
@@ -166,15 +212,19 @@ export default function App() {
       <nav className="relative z-50 bg-white/90 backdrop-blur-md border-b border-brand-dark/10 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
-            {/* Logo 30% larger */}
-            <button
-              type="button"
-              className="flex-shrink-0 flex items-center gap-2 cursor-pointer group text-left"
-              onClick={() => navigateTo('home')}
-              aria-label="Ir para o início"
-            >
-              <Logo className="h-[52px] md:h-[62px] group-hover:opacity-80 transition-opacity" />
-            </button>
+            {/* Logo + progresso da Copa */}
+            <div className="flex items-center gap-3 md:gap-4">
+              <button
+                type="button"
+                className="flex-shrink-0 flex items-center gap-2 cursor-pointer group text-left"
+                onClick={() => navigateTo('home')}
+                aria-label="Ir para o início"
+              >
+                <Logo className="h-[52px] md:h-[62px] group-hover:opacity-80 transition-opacity" />
+              </button>
+              <span className="hidden sm:block h-9 w-px bg-brand-dark/10" aria-hidden="true" />
+              <CopaProgressBadge />
+            </div>
 
             {/* Desktop Navigation */}
             <div className="hidden min-[1180px]:flex items-center gap-6 xl:gap-8">
