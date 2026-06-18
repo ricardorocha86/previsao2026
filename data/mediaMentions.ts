@@ -17,6 +17,40 @@ export const FEATURED_ARTICLE = {
 
 export const MEDIA_MENTIONS: MediaMention[] = [
   {
+    id: '32',
+    outlet: 'G1 · São Carlos e Região',
+    logo: 'G1',
+    edition: '2026',
+    title: 'Quem vai ganhar a Copa? Plataforma criada por estatísticos calcula chances de título; entenda',
+    link: 'https://g1.globo.com/sp/sao-carlos-regiao/noticia/2026/06/17/quem-vai-ganhar-a-copa-plataforma-criada-por-estatisticos-calcula-chances-de-titulo-entenda.ghtml',
+  },
+  {
+    id: '31',
+    outlet: 'Jornal da USP',
+    logo: 'USP',
+    edition: '2026',
+    title: 'Simulador da Copa do Mundo transforma previsões em aprendizado de estatística',
+    link: 'https://jornal.usp.br/universidade/simulador-da-copa-do-mundo-transforma-previsoes-em-aprendizado-de-estatistica/',
+    imageUrl: 'https://jornal.usp.br/wp-content/uploads/2026/06/20260616_grafico_copa_do_mundo_finais_mais_provaveis.jpg',
+  },
+  {
+    id: '30',
+    outlet: 'Metrópoles',
+    logo: 'MET',
+    edition: '2026',
+    title: 'O Brasil ganha a Copa? Simulador criado pela USP aponta 8% de chances',
+    link: 'https://www.metropoles.com/sao-paulo/brasil-copa-simulador-usp-chances',
+    imageUrl: 'https://i.metroimg.com/WcQlkVuAwUOuzdPq8wzKQ1r4b45B86JVGncHOmg-Mvs/w:600/q:85/f:webp/plain/https://images.metroimg.com/2026/06/selecao-brasileira.jpg',
+  },
+  {
+    id: '29',
+    outlet: 'Instagram · G1 São Carlos',
+    logo: 'IG',
+    edition: '2026',
+    title: 'Reel: quem será o campeão da Copa de 2026? Plataforma de estatísticos calcula as chances',
+    link: 'https://www.instagram.com/reel/DZr_THdSI9J/',
+  },
+  {
     id: '28',
     outlet: 'G1',
     logo: 'G1',
