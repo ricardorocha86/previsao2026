@@ -41,7 +41,7 @@ const TOTAL_JOGOS_COPA = 104;
 const JOGOS_ENCERRADOS = (resultadosJogos as Array<{ Status?: string }>).filter(
   (jogo) => jogo.Status === 'encerrado',
 ).length;
-const PCT_COPA_CONCLUIDA = Math.round((JOGOS_ENCERRADOS / TOTAL_JOGOS_COPA) * 100);
+const PCT_COPA_CONCLUIDA = ((JOGOS_ENCERRADOS / TOTAL_JOGOS_COPA) * 100).toFixed(1);
 
 const CopaProgressBadge: React.FC = () => {
   const radius = 11;
