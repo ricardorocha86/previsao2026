@@ -849,7 +849,7 @@ const WorldCupHub: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 mt-12">
+      <div className="max-w-7xl mx-auto px-4 mt-16">
 
         {/* STAGE SELECTOR CARD */}
         <div className="bg-white rounded-2xl shadow-md border border-brand-dark/5 px-6 py-5 mb-6">
@@ -860,7 +860,7 @@ const WorldCupHub: React.FC = () => {
               </span>
             </h2>
             <p className="text-brand-dark/50 font-light text-sm font-opensans mt-1">
-              Simulação realizada em {methodology === 1 ? currentStage.date : currentBayesStage.date}. O torneio foi simulado 1 milhão de vezes.
+              Simulação realizada em {methodology === 1 ? currentStage.date : currentBayesStage.date}. O torneio foi simulado 1 milhão de vezes e as probabilidades representam a frequência dos acontecimentos.
             </p>
           </div>
           <div className="mt-5">
