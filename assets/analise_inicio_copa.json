@@ -1,0 +1,3190 @@
+{
+ "eliminacao": [
+  {
+   "Rank": 1.0,
+   "Seleção": "Espanha",
+   "Fase de Grupos": 0.01913500000000001,
+   "16-avos": 0.241964,
+   "Oitavas": 0.206132,
+   "Quartas": 0.134937,
+   "Semifinal": 0.143623,
+   "Vice (Final)": 0.094949,
+   "Campeã": 0.15926
+  },
+  {
+   "Rank": 2.0,
+   "Seleção": "França",
+   "Fase de Grupos": 0.07885799999999998,
+   "16-avos": 0.212556,
+   "Oitavas": 0.2066560000000001,
+   "Quartas": 0.148436,
+   "Semifinal": 0.121366,
+   "Vice (Final)": 0.084281,
+   "Campeã": 0.147847
+  },
+  {
+   "Rank": 3.0,
+   "Seleção": "Inglaterra",
+   "Fase de Grupos": 0.03630100000000003,
+   "16-avos": 0.281072,
+   "Oitavas": 0.209621,
+   "Quartas": 0.177018,
+   "Semifinal": 0.115485,
+   "Vice (Final)": 0.077948,
+   "Campeã": 0.102555
+  },
+  {
+   "Rank": 4.0,
+   "Seleção": "Portugal",
+   "Fase de Grupos": 0.04495899999999997,
+   "16-avos": 0.266395,
+   "Oitavas": 0.208099,
+   "Quartas": 0.169574,
+   "Semifinal": 0.13138,
+   "Vice (Final)": 0.080351,
+   "Campeã": 0.099242
+  },
+  {
+   "Rank": 5.0,
+   "Seleção": "Brasil",
+   "Fase de Grupos": 0.04618199999999995,
+   "16-avos": 0.3180660000000001,
+   "Oitavas": 0.218477,
+   "Quartas": 0.16411,
+   "Semifinal": 0.103108,
+   "Vice (Final)": 0.06668099999999999,
+   "Campeã": 0.083376
+  },
+  {
+   "Rank": 6.0,
+   "Seleção": "Argentina",
+   "Fase de Grupos": 0.05776199999999998,
+   "16-avos": 0.331128,
+   "Oitavas": 0.1771180000000001,
+   "Quartas": 0.156765,
+   "Semifinal": 0.123549,
+   "Vice (Final)": 0.07206100000000001,
+   "Campeã": 0.081617
+  },
+  {
+   "Rank": 7.0,
+   "Seleção": "Alemanha",
+   "Fase de Grupos": 0.06364800000000004,
+   "16-avos": 0.3164709999999999,
+   "Oitavas": 0.281779,
+   "Quartas": 0.136197,
+   "Semifinal": 0.092197,
+   "Vice (Final)": 0.054181,
+   "Campeã": 0.055527
+  },
+  {
+   "Rank": 8.0,
+   "Seleção": "Holanda",
+   "Fase de Grupos": 0.11289,
+   "16-avos": 0.384574,
+   "Oitavas": 0.174295,
+   "Quartas": 0.152332,
+   "Semifinal": 0.08357900000000001,
+   "Vice (Final)": 0.047358,
+   "Campeã": 0.044972
+  },
+  {
+   "Rank": 9.0,
+   "Seleção": "Noruega",
+   "Fase de Grupos": 0.27156,
+   "16-avos": 0.300081,
+   "Oitavas": 0.197753,
+   "Quartas": 0.112849,
+   "Semifinal": 0.061847,
+   "Vice (Final)": 0.032319,
+   "Campeã": 0.023591
+  },
+  {
+   "Rank": 10.0,
+   "Seleção": "Bélgica",
+   "Fase de Grupos": 0.07146200000000003,
+   "16-avos": 0.341325,
+   "Oitavas": 0.270645,
+   "Quartas": 0.182594,
+   "Semifinal": 0.07802400000000001,
+   "Vice (Final)": 0.034158,
+   "Campeã": 0.021792
+  },
+  {
+   "Rank": 11.0,
+   "Seleção": "Colômbia",
+   "Fase de Grupos": 0.143194,
+   "16-avos": 0.376319,
+   "Oitavas": 0.233504,
+   "Quartas": 0.122026,
+   "Semifinal": 0.07216700000000001,
+   "Vice (Final)": 0.032558,
+   "Campeã": 0.020232
+  },
+  {
+   "Rank": 12.0,
+   "Seleção": "México",
+   "Fase de Grupos": 0.09435700000000002,
+   "16-avos": 0.3397519999999999,
+   "Oitavas": 0.304106,
+   "Quartas": 0.153285,
+   "Semifinal": 0.062041,
+   "Vice (Final)": 0.028684,
+   "Campeã": 0.017775
+  },
+  {
+   "Rank": 13.0,
+   "Seleção": "Japão",
+   "Fase de Grupos": 0.2022929999999999,
+   "16-avos": 0.4250340000000001,
+   "Oitavas": 0.167828,
+   "Quartas": 0.112106,
+   "Semifinal": 0.051856,
+   "Vice (Final)": 0.024596,
+   "Campeã": 0.016287
+  },
+  {
+   "Rank": 14.0,
+   "Seleção": "Marrocos",
+   "Fase de Grupos": 0.155675,
+   "16-avos": 0.427632,
+   "Oitavas": 0.199461,
+   "Quartas": 0.123055,
+   "Semifinal": 0.054088,
+   "Vice (Final)": 0.024872,
+   "Campeã": 0.015217
+  },
+  {
+   "Rank": 15.0,
+   "Seleção": "Estados Unidos",
+   "Fase de Grupos": 0.182114,
+   "16-avos": 0.330941,
+   "Oitavas": 0.246006,
+   "Quartas": 0.141641,
+   "Semifinal": 0.06052,
+   "Vice (Final)": 0.024832,
+   "Campeã": 0.013946
+  },
+  {
+   "Rank": 16.0,
+   "Seleção": "Turquia",
+   "Fase de Grupos": 0.196442,
+   "16-avos": 0.336043,
+   "Oitavas": 0.242557,
+   "Quartas": 0.134279,
+   "Semifinal": 0.05627799999999999,
+   "Vice (Final)": 0.022249,
+   "Campeã": 0.012152
+  },
+  {
+   "Rank": 17.0,
+   "Seleção": "Suíça",
+   "Fase de Grupos": 0.1252,
+   "16-avos": 0.356927,
+   "Oitavas": 0.2970470000000001,
+   "Quartas": 0.134597,
+   "Semifinal": 0.05481,
+   "Vice (Final)": 0.02084,
+   "Campeã": 0.010579
+  },
+  {
+   "Rank": 18.0,
+   "Seleção": "Uruguai",
+   "Fase de Grupos": 0.152461,
+   "16-avos": 0.450889,
+   "Oitavas": 0.196991,
+   "Quartas": 0.111459,
+   "Semifinal": 0.055874,
+   "Vice (Final)": 0.021767,
+   "Campeã": 0.010559
+  },
+  {
+   "Rank": 19.0,
+   "Seleção": "Equador",
+   "Fase de Grupos": 0.181034,
+   "16-avos": 0.4115799999999999,
+   "Oitavas": 0.237964,
+   "Quartas": 0.09607199999999999,
+   "Semifinal": 0.043878,
+   "Vice (Final)": 0.019018,
+   "Campeã": 0.010454
+  },
+  {
+   "Rank": 20.0,
+   "Seleção": "Croácia",
+   "Fase de Grupos": 0.192743,
+   "16-avos": 0.431721,
+   "Oitavas": 0.209396,
+   "Quartas": 0.09325200000000002,
+   "Semifinal": 0.04569899999999999,
+   "Vice (Final)": 0.018216,
+   "Campeã": 0.008973
+  },
+  {
+   "Rank": 21.0,
+   "Seleção": "Senegal",
+   "Fase de Grupos": 0.397909,
+   "16-avos": 0.297046,
+   "Oitavas": 0.161794,
+   "Quartas": 0.08160799999999999,
+   "Semifinal": 0.03718100000000001,
+   "Vice (Final)": 0.015802,
+   "Campeã": 0.00866
+  },
+  {
+   "Rank": 22.0,
+   "Seleção": "Áustria",
+   "Fase de Grupos": 0.303023,
+   "16-avos": 0.422883,
+   "Oitavas": 0.153813,
+   "Quartas": 0.072796,
+   "Semifinal": 0.032372,
+   "Vice (Final)": 0.010706,
+   "Campeã": 0.004407
+  },
+  {
+   "Rank": 23.0,
+   "Seleção": "Suécia",
+   "Fase de Grupos": 0.345061,
+   "16-avos": 0.4162450000000001,
+   "Oitavas": 0.132856,
+   "Quartas": 0.067094,
+   "Semifinal": 0.024937,
+   "Vice (Final)": 0.009519,
+   "Campeã": 0.004288
+  },
+  {
+   "Rank": 24.0,
+   "Seleção": "Costa do Marfim",
+   "Fase de Grupos": 0.273894,
+   "16-avos": 0.416206,
+   "Oitavas": 0.198668,
+   "Quartas": 0.071446,
+   "Semifinal": 0.026264,
+   "Vice (Final)": 0.009498,
+   "Campeã": 0.004024
+  },
+  {
+   "Rank": 25.0,
+   "Seleção": "Canadá",
+   "Fase de Grupos": 0.226556,
+   "16-avos": 0.392701,
+   "Oitavas": 0.247099,
+   "Quartas": 0.093366,
+   "Semifinal": 0.028779,
+   "Vice (Final)": 0.00847,
+   "Campeã": 0.003029
+  },
+  {
+   "Rank": 26.0,
+   "Seleção": "Tcheca",
+   "Fase de Grupos": 0.25074,
+   "16-avos": 0.388367,
+   "Oitavas": 0.237275,
+   "Quartas": 0.08973800000000001,
+   "Semifinal": 0.024057,
+   "Vice (Final)": 0.007257,
+   "Campeã": 0.002566
+  },
+  {
+   "Rank": 27.0,
+   "Seleção": "Escócia",
+   "Fase de Grupos": 0.340082,
+   "16-avos": 0.420696,
+   "Oitavas": 0.149006,
+   "Quartas": 0.062526,
+   "Semifinal": 0.019126,
+   "Vice (Final)": 0.006299000000000001,
+   "Campeã": 0.002265
+  },
+  {
+   "Rank": 28.0,
+   "Seleção": "RD do Congo",
+   "Fase de Grupos": 0.358519,
+   "16-avos": 0.400242,
+   "Oitavas": 0.15375,
+   "Quartas": 0.05759499999999999,
+   "Semifinal": 0.021402,
+   "Vice (Final)": 0.006392999999999999,
+   "Campeã": 0.002099
+  },
+  {
+   "Rank": 29.0,
+   "Seleção": "Bósnia e Herzegovina",
+   "Fase de Grupos": 0.263911,
+   "16-avos": 0.395763,
+   "Oitavas": 0.227416,
+   "Quartas": 0.08147599999999999,
+   "Semifinal": 0.023038,
+   "Vice (Final)": 0.006364000000000001,
+   "Campeã": 0.002032
+  },
+  {
+   "Rank": 30.0,
+   "Seleção": "Iraque",
+   "Fase de Grupos": 0.57765,
+   "16-avos": 0.248675,
+   "Oitavas": 0.106349,
+   "Quartas": 0.04459199999999999,
+   "Semifinal": 0.015607,
+   "Vice (Final)": 0.005135,
+   "Campeã": 0.001992
+  },
+  {
+   "Rank": 31.0,
+   "Seleção": "Coreia do Sul",
+   "Fase de Grupos": 0.280961,
+   "16-avos": 0.387176,
+   "Oitavas": 0.223071,
+   "Quartas": 0.080501,
+   "Semifinal": 0.020479,
+   "Vice (Final)": 0.005953,
+   "Campeã": 0.001859
+  },
+  {
+   "Rank": 32.0,
+   "Seleção": "Paraguai",
+   "Fase de Grupos": 0.3983640000000001,
+   "16-avos": 0.339704,
+   "Oitavas": 0.172005,
+   "Quartas": 0.062888,
+   "Semifinal": 0.019661,
+   "Vice (Final)": 0.005621,
+   "Campeã": 0.001757
+  },
+  {
+   "Rank": 33.0,
+   "Seleção": "Egito",
+   "Fase de Grupos": 0.292627,
+   "16-avos": 0.423739,
+   "Oitavas": 0.197235,
+   "Quartas": 0.063581,
+   "Semifinal": 0.017601,
+   "Vice (Final)": 0.004121000000000001,
+   "Campeã": 0.001096
+  },
+  {
+   "Rank": 34.0,
+   "Seleção": "Jordânia",
+   "Fase de Grupos": 0.472244,
+   "16-avos": 0.358275,
+   "Oitavas": 0.110386,
+   "Quartas": 0.041181,
+   "Semifinal": 0.013537,
+   "Vice (Final)": 0.003458,
+   "Campeã": 0.000919
+  },
+  {
+   "Rank": 35.0,
+   "Seleção": "Irã",
+   "Fase de Grupos": 0.322562,
+   "16-avos": 0.418806,
+   "Oitavas": 0.184394,
+   "Quartas": 0.055552,
+   "Semifinal": 0.014565,
+   "Vice (Final)": 0.003273,
+   "Campeã": 0.000848
+  },
+  {
+   "Rank": 36.0,
+   "Seleção": "Argélia",
+   "Fase de Grupos": 0.511216,
+   "16-avos": 0.33904,
+   "Oitavas": 0.100854,
+   "Quartas": 0.034859,
+   "Semifinal": 0.010835,
+   "Vice (Final)": 0.002551,
+   "Campeã": 0.000645
+  },
+  {
+   "Rank": 37.0,
+   "Seleção": "Austrália",
+   "Fase de Grupos": 0.517404,
+   "16-avos": 0.3036570000000001,
+   "Oitavas": 0.127459,
+   "Quartas": 0.038414,
+   "Semifinal": 0.010117,
+   "Vice (Final)": 0.002387,
+   "Campeã": 0.000562
+  },
+  {
+   "Rank": 38.0,
+   "Seleção": "Gana",
+   "Fase de Grupos": 0.544554,
+   "16-avos": 0.3398600000000001,
+   "Oitavas": 0.08356,
+   "Quartas": 0.023883,
+   "Semifinal": 0.006528999999999999,
+   "Vice (Final)": 0.001345,
+   "Campeã": 0.000269
+  },
+  {
+   "Rank": 39.0,
+   "Seleção": "Tunísia",
+   "Fase de Grupos": 0.647714,
+   "16-avos": 0.272441,
+   "Oitavas": 0.056779,
+   "Quartas": 0.017437,
+   "Semifinal": 0.004336,
+   "Vice (Final)": 0.00103,
+   "Campeã": 0.000263
+  },
+  {
+   "Rank": 40.0,
+   "Seleção": "Cabo Verde",
+   "Fase de Grupos": 0.540689,
+   "16-avos": 0.340787,
+   "Oitavas": 0.088136,
+   "Quartas": 0.024098,
+   "Semifinal": 0.005168,
+   "Vice (Final)": 0.000939,
+   "Campeã": 0.000183
+  },
+  {
+   "Rank": 41.0,
+   "Seleção": "Panamá",
+   "Fase de Grupos": 0.60924,
+   "16-avos": 0.302169,
+   "Oitavas": 0.066445,
+   "Quartas": 0.017025,
+   "Semifinal": 0.004208999999999999,
+   "Vice (Final)": 0.000773,
+   "Campeã": 0.000139
+  },
+  {
+   "Rank": 42.0,
+   "Seleção": "África do Sul",
+   "Fase de Grupos": 0.68179,
+   "16-avos": 0.235324,
+   "Oitavas": 0.067806,
+   "Quartas": 0.013121,
+   "Semifinal": 0.001674,
+   "Vice (Final)": 0.000253,
+   "Campeã": 3.2e-05
+  },
+  {
+   "Rank": 43.0,
+   "Seleção": "Catar",
+   "Fase de Grupos": 0.680358,
+   "16-avos": 0.242302,
+   "Oitavas": 0.06346500000000001,
+   "Quartas": 0.012087,
+   "Semifinal": 0.001554,
+   "Vice (Final)": 0.000203,
+   "Campeã": 3.1e-05
+  },
+  {
+   "Rank": 44.0,
+   "Seleção": "Nova Zelândia",
+   "Fase de Grupos": 0.638711,
+   "16-avos": 0.277277,
+   "Oitavas": 0.069994,
+   "Quartas": 0.011816,
+   "Semifinal": 0.001925,
+   "Vice (Final)": 0.000251,
+   "Campeã": 2.6e-05
+  },
+  {
+   "Rank": 45.0,
+   "Seleção": "Arábia Saudita",
+   "Fase de Grupos": 0.711265,
+   "16-avos": 0.233515,
+   "Oitavas": 0.04477,
+   "Quartas": 0.008908,
+   "Semifinal": 0.001346,
+   "Vice (Final)": 0.000174,
+   "Campeã": 2.2e-05
+  },
+  {
+   "Rank": 46.0,
+   "Seleção": "Curaçau",
+   "Fase de Grupos": 0.793112,
+   "16-avos": 0.168498,
+   "Oitavas": 0.032352,
+   "Quartas": 0.005218,
+   "Semifinal": 0.0007109999999999999,
+   "Vice (Final)": 9.200000000000001e-05,
+   "Campeã": 1.7e-05
+  },
+  {
+   "Rank": 47.0,
+   "Seleção": "Uzbequistão",
+   "Fase de Grupos": 0.795833,
+   "16-avos": 0.167928,
+   "Oitavas": 0.029764,
+   "Quartas": 0.005438,
+   "Semifinal": 0.000909,
+   "Vice (Final)": 0.000118,
+   "Campeã": 1e-05
+  },
+  {
+   "Rank": 48.0,
+   "Seleção": "Haiti",
+   "Fase de Grupos": 0.795741,
+   "16-avos": 0.170208,
+   "Oitavas": 0.028064,
+   "Quartas": 0.005172,
+   "Semifinal": 0.000712,
+   "Vice (Final)": 9.6e-05,
+   "Campeã": 7e-06
+  }
+ ],
+ "brasil_titulo_condicional": [
+  {
+   "Condicao": "Brasil 1o no grupo",
+   "Base": 584395.0,
+   "Titulos Brasil": 49794.0,
+   "Prob titulo": 0.08520606781372188
+  },
+  {
+   "Condicao": "Brasil 2o no grupo",
+   "Base": 274178.0,
+   "Titulos Brasil": 25510.0,
+   "Prob titulo": 0.09304174660257206
+  },
+  {
+   "Condicao": "Brasil 3o no grupo",
+   "Base": 113503.0,
+   "Titulos Brasil": 8072.0,
+   "Prob titulo": 0.07111706298511934
+  },
+  {
+   "Condicao": "Brasil 4o no grupo",
+   "Base": 27924.0,
+   "Titulos Brasil": 0.0,
+   "Prob titulo": 0.0
+  },
+  {
+   "Condicao": "Brasil chegou a Top 32",
+   "Base": 953818.0,
+   "Titulos Brasil": 83376.0,
+   "Prob titulo": 0.08741290267115949
+  },
+  {
+   "Condicao": "Brasil chegou a Oitavas",
+   "Base": 635752.0,
+   "Titulos Brasil": 83376.0,
+   "Prob titulo": 0.1311454781109615
+  },
+  {
+   "Condicao": "Brasil chegou a Quartas",
+   "Base": 417275.0,
+   "Titulos Brasil": 83376.0,
+   "Prob titulo": 0.1998106764124379
+  },
+  {
+   "Condicao": "Brasil chegou a Semifinal",
+   "Base": 253165.0,
+   "Titulos Brasil": 83376.0,
+   "Prob titulo": 0.3293346236644086
+  },
+  {
+   "Condicao": "Brasil chegou a Final",
+   "Base": 150057.0,
+   "Titulos Brasil": 83376.0,
+   "Prob titulo": 0.5556288610328075
+  }
+ ],
+ "brasil_impacto_pos": [
+  {
+   "Selecao": "França",
+   "Prob titulo se 1o grupo": 0.1684297659550504,
+   "Prob titulo se 2o grupo": 0.1451261519104335,
+   "Prob titulo se avancou em 3o": 0.1559665573644749
+  },
+  {
+   "Selecao": "Espanha",
+   "Prob titulo se 1o grupo": 0.1664861919366219,
+   "Prob titulo se 2o grupo": 0.1516925507673901,
+   "Prob titulo se avancou em 3o": 0.1491412358406792
+  },
+  {
+   "Selecao": "Portugal",
+   "Prob titulo se 1o grupo": 0.1127009356232763,
+   "Prob titulo se 2o grupo": 0.09265616489407448,
+   "Prob titulo se avancou em 3o": 0.08293622090796919
+  },
+  {
+   "Selecao": "Inglaterra",
+   "Prob titulo se 1o grupo": 0.1098263968362479,
+   "Prob titulo se 2o grupo": 0.09827157785493404,
+   "Prob titulo se avancou em 3o": 0.1016746590179118
+  },
+  {
+   "Selecao": "Argentina",
+   "Prob titulo se 1o grupo": 0.09282766764428414,
+   "Prob titulo se 2o grupo": 0.0694483601165304,
+   "Prob titulo se avancou em 3o": 0.08840098053080658
+  },
+  {
+   "Selecao": "Brasil",
+   "Prob titulo se 1o grupo": 0.08520606781372188,
+   "Prob titulo se 2o grupo": 0.09304174660257206,
+   "Prob titulo se avancou em 3o": 0.08474985563546643
+  },
+  {
+   "Selecao": "Alemanha",
+   "Prob titulo se 1o grupo": 0.06327266884513273,
+   "Prob titulo se 2o grupo": 0.0509314532365969,
+   "Prob titulo se avancou em 3o": 0.06136924080774869
+  },
+  {
+   "Selecao": "Holanda",
+   "Prob titulo se 1o grupo": 0.05732441428228926,
+   "Prob titulo se 2o grupo": 0.04270369128328879,
+   "Prob titulo se avancou em 3o": 0.04507643718212957
+  },
+  {
+   "Selecao": "Noruega",
+   "Prob titulo se 1o grupo": 0.03764551300223641,
+   "Prob titulo se 2o grupo": 0.02875555569575133,
+   "Prob titulo se avancou em 3o": 0.03228994883504588
+  },
+  {
+   "Selecao": "Colômbia",
+   "Prob titulo se 1o grupo": 0.02958581956120853,
+   "Prob titulo se 2o grupo": 0.02190456523568058,
+   "Prob titulo se avancou em 3o": 0.0178506700274926
+  },
+  {
+   "Selecao": "Japão",
+   "Prob titulo se 1o grupo": 0.02518107854177633,
+   "Prob titulo se 2o grupo": 0.01707922511858818,
+   "Prob titulo se avancou em 3o": 0.0183562809876243
+  },
+  {
+   "Selecao": "Bélgica",
+   "Prob titulo se 1o grupo": 0.02515132650297729,
+   "Prob titulo se 2o grupo": 0.02086315822233288,
+   "Prob titulo se avancou em 3o": 0.02068180934230485
+  },
+  {
+   "Selecao": "Estados Unidos",
+   "Prob titulo se 1o grupo": 0.01868646049298954,
+   "Prob titulo se 2o grupo": 0.01762248490858768,
+   "Prob titulo se avancou em 3o": 0.01219281425039108
+  },
+  {
+   "Selecao": "México",
+   "Prob titulo se 1o grupo": 0.01831636002626059,
+   "Prob titulo se 2o grupo": 0.02082698546412632,
+   "Prob titulo se avancou em 3o": 0.02214527425828284
+  },
+  {
+   "Selecao": "Senegal",
+   "Prob titulo se 1o grupo": 0.01737635378425418,
+   "Prob titulo se 2o grupo": 0.01295882691837202,
+   "Prob titulo se avancou em 3o": 0.01407456131865581
+  },
+  {
+   "Selecao": "Marrocos",
+   "Prob titulo se 1o grupo": 0.01711359109268512,
+   "Prob titulo se 2o grupo": 0.01963161830380325,
+   "Prob titulo se avancou em 3o": 0.01603548277038553
+  },
+  {
+   "Selecao": "Turquia",
+   "Prob titulo se 1o grupo": 0.0167736519991836,
+   "Prob titulo se 2o grupo": 0.01583255941939256,
+   "Prob titulo se avancou em 3o": 0.01039033468516801
+  },
+  {
+   "Selecao": "Equador",
+   "Prob titulo se 1o grupo": 0.01504904579501927,
+   "Prob titulo se 2o grupo": 0.01061224489795918,
+   "Prob titulo se avancou em 3o": 0.01345306545590677
+  },
+  {
+   "Selecao": "Uruguai",
+   "Prob titulo se 1o grupo": 0.01460349412720691,
+   "Prob titulo se 2o grupo": 0.0121313218720352,
+   "Prob titulo se avancou em 3o": 0.01042533793158124
+  },
+  {
+   "Selecao": "Suíça",
+   "Prob titulo se 1o grupo": 0.01275845886282701,
+   "Prob titulo se 2o grupo": 0.01089921067565476,
+   "Prob titulo se avancou em 3o": 0.0124804992199688
+  },
+  {
+   "Selecao": "Croácia",
+   "Prob titulo se 1o grupo": 0.01255068294315253,
+   "Prob titulo se 2o grupo": 0.01021547122197418,
+   "Prob titulo se avancou em 3o": 0.011361570623523
+  },
+  {
+   "Selecao": "Suécia",
+   "Prob titulo se 1o grupo": 0.008634950231080137,
+   "Prob titulo se 2o grupo": 0.005687965624903397,
+   "Prob titulo se avancou em 3o": 0.005889190588192559
+  },
+  {
+   "Selecao": "Áustria",
+   "Prob titulo se 1o grupo": 0.008173574638069996,
+   "Prob titulo se 2o grupo": 0.00500978159082972,
+   "Prob titulo se avancou em 3o": 0.006765018818186149
+  },
+  {
+   "Selecao": "Costa do Marfim",
+   "Prob titulo se 1o grupo": 0.006510818623186372,
+   "Prob titulo se 2o grupo": 0.004471916297688264,
+   "Prob titulo se avancou em 3o": 0.006102657100055192
+  },
+  {
+   "Selecao": "Iraque",
+   "Prob titulo se 1o grupo": 0.006181794419394889,
+   "Prob titulo se 2o grupo": 0.004155575445489312,
+   "Prob titulo se avancou em 3o": 0.00462661917284796
+  },
+  {
+   "Selecao": "RD do Congo",
+   "Prob titulo se 1o grupo": 0.005183892217144562,
+   "Prob titulo se 2o grupo": 0.003393887852086335,
+   "Prob titulo se avancou em 3o": 0.002362078043643597
+  },
+  {
+   "Selecao": "Canadá",
+   "Prob titulo se 1o grupo": 0.004107711709347504,
+   "Prob titulo se 2o grupo": 0.003700696210114349,
+   "Prob titulo se avancou em 3o": 0.003977884973665394
+  },
+  {
+   "Selecao": "Paraguai",
+   "Prob titulo se 1o grupo": 0.003537148951297547,
+   "Prob titulo se 2o grupo": 0.003239708340315463,
+   "Prob titulo se avancou em 3o": 0.002028792868243395
+  },
+  {
+   "Selecao": "Escócia",
+   "Prob titulo se 1o grupo": 0.003469768039581057,
+   "Prob titulo se 2o grupo": 0.003946139711419707,
+   "Prob titulo se avancou em 3o": 0.002909152899146896
+  },
+  {
+   "Selecao": "Tcheca",
+   "Prob titulo se 1o grupo": 0.003172025594965145,
+   "Prob titulo se 2o grupo": 0.003406003448456032,
+   "Prob titulo se avancou em 3o": 0.003745135949896023
+  },
+  {
+   "Selecao": "Bósnia e Herzegovina",
+   "Prob titulo se 1o grupo": 0.002959814821841916,
+   "Prob titulo se 2o grupo": 0.002483915345385823,
+   "Prob titulo se avancou em 3o": 0.002913863356391547
+  },
+  {
+   "Selecao": "Jordânia",
+   "Prob titulo se 1o grupo": 0.002550349943055163,
+   "Prob titulo se 2o grupo": 0.001418532014575742,
+   "Prob titulo se avancou em 3o": 0.001696614482918177
+  },
+  {
+   "Selecao": "Coreia do Sul",
+   "Prob titulo se 1o grupo": 0.002224746534438794,
+   "Prob titulo se 2o grupo": 0.002593329096537444,
+   "Prob titulo se avancou em 3o": 0.002931757280374966
+  },
+  {
+   "Selecao": "Egito",
+   "Prob titulo se 1o grupo": 0.002029282547155453,
+   "Prob titulo se 2o grupo": 0.001360881668564939,
+   "Prob titulo se avancou em 3o": 0.001368720565149137
+  },
+  {
+   "Selecao": "Argélia",
+   "Prob titulo se 1o grupo": 0.001799123904881101,
+   "Prob titulo se 2o grupo": 0.001057546586343485,
+   "Prob titulo se avancou em 3o": 0.001386777608875377
+  },
+  {
+   "Selecao": "Austrália",
+   "Prob titulo se 1o grupo": 0.00156076398074176,
+   "Prob titulo se 2o grupo": 0.001314594132421311,
+   "Prob titulo se avancou em 3o": 0.000763484565527848
+  },
+  {
+   "Selecao": "Irã",
+   "Prob titulo se 1o grupo": 0.001463705216577313,
+   "Prob titulo se 2o grupo": 0.001222989453433646,
+   "Prob titulo se avancou em 3o": 0.001113845480119762
+  },
+  {
+   "Selecao": "Tunísia",
+   "Prob titulo se 1o grupo": 0.001164659952101309,
+   "Prob titulo se 2o grupo": 0.0007020551741466335,
+   "Prob titulo se avancou em 3o": 0.0006217669719948464
+  },
+  {
+   "Selecao": "Gana",
+   "Prob titulo se 1o grupo": 0.0006126166792951684,
+   "Prob titulo se 2o grupo": 0.0005603780966176424,
+   "Prob titulo se avancou em 3o": 0.0006119681384908376
+  },
+  {
+   "Selecao": "Panamá",
+   "Prob titulo se 1o grupo": 0.0005608524957936063,
+   "Prob titulo se 2o grupo": 0.0003030584160559112,
+   "Prob titulo se avancou em 3o": 0.000348193263842064
+  },
+  {
+   "Selecao": "Cabo Verde",
+   "Prob titulo se 1o grupo": 0.0005254285526632659,
+   "Prob titulo se 2o grupo": 0.0004480238946077124,
+   "Prob titulo se avancou em 3o": 0.0003316470921182963
+  },
+  {
+   "Selecao": "Arábia Saudita",
+   "Prob titulo se 1o grupo": 0.0001816035594297648,
+   "Prob titulo se 2o grupo": 5.266114309787951e-05,
+   "Prob titulo se avancou em 3o": 7.854791095285162e-05
+  },
+  {
+   "Selecao": "Curaçau",
+   "Prob titulo se 1o grupo": 0.0001765302970122247,
+   "Prob titulo se 2o grupo": 6.584318786378361e-05,
+   "Prob titulo se avancou em 3o": 7.387502193164714e-05
+  },
+  {
+   "Selecao": "Uzbequistão",
+   "Prob titulo se 1o grupo": 0.0001596593932943055,
+   "Prob titulo se 2o grupo": 6.693171626306841e-05,
+   "Prob titulo se avancou em 3o": 1.807109167464806e-05
+  },
+  {
+   "Selecao": "Catar",
+   "Prob titulo se 1o grupo": 0.0001487846156707397,
+   "Prob titulo se 2o grupo": 7.443614619259112e-05,
+   "Prob titulo se avancou em 3o": 9.657570155348915e-05
+  },
+  {
+   "Selecao": "África do Sul",
+   "Prob titulo se 1o grupo": 0.0001187413417771621,
+   "Prob titulo se 2o grupo": 6.550021696946871e-05,
+   "Prob titulo se avancou em 3o": 0.0001236747902681682
+  },
+  {
+   "Selecao": "Nova Zelândia",
+   "Prob titulo se 1o grupo": 6.898573719883414e-05,
+   "Prob titulo se 2o grupo": 5.50073916182487e-05,
+   "Prob titulo se avancou em 3o": 8.867999822640004e-05
+  },
+  {
+   "Selecao": "Haiti",
+   "Prob titulo se 1o grupo": 5.127153404429861e-05,
+   "Prob titulo se 2o grupo": 1.331522462783947e-05,
+   "Prob titulo se avancou em 3o": 4.559838764101301e-05
+  }
+ ],
+ "brasil_adv_1o": [
+  {
+   "Adversario": "Japão",
+   "Prob dado Brasil 1o grupo": 0.3165051035686479,
+   "Base Brasil 1o grupo": 584395.0
+  },
+  {
+   "Adversario": "Holanda",
+   "Prob dado Brasil 1o grupo": 0.2890784486520248,
+   "Base Brasil 1o grupo": 584395.0
+  },
+  {
+   "Adversario": "Suécia",
+   "Prob dado Brasil 1o grupo": 0.258872851410433,
+   "Base Brasil 1o grupo": 584395.0
+  },
+  {
+   "Adversario": "Tunísia",
+   "Prob dado Brasil 1o grupo": 0.1355435963688943,
+   "Base Brasil 1o grupo": 584395.0
+  }
+ ],
+ "brasil_adv_2o": [
+  {
+   "Adversario": "Holanda",
+   "Prob dado Brasil 2o grupo": 0.463268387689749,
+   "Base Brasil 2o grupo": 274178.0
+  },
+  {
+   "Adversario": "Japão",
+   "Prob dado Brasil 2o grupo": 0.2996374617948924,
+   "Base Brasil 2o grupo": 274178.0
+  },
+  {
+   "Adversario": "Suécia",
+   "Prob dado Brasil 2o grupo": 0.1759039747900999,
+   "Base Brasil 2o grupo": 274178.0
+  },
+  {
+   "Adversario": "Tunísia",
+   "Prob dado Brasil 2o grupo": 0.06119017572525878,
+   "Base Brasil 2o grupo": 274178.0
+  }
+ ],
+ "brasil_adv_3o": [
+  {
+   "Adversario": "Alemanha",
+   "Prob dado Brasil 3o grupo": 0.347398813586015,
+   "Base Brasil 3o grupo": 95245.0
+  },
+  {
+   "Adversario": "México",
+   "Prob dado Brasil 3o grupo": 0.1754107827182529,
+   "Base Brasil 3o grupo": 95245.0
+  },
+  {
+   "Adversario": "Equador",
+   "Prob dado Brasil 3o grupo": 0.1722925087931125,
+   "Base Brasil 3o grupo": 95245.0
+  },
+  {
+   "Adversario": "Costa do Marfim",
+   "Prob dado Brasil 3o grupo": 0.1169300225733634,
+   "Base Brasil 3o grupo": 95245.0
+  },
+  {
+   "Adversario": "Tcheca",
+   "Prob dado Brasil 3o grupo": 0.07910126515827602,
+   "Base Brasil 3o grupo": 95245.0
+  },
+  {
+   "Adversario": "Coreia do Sul",
+   "Prob dado Brasil 3o grupo": 0.0712688330096068,
+   "Base Brasil 3o grupo": 95245.0
+  },
+  {
+   "Adversario": "África do Sul",
+   "Prob dado Brasil 3o grupo": 0.01557037114809176,
+   "Base Brasil 3o grupo": 95245.0
+  },
+  {
+   "Adversario": "Curaçau",
+   "Prob dado Brasil 3o grupo": 0.0153813848495984,
+   "Base Brasil 3o grupo": 95245.0
+  },
+  {
+   "Adversario": "França",
+   "Prob dado Brasil 3o grupo": 0.003601238910179012,
+   "Base Brasil 3o grupo": 95245.0
+  },
+  {
+   "Adversario": "Noruega",
+   "Prob dado Brasil 3o grupo": 0.001438395716310568,
+   "Base Brasil 3o grupo": 95245.0
+  },
+  {
+   "Adversario": "Senegal",
+   "Prob dado Brasil 3o grupo": 0.0009974276864927294,
+   "Base Brasil 3o grupo": 95245.0
+  },
+  {
+   "Adversario": "Iraque",
+   "Prob dado Brasil 3o grupo": 0.0006089558507008242,
+   "Base Brasil 3o grupo": 95245.0
+  }
+ ],
+ "brasil_adv_16avos": [
+  {
+   "Selecao": "Holanda",
+   "Probabilidade": 0.3102835132069221
+  },
+  {
+   "Selecao": "Japão",
+   "Probabilidade": 0.2800513305473371
+  },
+  {
+   "Selecao": "Suécia",
+   "Probabilidade": 0.2091730288168183
+  },
+  {
+   "Selecao": "Tunísia",
+   "Probabilidade": 0.1006355510170703
+  },
+  {
+   "Selecao": "Alemanha",
+   "Probabilidade": 0.03469005617423869
+  },
+  {
+   "Selecao": "México",
+   "Probabilidade": 0.01751592022796802
+  },
+  {
+   "Selecao": "Equador",
+   "Probabilidade": 0.01720454006948915
+  },
+  {
+   "Selecao": "Costa do Marfim",
+   "Probabilidade": 0.01167623173393666
+  },
+  {
+   "Selecao": "Tcheca",
+   "Probabilidade": 0.00789878152855157
+  },
+  {
+   "Selecao": "Coreia do Sul",
+   "Probabilidade": 0.007116661669207333
+  },
+  {
+   "Selecao": "África do Sul",
+   "Probabilidade": 0.001554803956310323
+  },
+  {
+   "Selecao": "Curaçau",
+   "Probabilidade": 0.001535932431554028
+  },
+  {
+   "Selecao": "França",
+   "Probabilidade": 0.0003596073884116257
+  },
+  {
+   "Selecao": "Noruega",
+   "Probabilidade": 0.000143633271756247
+  },
+  {
+   "Selecao": "Senegal",
+   "Probabilidade": 9.959971399155814e-05
+  },
+  {
+   "Selecao": "Iraque",
+   "Probabilidade": 6.080824643695128e-05
+  }
+ ],
+ "brasil_adv_oitavas": [
+  {
+   "Selecao": "França",
+   "Probabilidade": 0.1477352804238131
+  },
+  {
+   "Selecao": "Noruega",
+   "Probabilidade": 0.1252626810454391
+  },
+  {
+   "Selecao": "Alemanha",
+   "Probabilidade": 0.1008585108658722
+  },
+  {
+   "Selecao": "Equador",
+   "Probabilidade": 0.0923520492267425
+  },
+  {
+   "Selecao": "Senegal",
+   "Probabilidade": 0.08634498987026387
+  },
+  {
+   "Selecao": "Costa do Marfim",
+   "Probabilidade": 0.06589519183581019
+  },
+  {
+   "Selecao": "México",
+   "Probabilidade": 0.05000534799733229
+  },
+  {
+   "Selecao": "Suíça",
+   "Probabilidade": 0.04756257156878783
+  },
+  {
+   "Selecao": "Iraque",
+   "Probabilidade": 0.04755313392643672
+  },
+  {
+   "Selecao": "Tcheca",
+   "Probabilidade": 0.04260623639406561
+  },
+  {
+   "Selecao": "Canadá",
+   "Probabilidade": 0.04172381683423725
+  },
+  {
+   "Selecao": "Coreia do Sul",
+   "Probabilidade": 0.03935968742528533
+  },
+  {
+   "Selecao": "Bósnia e Herzegovina",
+   "Probabilidade": 0.0374894612993746
+  },
+  {
+   "Selecao": "Inglaterra",
+   "Probabilidade": 0.01789691577847966
+  },
+  {
+   "Selecao": "África do Sul",
+   "Probabilidade": 0.009409329424052147
+  },
+  {
+   "Selecao": "Catar",
+   "Probabilidade": 0.008685776843800728
+  },
+  {
+   "Selecao": "Curaçau",
+   "Probabilidade": 0.006856447168078118
+  },
+  {
+   "Selecao": "Croácia",
+   "Probabilidade": 0.004465577772464735
+  },
+  {
+   "Selecao": "Japão",
+   "Probabilidade": 0.002836011526507191
+  },
+  {
+   "Selecao": "Colômbia",
+   "Probabilidade": 0.002697592772024311
+  },
+  {
+   "Selecao": "RD do Congo",
+   "Probabilidade": 0.002662988083403591
+  },
+  {
+   "Selecao": "Suécia",
+   "Probabilidade": 0.002625237513999169
+  },
+  {
+   "Selecao": "Holanda",
+   "Probabilidade": 0.002554455196365879
+  },
+  {
+   "Selecao": "Turquia",
+   "Probabilidade": 0.002158074217619449
+  },
+  {
+   "Selecao": "Estados Unidos",
+   "Probabilidade": 0.002065270734500245
+  },
+  {
+   "Selecao": "Portugal",
+   "Probabilidade": 0.0019001119933559
+  },
+  {
+   "Selecao": "Paraguai",
+   "Probabilidade": 0.001750682656130063
+  },
+  {
+   "Selecao": "Austrália",
+   "Probabilidade": 0.001302394644452554
+  },
+  {
+   "Selecao": "Tunísia",
+   "Probabilidade": 0.00112307943978155
+  },
+  {
+   "Selecao": "Gana",
+   "Probabilidade": 0.0007597302092639897
+  },
+  {
+   "Selecao": "Panamá",
+   "Probabilidade": 0.0005001950446085895
+  },
+  {
+   "Selecao": "Uzbequistão",
+   "Probabilidade": 0.0004923303426493349
+  },
+  {
+   "Selecao": "Uruguai",
+   "Probabilidade": 0.000402672740313833
+  },
+  {
+   "Selecao": "Cabo Verde",
+   "Probabilidade": 0.0002673998666146547
+  },
+  {
+   "Selecao": "Irã",
+   "Probabilidade": 0.0002532434030879966
+  },
+  {
+   "Selecao": "Egito",
+   "Probabilidade": 0.0002516704626961457
+  },
+  {
+   "Selecao": "Bélgica",
+   "Probabilidade": 0.0002485245819124439
+  },
+  {
+   "Selecao": "Espanha",
+   "Probabilidade": 0.0002076281317243202
+  },
+  {
+   "Selecao": "Áustria",
+   "Probabilidade": 0.0001918987278058111
+  },
+  {
+   "Selecao": "Jordânia",
+   "Probabilidade": 0.0001557210987932401
+  },
+  {
+   "Selecao": "Argentina",
+   "Probabilidade": 0.0001431375756584328
+  },
+  {
+   "Selecao": "Argélia",
+   "Probabilidade": 0.0001368458140910292
+  },
+  {
+   "Selecao": "Arábia Saudita",
+   "Probabilidade": 0.0001289811121317747
+  },
+  {
+   "Selecao": "Nova Zelândia",
+   "Probabilidade": 0.0001211164101725201
+  }
+ ],
+ "brasil_adv_quartas": [
+  {
+   "Selecao": "Inglaterra",
+   "Probabilidade": 0.2067749086333952
+  },
+  {
+   "Selecao": "França",
+   "Probabilidade": 0.1220226469354742
+  },
+  {
+   "Selecao": "Alemanha",
+   "Probabilidade": 0.08741477442933317
+  },
+  {
+   "Selecao": "México",
+   "Probabilidade": 0.08512851237193697
+  },
+  {
+   "Selecao": "Noruega",
+   "Probabilidade": 0.04224552153855371
+  },
+  {
+   "Selecao": "Equador",
+   "Probabilidade": 0.04016535857647834
+  },
+  {
+   "Selecao": "Croácia",
+   "Probabilidade": 0.03740698580073093
+  },
+  {
+   "Selecao": "Holanda",
+   "Probabilidade": 0.03010963992570847
+  },
+  {
+   "Selecao": "Marrocos",
+   "Probabilidade": 0.02948175663531244
+  },
+  {
+   "Selecao": "Costa do Marfim",
+   "Probabilidade": 0.02690072494158529
+  },
+  {
+   "Selecao": "Colômbia",
+   "Probabilidade": 0.02621772212569648
+  },
+  {
+   "Selecao": "Senegal",
+   "Probabilidade": 0.02554670181534959
+  },
+  {
+   "Selecao": "Tcheca",
+   "Probabilidade": 0.02386196153615721
+  },
+  {
+   "Selecao": "Portugal",
+   "Probabilidade": 0.02285303456952849
+  },
+  {
+   "Selecao": "Escócia",
+   "Probabilidade": 0.02145347792223354
+  },
+  {
+   "Selecao": "Japão",
+   "Probabilidade": 0.02114193277814391
+  },
+  {
+   "Selecao": "Coreia do Sul",
+   "Probabilidade": 0.01948355401114373
+  },
+  {
+   "Selecao": "RD do Congo",
+   "Probabilidade": 0.01944041699119286
+  },
+  {
+   "Selecao": "Suécia",
+   "Probabilidade": 0.01298663950632077
+  },
+  {
+   "Selecao": "Uruguai",
+   "Probabilidade": 0.01280929842430052
+  },
+  {
+   "Selecao": "Iraque",
+   "Probabilidade": 0.01164699538673537
+  },
+  {
+   "Selecao": "Espanha",
+   "Probabilidade": 0.009125876220717753
+  },
+  {
+   "Selecao": "Turquia",
+   "Probabilidade": 0.008234377808399737
+  },
+  {
+   "Selecao": "Estados Unidos",
+   "Probabilidade": 0.00814570726738961
+  },
+  {
+   "Selecao": "Cabo Verde",
+   "Probabilidade": 0.005042238332035228
+  },
+  {
+   "Selecao": "Paraguai",
+   "Probabilidade": 0.004960757294350249
+  },
+  {
+   "Selecao": "Suíça",
+   "Probabilidade": 0.004220238451860284
+  },
+  {
+   "Selecao": "Gana",
+   "Probabilidade": 0.00375292073572584
+  },
+  {
+   "Selecao": "Austrália",
+   "Probabilidade": 0.003467737103828411
+  },
+  {
+   "Selecao": "Tunísia",
+   "Probabilidade": 0.003415014079444012
+  },
+  {
+   "Selecao": "Canadá",
+   "Probabilidade": 0.003175363968605835
+  },
+  {
+   "Selecao": "Bósnia e Herzegovina",
+   "Probabilidade": 0.002619375711461266
+  },
+  {
+   "Selecao": "Panamá",
+   "Probabilidade": 0.002547480678209814
+  },
+  {
+   "Selecao": "Uzbequistão",
+   "Probabilidade": 0.001953148403331137
+  },
+  {
+   "Selecao": "Arábia Saudita",
+   "Probabilidade": 0.001921993888922174
+  },
+  {
+   "Selecao": "África do Sul",
+   "Probabilidade": 0.001624827751482835
+  },
+  {
+   "Selecao": "Curaçau",
+   "Probabilidade": 0.001581690731531963
+  },
+  {
+   "Selecao": "Argentina",
+   "Probabilidade": 0.001540950212689473
+  },
+  {
+   "Selecao": "Haiti",
+   "Probabilidade": 0.001521778203822419
+  },
+  {
+   "Selecao": "Áustria",
+   "Probabilidade": 0.001416332155053622
+  },
+  {
+   "Selecao": "Bélgica",
+   "Probabilidade": 0.001150320532023246
+  },
+  {
+   "Selecao": "Jordânia",
+   "Probabilidade": 0.0008267928823917081
+  },
+  {
+   "Selecao": "Egito",
+   "Probabilidade": 0.0007381223413815829
+  },
+  {
+   "Selecao": "Argélia",
+   "Probabilidade": 0.0007093643280810017
+  },
+  {
+   "Selecao": "Irã",
+   "Probabilidade": 0.0006997783236474747
+  },
+  {
+   "Selecao": "Catar",
+   "Probabilidade": 0.0003091486429812474
+  },
+  {
+   "Selecao": "Nova Zelândia",
+   "Probabilidade": 0.0002060990953208316
+  }
+ ],
+ "brasil_adv_semi": [
+  {
+   "Selecao": "Espanha",
+   "Probabilidade": 0.1643394624059408
+  },
+  {
+   "Selecao": "Portugal",
+   "Probabilidade": 0.1611518179843185
+  },
+  {
+   "Selecao": "Argentina",
+   "Probabilidade": 0.1586672723322734
+  },
+  {
+   "Selecao": "Bélgica",
+   "Probabilidade": 0.06064029387948571
+  },
+  {
+   "Selecao": "Colômbia",
+   "Probabilidade": 0.05260995793257362
+  },
+  {
+   "Selecao": "Estados Unidos",
+   "Probabilidade": 0.0419923765133411
+  },
+  {
+   "Selecao": "Uruguai",
+   "Probabilidade": 0.04139987755021429
+  },
+  {
+   "Selecao": "Inglaterra",
+   "Probabilidade": 0.03882053206406889
+  },
+  {
+   "Selecao": "Turquia",
+   "Probabilidade": 0.03825568305255466
+  },
+  {
+   "Selecao": "Suíça",
+   "Probabilidade": 0.03466118934291865
+  },
+  {
+   "Selecao": "Áustria",
+   "Probabilidade": 0.02421345762644915
+  },
+  {
+   "Selecao": "Croácia",
+   "Probabilidade": 0.02188296170481702
+  },
+  {
+   "Selecao": "Canadá",
+   "Probabilidade": 0.0133549266288784
+  },
+  {
+   "Selecao": "França",
+   "Probabilidade": 0.01321272687772796
+  },
+  {
+   "Selecao": "Egito",
+   "Probabilidade": 0.01164062962889815
+  },
+  {
+   "Selecao": "Paraguai",
+   "Probabilidade": 0.01116268046530919
+  },
+  {
+   "Selecao": "Bósnia e Herzegovina",
+   "Probabilidade": 0.01084668101830822
+  },
+  {
+   "Selecao": "Noruega",
+   "Probabilidade": 0.009993482511405605
+  },
+  {
+   "Selecao": "Irã",
+   "Probabilidade": 0.009693283036754685
+  },
+  {
+   "Selecao": "RD do Congo",
+   "Probabilidade": 0.009641933126617028
+  },
+  {
+   "Selecao": "Jordânia",
+   "Probabilidade": 0.008934884363952364
+  },
+  {
+   "Selecao": "Senegal",
+   "Probabilidade": 0.007050737661209093
+  },
+  {
+   "Selecao": "Argélia",
+   "Probabilidade": 0.006714988248770565
+  },
+  {
+   "Selecao": "México",
+   "Probabilidade": 0.006454288704994766
+  },
+  {
+   "Selecao": "Alemanha",
+   "Probabilidade": 0.005924989631268146
+  },
+  {
+   "Selecao": "Austrália",
+   "Probabilidade": 0.005237690834041041
+  },
+  {
+   "Selecao": "Equador",
+   "Probabilidade": 0.00472814172575198
+  },
+  {
+   "Selecao": "Tcheca",
+   "Probabilidade": 0.003863093239586831
+  },
+  {
+   "Selecao": "Coreia do Sul",
+   "Probabilidade": 0.003570793751110936
+  },
+  {
+   "Selecao": "Gana",
+   "Probabilidade": 0.003479943910098158
+  },
+  {
+   "Selecao": "Costa do Marfim",
+   "Probabilidade": 0.003314044200422649
+  },
+  {
+   "Selecao": "Iraque",
+   "Probabilidade": 0.003231094345584895
+  },
+  {
+   "Selecao": "Cabo Verde",
+   "Probabilidade": 0.002338395907807162
+  },
+  {
+   "Selecao": "Panamá",
+   "Probabilidade": 0.00227914601149448
+  },
+  {
+   "Selecao": "Nova Zelândia",
+   "Probabilidade": 0.001244247822566311
+  },
+  {
+   "Selecao": "Holanda",
+   "Probabilidade": 0.0006872987972271049
+  },
+  {
+   "Selecao": "Japão",
+   "Probabilidade": 0.0005490490391641815
+  },
+  {
+   "Selecao": "Arábia Saudita",
+   "Probabilidade": 0.000529299073726621
+  },
+  {
+   "Selecao": "Catar",
+   "Probabilidade": 0.0005055991152015484
+  },
+  {
+   "Selecao": "África do Sul",
+   "Probabilidade": 0.0003436493986135524
+  },
+  {
+   "Selecao": "Uzbequistão",
+   "Probabilidade": 0.0003436493986135524
+  },
+  {
+   "Selecao": "Suécia",
+   "Probabilidade": 0.0003080994608259435
+  },
+  {
+   "Selecao": "Curaçau",
+   "Probabilidade": 0.0001145497995378508
+  },
+  {
+   "Selecao": "Tunísia",
+   "Probabilidade": 7.109987557521775e-05
+  }
+ ],
+ "brasil_adv_final": [
+  {
+   "Selecao": "Espanha",
+   "Probabilidade": 0.1522221555808793
+  },
+  {
+   "Selecao": "França",
+   "Probabilidade": 0.1463243967292429
+  },
+  {
+   "Selecao": "Inglaterra",
+   "Probabilidade": 0.08368819848457586
+  },
+  {
+   "Selecao": "Portugal",
+   "Probabilidade": 0.0810158806320265
+  },
+  {
+   "Selecao": "Argentina",
+   "Probabilidade": 0.0666480070906389
+  },
+  {
+   "Selecao": "Alemanha",
+   "Probabilidade": 0.06432222422146251
+  },
+  {
+   "Selecao": "Holanda",
+   "Probabilidade": 0.06033707191267319
+  },
+  {
+   "Selecao": "Marrocos",
+   "Probabilidade": 0.03317406052366767
+  },
+  {
+   "Selecao": "Bélgica",
+   "Probabilidade": 0.03023517729929294
+  },
+  {
+   "Selecao": "Noruega",
+   "Probabilidade": 0.02734294301498764
+  },
+  {
+   "Selecao": "Colômbia",
+   "Probabilidade": 0.02465063275955137
+  },
+  {
+   "Selecao": "México",
+   "Probabilidade": 0.02449069353645615
+  },
+  {
+   "Selecao": "Japão",
+   "Probabilidade": 0.02373098222675383
+  },
+  {
+   "Selecao": "Estados Unidos",
+   "Probabilidade": 0.02037892267604977
+  },
+  {
+   "Selecao": "Turquia",
+   "Probabilidade": 0.01873288150502809
+  },
+  {
+   "Selecao": "Suíça",
+   "Probabilidade": 0.01584064722072279
+  },
+  {
+   "Selecao": "Uruguai",
+   "Probabilidade": 0.01490100428503835
+  },
+  {
+   "Selecao": "Equador",
+   "Probabilidade": 0.01456779757025664
+  },
+  {
+   "Selecao": "Croácia",
+   "Probabilidade": 0.01311501629380835
+  },
+  {
+   "Selecao": "Senegal",
+   "Probabilidade": 0.0116688991516557
+  },
+  {
+   "Selecao": "Suécia",
+   "Probabilidade": 0.007850350200257235
+  },
+  {
+   "Selecao": "Áustria",
+   "Probabilidade": 0.007463830411110445
+  },
+  {
+   "Selecao": "Canadá",
+   "Probabilidade": 0.006404233058104587
+  },
+  {
+   "Selecao": "Costa do Marfim",
+   "Probabilidade": 0.006290942775078803
+  },
+  {
+   "Selecao": "Escócia",
+   "Probabilidade": 0.00613100355198358
+  },
+  {
+   "Selecao": "Tcheca",
+   "Probabilidade": 0.00573115549424552
+  },
+  {
+   "Selecao": "Bósnia e Herzegovina",
+   "Probabilidade": 0.004478298246666267
+  },
+  {
+   "Selecao": "Coreia do Sul",
+   "Probabilidade": 0.004311694889275409
+  },
+  {
+   "Selecao": "Paraguai",
+   "Probabilidade": 0.004038465383154401
+  },
+  {
+   "Selecao": "RD do Congo",
+   "Probabilidade": 0.00400514471167623
+  },
+  {
+   "Selecao": "Iraque",
+   "Probabilidade": 0.003412036759364775
+  },
+  {
+   "Selecao": "Egito",
+   "Probabilidade": 0.002452401420793432
+  },
+  {
+   "Selecao": "Jordânia",
+   "Probabilidade": 0.002025896825872835
+  },
+  {
+   "Selecao": "Irã",
+   "Probabilidade": 0.001839301065595074
+  },
+  {
+   "Selecao": "Austrália",
+   "Probabilidade": 0.001619384633839141
+  },
+  {
+   "Selecao": "Argélia",
+   "Probabilidade": 0.001419460604970111
+  },
+  {
+   "Selecao": "Gana",
+   "Probabilidade": 0.0007130623696328728
+  },
+  {
+   "Selecao": "Tunísia",
+   "Probabilidade": 0.0006930699667459699
+  },
+  {
+   "Selecao": "Cabo Verde",
+   "Probabilidade": 0.0005997720866070893
+  },
+  {
+   "Selecao": "Panamá",
+   "Probabilidade": 0.0003931839234424252
+  },
+  {
+   "Selecao": "África do Sul",
+   "Probabilidade": 0.0002199164317559328
+  },
+  {
+   "Selecao": "Catar",
+   "Probabilidade": 0.0001332826859126865
+  },
+  {
+   "Selecao": "Arábia Saudita",
+   "Probabilidade": 0.0001199544173214179
+  },
+  {
+   "Selecao": "Nova Zelândia",
+   "Probabilidade": 7.996961154761191e-05
+  },
+  {
+   "Selecao": "Haiti",
+   "Probabilidade": 7.330547725197758e-05
+  },
+  {
+   "Selecao": "Uzbequistão",
+   "Probabilidade": 6.664134295634326e-05
+  },
+  {
+   "Selecao": "Curaçau",
+   "Probabilidade": 4.664894006944028e-05
+  }
+ ],
+ "brasil_carrascos": [
+  {
+   "Eliminador": "Holanda",
+   "Prob dado Brasil eliminado": 0.1587848472385294,
+   "Prob no total de copas": 0.138213
+  },
+  {
+   "Eliminador": "França",
+   "Prob dado Brasil eliminado": 0.1119833372011001,
+   "Prob no total de copas": 0.097475
+  },
+  {
+   "Eliminador": "Japão",
+   "Prob dado Brasil eliminado": 0.1114744003621149,
+   "Prob no total de copas": 0.097032
+  },
+  {
+   "Eliminador": "Alemanha",
+   "Prob dado Brasil eliminado": 0.07539388035044264,
+   "Prob no total de copas": 0.065626
+  },
+  {
+   "Eliminador": "Inglaterra",
+   "Prob dado Brasil eliminado": 0.07107653353124045,
+   "Prob no total de copas": 0.061868
+  },
+  {
+   "Eliminador": "Suécia",
+   "Prob dado Brasil eliminado": 0.06203170343342807,
+   "Prob no total de copas": 0.053995
+  },
+  {
+   "Eliminador": "Noruega",
+   "Prob dado Brasil eliminado": 0.04514373157545247,
+   "Prob no total de copas": 0.039295
+  },
+  {
+   "Eliminador": "Espanha",
+   "Prob dado Brasil eliminado": 0.04450497563306918,
+   "Prob no total de copas": 0.038739
+  },
+  {
+   "Eliminador": "Portugal",
+   "Prob dado Brasil eliminado": 0.03661817789123227,
+   "Prob no total de copas": 0.031874
+  },
+  {
+   "Eliminador": "México",
+   "Prob dado Brasil eliminado": 0.03399881899081156,
+   "Prob no total de copas": 0.029594
+  },
+  {
+   "Eliminador": "Equador",
+   "Prob dado Brasil eliminado": 0.03326930456021194,
+   "Prob no total de copas": 0.028959
+  },
+  {
+   "Eliminador": "Argentina",
+   "Prob dado Brasil eliminado": 0.02806620084968326,
+   "Prob no total de copas": 0.02443
+  },
+  {
+   "Eliminador": "Senegal",
+   "Prob dado Brasil eliminado": 0.02431293526736991,
+   "Prob no total de copas": 0.021163
+  },
+  {
+   "Eliminador": "Costa do Marfim",
+   "Prob dado Brasil eliminado": 0.01853655958696846,
+   "Prob no total de copas": 0.016135
+  },
+  {
+   "Eliminador": "Tunísia",
+   "Prob dado Brasil eliminado": 0.01712118670744289,
+   "Prob no total de copas": 0.014903
+  },
+  {
+   "Eliminador": "Suíça",
+   "Prob dado Brasil eliminado": 0.01419049172719147,
+   "Prob no total de copas": 0.012352
+  },
+  {
+   "Eliminador": "Colômbia",
+   "Prob dado Brasil eliminado": 0.01167797509770898,
+   "Prob no total de copas": 0.010165
+  },
+  {
+   "Eliminador": "Tcheca",
+   "Prob dado Brasil eliminado": 0.01131953651133562,
+   "Prob no total de copas": 0.009853
+  },
+  {
+   "Eliminador": "Iraque",
+   "Prob dado Brasil eliminado": 0.00960776249307823,
+   "Prob no total de copas": 0.008363
+  },
+  {
+   "Eliminador": "Coreia do Sul",
+   "Prob dado Brasil eliminado": 0.009430840883137533,
+   "Prob no total de copas": 0.008209
+  },
+  {
+   "Eliminador": "Croácia",
+   "Prob dado Brasil eliminado": 0.008469260444693616,
+   "Prob no total de copas": 0.007372
+  },
+  {
+   "Eliminador": "Bélgica",
+   "Prob dado Brasil eliminado": 0.00786841627586904,
+   "Prob no total de copas": 0.006849
+  },
+  {
+   "Eliminador": "Canadá",
+   "Prob dado Brasil eliminado": 0.007817867244457414,
+   "Prob no total de copas": 0.006805
+  },
+  {
+   "Eliminador": "Marrocos",
+   "Prob dado Brasil eliminado": 0.006498997061263129,
+   "Prob no total de copas": 0.005657
+  },
+  {
+   "Eliminador": "Estados Unidos",
+   "Prob dado Brasil eliminado": 0.00644040613849056,
+   "Prob no total de copas": 0.005606
+  },
+  {
+   "Eliminador": "Bósnia e Herzegovina",
+   "Prob dado Brasil eliminado": 0.006324373134568415,
+   "Prob no total de copas": 0.005505
+  },
+  {
+   "Eliminador": "Uruguai",
+   "Prob dado Brasil eliminado": 0.006092307126724124,
+   "Prob no total de copas": 0.005303
+  },
+  {
+   "Eliminador": "Turquia",
+   "Prob dado Brasil eliminado": 0.005921129724898385,
+   "Prob no total de copas": 0.005154
+  },
+  {
+   "Eliminador": "RD do Congo",
+   "Prob dado Brasil eliminado": 0.003037537251189625,
+   "Prob no total de copas": 0.002644
+  },
+  {
+   "Eliminador": "Escócia",
+   "Prob dado Brasil eliminado": 0.002515963154351467,
+   "Prob no total de copas": 0.00219
+  },
+  {
+   "Eliminador": "Áustria",
+   "Prob dado Brasil eliminado": 0.002239092323210507,
+   "Prob no total de copas": 0.001949
+  },
+  {
+   "Eliminador": "Paraguai",
+   "Prob dado Brasil eliminado": 0.001507280209364897,
+   "Prob no total de copas": 0.001312
+  },
+  {
+   "Eliminador": "África do Sul",
+   "Prob dado Brasil eliminado": 0.0009029895156713486,
+   "Prob no total de copas": 0.000786
+  },
+  {
+   "Eliminador": "Egito",
+   "Prob dado Brasil eliminado": 0.0007582354711744148,
+   "Prob no total de copas": 0.00066
+  },
+  {
+   "Eliminador": "Austrália",
+   "Prob dado Brasil eliminado": 0.0006720723494500495,
+   "Prob no total de copas": 0.000585
+  },
+  {
+   "Eliminador": "Curaçau",
+   "Prob dado Brasil eliminado": 0.0006422024672522696,
+   "Prob no total de copas": 0.000559
+  },
+  {
+   "Eliminador": "Jordânia",
+   "Prob dado Brasil eliminado": 0.0006146302683004727,
+   "Prob no total de copas": 0.000535
+  },
+  {
+   "Eliminador": "Irã",
+   "Prob dado Brasil eliminado": 0.0006100349018085065,
+   "Prob no total de copas": 0.000531
+  },
+  {
+   "Eliminador": "Catar",
+   "Prob dado Brasil eliminado": 0.0005698254450038026,
+   "Prob no total de copas": 0.000496
+  },
+  {
+   "Eliminador": "Gana",
+   "Prob dado Brasil eliminado": 0.0004526435994586658,
+   "Prob no total de copas": 0.000394
+  },
+  {
+   "Eliminador": "Argélia",
+   "Prob dado Brasil eliminado": 0.0004491970745896912,
+   "Prob no total de copas": 0.000391
+  },
+  {
+   "Eliminador": "Cabo Verde",
+   "Prob dado Brasil eliminado": 0.000427369083752852,
+   "Prob no total de copas": 0.000372
+  },
+  {
+   "Eliminador": "Panamá",
+   "Prob dado Brasil eliminado": 0.0002929546138628421,
+   "Prob no total de copas": 0.000255
+  },
+  {
+   "Eliminador": "Uzbequistão",
+   "Prob dado Brasil eliminado": 0.000121777212037103,
+   "Prob no total de copas": 0.000106
+  },
+  {
+   "Eliminador": "Arábia Saudita",
+   "Prob dado Brasil eliminado": 0.0001045445876922299,
+   "Prob no total de copas": 9.1e-05
+  },
+  {
+   "Eliminador": "Haiti",
+   "Prob dado Brasil eliminado": 5.859092277256842e-05,
+   "Prob no total de copas": 5.1e-05
+  },
+  {
+   "Eliminador": "Nova Zelândia",
+   "Prob dado Brasil eliminado": 4.710250654265304e-05,
+   "Prob no total de copas": 4.1e-05
+  }
+ ],
+ "brasil_eliminadores": [
+  {
+   "Eliminador": "Holanda",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 0.147166611905216,
+   "Prob no total de copas": 0.1281
+  },
+  {
+   "Eliminador": "Japão",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 0.1057175549893043,
+   "Prob no total de copas": 0.092021
+  },
+  {
+   "Eliminador": "França",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.06191222390463696,
+   "Prob no total de copas": 0.053891
+  },
+  {
+   "Eliminador": "Suécia",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 0.05947667966389489,
+   "Prob no total de copas": 0.051771
+  },
+  {
+   "Eliminador": "Inglaterra",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.05102120531867717,
+   "Prob no total de copas": 0.044411
+  },
+  {
+   "Eliminador": "Noruega",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.03453073266225665,
+   "Prob no total de copas": 0.030057
+  },
+  {
+   "Eliminador": "Alemanha",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.03339337945549502,
+   "Prob no total de copas": 0.029067
+  },
+  {
+   "Eliminador": "França",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.03328538834293382,
+   "Prob no total de copas": 0.028973
+  },
+  {
+   "Eliminador": "Espanha",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0269345918510366,
+   "Prob no total de copas": 0.023445
+  },
+  {
+   "Eliminador": "Portugal",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.02355125327132652,
+   "Prob no total de copas": 0.0205
+  },
+  {
+   "Eliminador": "Argentina",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.02210830819284915,
+   "Prob no total de copas": 0.019244
+  },
+  {
+   "Eliminador": "Equador",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.02064468396515793,
+   "Prob no total de copas": 0.01797
+  },
+  {
+   "Eliminador": "Senegal",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.01927986011704398,
+   "Prob no total de copas": 0.016782
+  },
+  {
+   "Eliminador": "Alemanha",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.0189788636118202,
+   "Prob no total de copas": 0.01652
+  },
+  {
+   "Eliminador": "Alemanha",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 0.01729810831738358,
+   "Prob no total de copas": 0.015057
+  },
+  {
+   "Eliminador": "Tunísia",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 0.01668003152421414,
+   "Prob no total de copas": 0.014519
+  },
+  {
+   "Eliminador": "Espanha",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.01500042507140051,
+   "Prob no total de copas": 0.013057
+  },
+  {
+   "Eliminador": "França",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.01436511565388619,
+   "Prob no total de copas": 0.012504
+  },
+  {
+   "Eliminador": "México",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.01358390335025194,
+   "Prob no total de copas": 0.011824
+  },
+  {
+   "Eliminador": "México",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.0120685812495261,
+   "Prob no total de copas": 0.010505
+  },
+  {
+   "Eliminador": "Costa do Marfim",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.01186178975738763,
+   "Prob no total de copas": 0.010325
+  },
+  {
+   "Eliminador": "Suíça",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.009917949731285944,
+   "Prob no total de copas": 0.008633
+  },
+  {
+   "Eliminador": "Iraque",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.008015468003611958,
+   "Prob no total de copas": 0.006977
+  },
+  {
+   "Eliminador": "Noruega",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.00766622015022253,
+   "Prob no total de copas": 0.006673
+  },
+  {
+   "Eliminador": "Inglaterra",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.007491596223527817,
+   "Prob no total de copas": 0.006521
+  },
+  {
+   "Eliminador": "Portugal",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.00697117096831265,
+   "Prob no total de copas": 0.006068
+  },
+  {
+   "Eliminador": "Inglaterra",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.006737956118845368,
+   "Prob no total de copas": 0.005865
+  },
+  {
+   "Eliminador": "Tcheca",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.006658686046858952,
+   "Prob no total de copas": 0.005796
+  },
+  {
+   "Eliminador": "Canadá",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.006434661930375602,
+   "Prob no total de copas": 0.005601
+  },
+  {
+   "Eliminador": "México",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 0.00633586155079833,
+   "Prob no total de copas": 0.005515
+  },
+  {
+   "Eliminador": "Holanda",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.00626118684530388,
+   "Prob no total de copas": 0.00545
+  },
+  {
+   "Eliminador": "Equador",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.005913087833537444,
+   "Prob no total de copas": 0.005147
+  },
+  {
+   "Eliminador": "Bélgica",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.005878622584847698,
+   "Prob no total de copas": 0.005117
+  },
+  {
+   "Eliminador": "Inglaterra",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.005825775870190088,
+   "Prob no total de copas": 0.005071
+  },
+  {
+   "Eliminador": "Coreia do Sul",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.005682170667316145,
+   "Prob no total de copas": 0.004946
+  },
+  {
+   "Eliminador": "Equador",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 0.005622430902920585,
+   "Prob no total de copas": 0.004894
+  },
+  {
+   "Eliminador": "Argentina",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.005538565464442203,
+   "Prob no total de copas": 0.004821
+  },
+  {
+   "Eliminador": "Portugal",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.005408746361044159,
+   "Prob no total de copas": 0.004708
+  },
+  {
+   "Eliminador": "Bósnia e Herzegovina",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.005374281112354413,
+   "Prob no total de copas": 0.004678
+  },
+  {
+   "Eliminador": "Colômbia",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.005265141158170217,
+   "Prob no total de copas": 0.004583
+  },
+  {
+   "Eliminador": "Croácia",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.005030777467079943,
+   "Prob no total de copas": 0.004379
+  },
+  {
+   "Eliminador": "Alemanha",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.004980228435668315,
+   "Prob no total de copas": 0.004335
+  },
+  {
+   "Eliminador": "Marrocos",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.00458732460060521,
+   "Prob no total de copas": 0.003993
+  },
+  {
+   "Eliminador": "Holanda",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.004465547388568107,
+   "Prob no total de copas": 0.003887
+  },
+  {
+   "Eliminador": "Colômbia",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.004331132918678097,
+   "Prob no total de copas": 0.00377
+  },
+  {
+   "Eliminador": "Senegal",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.003763605156920277,
+   "Prob no total de copas": 0.003276
+  },
+  {
+   "Eliminador": "Estados Unidos",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.003711907283885658,
+   "Prob no total de copas": 0.003231
+  },
+  {
+   "Eliminador": "Japão",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.003567153239388725,
+   "Prob no total de copas": 0.003105
+  },
+  {
+   "Eliminador": "Uruguai",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.00352694378258402,
+   "Prob no total de copas": 0.00307
+  },
+  {
+   "Eliminador": "Turquia",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.003319003448822552,
+   "Prob no total de copas": 0.002889
+  },
+  {
+   "Eliminador": "Costa do Marfim",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.003089235124224245,
+   "Prob no total de copas": 0.002689
+  },
+  {
+   "Eliminador": "Costa do Marfim",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 0.003078895549617321,
+   "Prob no total de copas": 0.00268
+  },
+  {
+   "Eliminador": "Suíça",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.002935290346743378,
+   "Prob no total de copas": 0.002555
+  },
+  {
+   "Eliminador": "Espanha",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.002476902539169755,
+   "Prob no total de copas": 0.002156
+  },
+  {
+   "Eliminador": "Tcheca",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.002348232277394703,
+   "Prob no total de copas": 0.002044
+  },
+  {
+   "Eliminador": "Escócia",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.002274706413523244,
+   "Prob no total de copas": 0.00198
+  },
+  {
+   "Eliminador": "França",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.002200031708028795,
+   "Prob no total de copas": 0.001915
+  },
+  {
+   "Eliminador": "RD do Congo",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.001919714352018859,
+   "Prob no total de copas": 0.001671
+  },
+  {
+   "Eliminador": "Marrocos",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.001911672460657919,
+   "Prob no total de copas": 0.001664
+  },
+  {
+   "Eliminador": "Tcheca",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 0.001847337329770393,
+   "Prob no total de copas": 0.001608
+  },
+  {
+   "Eliminador": "Croácia",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.001817467447572613,
+   "Prob no total de copas": 0.001582
+  },
+  {
+   "Eliminador": "Coreia do Sul",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.001805979031342697,
+   "Prob no total de copas": 0.001572
+  },
+  {
+   "Eliminador": "Noruega",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.001786448723751841,
+   "Prob no total de copas": 0.001555
+  },
+  {
+   "Eliminador": "Uruguai",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.001769216099406968,
+   "Prob no total de copas": 0.00154
+  },
+  {
+   "Eliminador": "Bélgica",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.001747388108570129,
+   "Prob no total de copas": 0.001521
+  },
+  {
+   "Eliminador": "Áustria",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.001732453167471239,
+   "Prob no total de copas": 0.001508
+  },
+  {
+   "Eliminador": "Suécia",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.001632503946270975,
+   "Prob no total de copas": 0.001421
+  },
+  {
+   "Eliminador": "Coreia do Sul",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 0.001558978082399517,
+   "Prob no total de copas": 0.001357
+  },
+  {
+   "Eliminador": "Japão",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.001422265929263524,
+   "Prob no total de copas": 0.001238
+  },
+  {
+   "Eliminador": "México",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.001400437938426684,
+   "Prob no total de copas": 0.001219
+  },
+  {
+   "Eliminador": "Colômbia",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.001344144698900099,
+   "Prob no total de copas": 0.00117
+  },
+  {
+   "Eliminador": "Iraque",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.001249939685814793,
+   "Prob no total de copas": 0.001088
+  },
+  {
+   "Eliminador": "Estados Unidos",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.001207432545764106,
+   "Prob no total de copas": 0.001051
+  },
+  {
+   "Eliminador": "Turquia",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.001182158030058292,
+   "Prob no total de copas": 0.001029
+  },
+  {
+   "Eliminador": "Noruega",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.001094846066710935,
+   "Prob no total de copas": 0.000953
+  },
+  {
+   "Eliminador": "Estados Unidos",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.001071869234251105,
+   "Prob no total de copas": 0.000933
+  },
+  {
+   "Eliminador": "Turquia",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.0009799619044117817,
+   "Prob no total de copas": 0.000853
+  },
+  {
+   "Eliminador": "Croácia",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.0009799619044117817,
+   "Prob no total de copas": 0.000853
+  },
+  {
+   "Eliminador": "Canadá",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0008271659685539071,
+   "Prob no total de copas": 0.00072
+  },
+  {
+   "Eliminador": "Holanda",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.0008041891360940763,
+   "Prob no total de copas": 0.0007
+  },
+  {
+   "Eliminador": "Suíça",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.0007605331544203979,
+   "Prob no total de copas": 0.000662
+  },
+  {
+   "Eliminador": "Alemanha",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0007433005300755248,
+   "Prob no total de copas": 0.000647
+  },
+  {
+   "Eliminador": "Colômbia",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.0007375563219605671,
+   "Prob no total de copas": 0.000642
+  },
+  {
+   "Eliminador": "Uruguai",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.0007226213808616772,
+   "Prob no total de copas": 0.000629
+  },
+  {
+   "Eliminador": "Japão",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.0006984957067788549,
+   "Prob no total de copas": 0.000608
+  },
+  {
+   "Eliminador": "Equador",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.000688156132171931,
+   "Prob no total de copas": 0.000599
+  },
+  {
+   "Eliminador": "Portugal",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.0006870072905489395,
+   "Prob no total de copas": 0.000598
+  },
+  {
+   "Eliminador": "África do Sul",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.000655988566728168,
+   "Prob no total de copas": 0.000571
+  },
+  {
+   "Eliminador": "Croácia",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.000641053625629278,
+   "Prob no total de copas": 0.000558
+  },
+  {
+   "Eliminador": "Senegal",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.0006284163677763711,
+   "Prob no total de copas": 0.000547
+  },
+  {
+   "Eliminador": "Senegal",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0006100349018085065,
+   "Prob no total de copas": 0.000531
+  },
+  {
+   "Eliminador": "México",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0006100349018085065,
+   "Prob no total de copas": 0.000531
+  },
+  {
+   "Eliminador": "Bósnia e Herzegovina",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0005962488023326081,
+   "Prob no total de copas": 0.000519
+  },
+  {
+   "Eliminador": "RD do Congo",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0005905045942176504,
+   "Prob no total de copas": 0.000514
+  },
+  {
+   "Eliminador": "Paraguai",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0005870580693486757,
+   "Prob no total de copas": 0.000511
+  },
+  {
+   "Eliminador": "Suíça",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.0005767184947417518,
+   "Prob no total de copas": 0.000502
+  },
+  {
+   "Eliminador": "Egito",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0005767184947417518,
+   "Prob no total de copas": 0.000502
+  },
+  {
+   "Eliminador": "Catar",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.0005411044044290142,
+   "Prob no total de copas": 0.000471
+  },
+  {
+   "Eliminador": "Suécia",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.0005227229384611496,
+   "Prob no total de copas": 0.000455
+  },
+  {
+   "Eliminador": "Paraguai",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.0005054903141162765,
+   "Prob no total de copas": 0.00044
+  },
+  {
+   "Eliminador": "Irã",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0004641320156885812,
+   "Prob no total de copas": 0.000404
+  },
+  {
+   "Eliminador": "Jordânia",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0004549412827046489,
+   "Prob no total de copas": 0.000396
+  },
+  {
+   "Eliminador": "Estados Unidos",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.0004491970745896912,
+   "Prob no total de copas": 0.000391
+  },
+  {
+   "Eliminador": "Curaçau",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.0004411551832287505,
+   "Prob no total de copas": 0.000384
+  },
+  {
+   "Eliminador": "Turquia",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.0004400063416057589,
+   "Prob no total de copas": 0.000383
+  },
+  {
+   "Eliminador": "Equador",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0004009457264240466,
+   "Prob no total de copas": 0.000349
+  },
+  {
+   "Eliminador": "RD do Congo",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.0003814154188331905,
+   "Prob no total de copas": 0.000332
+  },
+  {
+   "Eliminador": "Suécia",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.0003756712107182328,
+   "Prob no total de copas": 0.000327
+  },
+  {
+   "Eliminador": "Argentina",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.0003618851112423343,
+   "Prob no total de copas": 0.000315
+  },
+  {
+   "Eliminador": "Argélia",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0003423548036514782,
+   "Prob no total de copas": 0.000298
+  },
+  {
+   "Eliminador": "Canadá",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.0003124849214536983,
+   "Prob no total de copas": 0.000272
+  },
+  {
+   "Eliminador": "Cabo Verde",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.0003090383965847236,
+   "Prob no total de copas": 0.000269
+  },
+  {
+   "Eliminador": "Áustria",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.0003044430300927575,
+   "Prob no total de copas": 0.000265
+  },
+  {
+   "Eliminador": "Paraguai",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.0002745731478949775,
+   "Prob no total de copas": 0.000239
+  },
+  {
+   "Eliminador": "Tunísia",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.0002665312565340367,
+   "Prob no total de copas": 0.000232
+  },
+  {
+   "Eliminador": "Costa do Marfim",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.0002642335732880536,
+   "Prob no total de copas": 0.00023
+  },
+  {
+   "Eliminador": "Austrália",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.0002527451570581383,
+   "Prob no total de copas": 0.00022
+  },
+  {
+   "Eliminador": "Coreia do Sul",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0002515963154351467,
+   "Prob no total de copas": 0.000219
+  },
+  {
+   "Eliminador": "Canadá",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.000243554424074206,
+   "Prob no total de copas": 0.000212
+  },
+  {
+   "Eliminador": "Costa do Marfim",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0002424055824512144,
+   "Prob no total de copas": 0.000211
+  },
+  {
+   "Eliminador": "Austrália",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0002424055824512144,
+   "Prob no total de copas": 0.000211
+  },
+  {
+   "Eliminador": "Tcheca",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0002412567408282229,
+   "Prob no total de copas": 0.00021
+  },
+  {
+   "Eliminador": "Escócia",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.0002412567408282229,
+   "Prob no total de copas": 0.00021
+  },
+  {
+   "Eliminador": "Gana",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.0002274706413523245,
+   "Prob no total de copas": 0.000198
+  },
+  {
+   "Eliminador": "Tcheca",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.0002240241164833498,
+   "Prob no total de copas": 0.000195
+  },
+  {
+   "Eliminador": "França",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 0.0002205775916143752,
+   "Prob no total de copas": 0.000192
+  },
+  {
+   "Eliminador": "Bósnia e Herzegovina",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.0002205775916143752,
+   "Prob no total de copas": 0.000192
+  },
+  {
+   "Eliminador": "Iraque",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0002021961256465106,
+   "Prob no total de copas": 0.000176
+  },
+  {
+   "Eliminador": "Bélgica",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.000183814659678646,
+   "Prob no total de copas": 0.00016
+  },
+  {
+   "Eliminador": "Áustria",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.0001711774018257391,
+   "Prob no total de copas": 0.000149
+  },
+  {
+   "Eliminador": "África do Sul",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 0.0001573913023498407,
+   "Prob no total de copas": 0.000137
+  },
+  {
+   "Eliminador": "RD do Congo",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.0001459028861199253,
+   "Prob no total de copas": 0.000127
+  },
+  {
+   "Eliminador": "Panamá",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 0.0001459028861199253,
+   "Prob no total de copas": 0.000127
+  },
+  {
+   "Eliminador": "Tunísia",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.0001413075196279591,
+   "Prob no total de copas": 0.000123
+  },
+  {
+   "Eliminador": "Paraguai",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.0001401586780049676,
+   "Prob no total de copas": 0.000122
+  },
+  {
+   "Eliminador": "Curaçau",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 0.0001378609947589845,
+   "Prob no total de copas": 0.00012
+  },
+  {
+   "Eliminador": "Austrália",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 0.0001355633115130014,
+   "Prob no total de copas": 0.000118
+  },
+  {
+   "Eliminador": "Gana",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 0.0001344144698900099,
+   "Prob no total de copas": 0.000117
+  },
+  {
+   "Eliminador": "Bósnia e Herzegovina",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.0001332656282670184,
+   "Prob no total de copas": 0.000116
+  },
+  {
+   "Eliminador": "Coreia do Sul",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.0001321167866440268,
+   "Prob no total de copas": 0.000115
+  },
+  {
+   "Eliminador": "Iraque",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 0.0001275214201520607,
+   "Prob no total de copas": 0.000111
+  },
+  {
+   "Eliminador": "Espanha",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 9.305617146231455e-05,
+   "Prob no total de copas": 8.1e-05
+  },
+  {
+   "Eliminador": "Panamá",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 9.305617146231455e-05,
+   "Prob no total de copas": 8.1e-05
+  },
+  {
+   "Eliminador": "Holanda",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 8.731196334735686e-05,
+   "Prob no total de copas": 7.6e-05
+  },
+  {
+   "Eliminador": "Egito",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 8.616312172436532e-05,
+   "Prob no total de copas": 7.5e-05
+  },
+  {
+   "Eliminador": "Uzbequistão",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 8.616312172436532e-05,
+   "Prob no total de copas": 7.5e-05
+  },
+  {
+   "Eliminador": "Arábia Saudita",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 8.386543847838225e-05,
+   "Prob no total de copas": 7.3e-05
+  },
+  {
+   "Eliminador": "Cabo Verde",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 8.041891360940764e-05,
+   "Prob no total de copas": 7e-05
+  },
+  {
+   "Eliminador": "África do Sul",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 7.92700719864161e-05,
+   "Prob no total de copas": 6.9e-05
+  },
+  {
+   "Eliminador": "Jordânia",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 7.582354711744149e-05,
+   "Prob no total de copas": 6.6e-05
+  },
+  {
+   "Eliminador": "Uruguai",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 7.352586387145842e-05,
+   "Prob no total de copas": 6.4e-05
+  },
+  {
+   "Eliminador": "Gana",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 7.237702224846686e-05,
+   "Prob no total de copas": 6.3e-05
+  },
+  {
+   "Eliminador": "Japão",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 6.893049737949225e-05,
+   "Prob no total de copas": 6e-05
+  },
+  {
+   "Eliminador": "Egito",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 6.663281413350918e-05,
+   "Prob no total de copas": 5.8e-05
+  },
+  {
+   "Eliminador": "Noruega",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 6.548397251051764e-05,
+   "Prob no total de copas": 5.7e-05
+  },
+  {
+   "Eliminador": "Irã",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 6.088860601855149e-05,
+   "Prob no total de copas": 5.3e-05
+  },
+  {
+   "Eliminador": "Curaçau",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 5.973976439555996e-05,
+   "Prob no total de copas": 5.2e-05
+  },
+  {
+   "Eliminador": "Bélgica",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 5.859092277256842e-05,
+   "Prob no total de copas": 5.1e-05
+  },
+  {
+   "Eliminador": "Haiti",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 5.859092277256842e-05,
+   "Prob no total de copas": 5.1e-05
+  },
+  {
+   "Eliminador": "Argélia",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 5.859092277256842e-05,
+   "Prob no total de copas": 5.1e-05
+  },
+  {
+   "Eliminador": "Argentina",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 5.744208114957688e-05,
+   "Prob no total de copas": 5e-05
+  },
+  {
+   "Eliminador": "Jordânia",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 5.629323952658535e-05,
+   "Prob no total de copas": 4.9e-05
+  },
+  {
+   "Eliminador": "Irã",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 5.629323952658535e-05,
+   "Prob no total de copas": 4.9e-05
+  },
+  {
+   "Eliminador": "Panamá",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 4.710250654265304e-05,
+   "Prob no total de copas": 4.1e-05
+  },
+  {
+   "Eliminador": "Austrália",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 4.135829842769536e-05,
+   "Prob no total de copas": 3.6e-05
+  },
+  {
+   "Eliminador": "Argélia",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 3.676293193572921e-05,
+   "Prob no total de copas": 3.2e-05
+  },
+  {
+   "Eliminador": "Nova Zelândia",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 3.561409031273766e-05,
+   "Prob no total de copas": 3.1e-05
+  },
+  {
+   "Eliminador": "Áustria",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 3.101872382077152e-05,
+   "Prob no total de copas": 2.7e-05
+  },
+  {
+   "Eliminador": "Senegal",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 3.101872382077152e-05,
+   "Prob no total de copas": 2.7e-05
+  },
+  {
+   "Eliminador": "Irã",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 2.872104057478844e-05,
+   "Prob no total de copas": 2.5e-05
+  },
+  {
+   "Eliminador": "Uzbequistão",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 2.872104057478844e-05,
+   "Prob no total de copas": 2.5e-05
+  },
+  {
+   "Eliminador": "Egito",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 2.872104057478844e-05,
+   "Prob no total de copas": 2.5e-05
+  },
+  {
+   "Eliminador": "Jordânia",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 2.75721989517969e-05,
+   "Prob no total de copas": 2.4e-05
+  },
+  {
+   "Eliminador": "Tunísia",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 2.75721989517969e-05,
+   "Prob no total de copas": 2.4e-05
+  },
+  {
+   "Eliminador": "Suécia",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 2.412567408282229e-05,
+   "Prob no total de copas": 2.1e-05
+  },
+  {
+   "Eliminador": "Cabo Verde",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 2.182799083683922e-05,
+   "Prob no total de copas": 1.9e-05
+  },
+  {
+   "Eliminador": "Gana",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 1.83814659678646e-05,
+   "Prob no total de copas": 1.6e-05
+  },
+  {
+   "Eliminador": "Cabo Verde",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 1.608378272188153e-05,
+   "Prob no total de copas": 1.4e-05
+  },
+  {
+   "Eliminador": "Iraque",
+   "Fase": "Top 32",
+   "Prob dado Brasil eliminado": 1.263725785290691e-05,
+   "Prob no total de copas": 1.1e-05
+  },
+  {
+   "Eliminador": "Catar",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 1.263725785290691e-05,
+   "Prob no total de copas": 1.1e-05
+  },
+  {
+   "Eliminador": "Argélia",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 1.148841622991538e-05,
+   "Prob no total de copas": 1e-05
+  },
+  {
+   "Eliminador": "Catar",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 1.148841622991538e-05,
+   "Prob no total de copas": 1e-05
+  },
+  {
+   "Eliminador": "Arábia Saudita",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 1.033957460692384e-05,
+   "Prob no total de copas": 9e-06
+  },
+  {
+   "Eliminador": "Arábia Saudita",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 8.041891360940763e-06,
+   "Prob no total de copas": 7e-06
+  },
+  {
+   "Eliminador": "África do Sul",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 6.893049737949226e-06,
+   "Prob no total de copas": 6e-06
+  },
+  {
+   "Eliminador": "Nova Zelândia",
+   "Fase": "Quartas",
+   "Prob dado Brasil eliminado": 6.893049737949226e-06,
+   "Prob no total de copas": 6e-06
+  },
+  {
+   "Eliminador": "Uzbequistão",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 6.893049737949226e-06,
+   "Prob no total de copas": 6e-06
+  },
+  {
+   "Eliminador": "Panamá",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 6.893049737949226e-06,
+   "Prob no total de copas": 6e-06
+  },
+  {
+   "Eliminador": "Tunísia",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 5.744208114957688e-06,
+   "Prob no total de copas": 5e-06
+  },
+  {
+   "Eliminador": "Nova Zelândia",
+   "Fase": "Oitavas",
+   "Prob dado Brasil eliminado": 4.595366491966151e-06,
+   "Prob no total de copas": 4e-06
+  },
+  {
+   "Eliminador": "Catar",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 4.595366491966151e-06,
+   "Prob no total de copas": 4e-06
+  },
+  {
+   "Eliminador": "África do Sul",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 3.446524868974613e-06,
+   "Prob no total de copas": 3e-06
+  },
+  {
+   "Eliminador": "Curaçau",
+   "Fase": "Semifinal",
+   "Prob dado Brasil eliminado": 3.446524868974613e-06,
+   "Prob no total de copas": 3e-06
+  },
+  {
+   "Eliminador": "Arábia Saudita",
+   "Fase": "Final",
+   "Prob dado Brasil eliminado": 2.297683245983075e-06,
+   "Prob no total de copas": 2e-06
+  }
+ ],
+ "brasil_encontros": []
+}
