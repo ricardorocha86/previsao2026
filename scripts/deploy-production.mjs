@@ -53,6 +53,6 @@ if (localHead !== remoteHead) {
 }
 
 console.log('Árvore limpa e sincronizada. Iniciando deploy de produção...');
-run('vercel', ['--prod', ...process.argv.slice(2)], {
+run('npx', ['--yes', 'vercel@54.14.2', '--prod', ...process.argv.slice(2)], {
   shell: process.platform === 'win32',
 });
