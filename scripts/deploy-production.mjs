@@ -5,7 +5,7 @@ function run(command, args, options = {}) {
     cwd: process.cwd(),
     encoding: 'utf8',
     stdio: options.capture ? 'pipe' : 'inherit',
-    shell: false,
+    shell: options.shell ?? false,
   });
 
   if (result.error) {
@@ -52,6 +52,7 @@ if (localHead !== remoteHead) {
   process.exit(1);
 }
 
-const vercelCommand = process.platform === 'win32' ? 'vercel.cmd' : 'vercel';
 console.log('Árvore limpa e sincronizada. Iniciando deploy de produção...');
-run(vercelCommand, ['--prod']);
+run('vercel', ['--prod', ...process.argv.slice(2)], {
+  shell: process.platform === 'win32',
+});
