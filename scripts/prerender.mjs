@@ -149,14 +149,28 @@ const routes = [
   {
     path: '/caminho-do-hexa',
     changefreq: 'weekly',
-    priority: '0.7',
-    linkLabel: 'Caminho do Hexa',
+    priority: '0.8',
+    linkLabel: 'Hexa — análise atual',
+    title: 'A Copa Mudou de Rosto | Previsão Esportiva',
+    description:
+      'O que a primeira rodada da Copa do Mundo de 2026 mudou nas probabilidades: França assume a ponta, Brasil recua e novas forças entram no mapa.',
+    h1: 'A Copa Mudou de Rosto',
+    body: [
+      'Depois dos 24 jogos da primeira rodada, comparamos um milhão de novas simulações com o retrato anterior ao início da Copa do Mundo de 2026.',
+      'A França assumiu a liderança, Argentina e Inglaterra avançaram, Espanha perdeu a ponta e o Brasil recuou de 8,3% para 6,6% de chance de título.',
+    ],
+  },
+  {
+    path: '/caminho-do-hexa/inicio-da-copa',
+    changefreq: 'monthly',
+    priority: '0.6',
+    linkLabel: 'Hexa — início da Copa',
     title: 'O Caminho Rumo ao Hexa 🇧🇷 | Previsão Esportiva',
     description:
-      'Rodamos a Copa do Mundo de 2026 um milhão de vezes. Uma análise, número por número, do caminho do Brasil rumo ao hexa.',
-    h1: 'O caminho do Brasil rumo ao Hexa',
+      'O retrato de um milhão de simulações antes de a bola rolar na Copa do Mundo de 2026.',
+    h1: 'O caminho do Brasil rumo ao Hexa antes da Copa',
     body: [
-      'Rodamos a Copa do Mundo de 2026 um milhão de vezes. Uma análise, número por número, do caminho do Brasil rumo ao hexa e do que o modelo estatístico revelou sobre o torneio.',
+      'Rodamos a Copa do Mundo de 2026 um milhão de vezes antes de a bola rolar. Esta edição preserva o retrato original do caminho do Brasil rumo ao hexa.',
     ],
   },
 ];

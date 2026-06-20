@@ -8,6 +8,9 @@ import simulacaoGeralBayes from '../assets/simulacao_geral_bayes.json';
 const D3_SRC = 'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
 const TOPOJSON_SRC = 'https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js';
 const WORLD_ATLAS = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json';
+const UK_ADMIN_1 =
+  'https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/9469f09/releaseData/gbOpen/GBR/ADM1/geoBoundaries-GBR-ADM1_simplified.geojson';
+const WESTERN_SAHARA_ID = '732';
 
 function loadScript(src: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -116,6 +119,13 @@ const MapPage: React.FC = () => {
       const cf = defs.append('filter').attr('id', 'mp-champGlow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
       cf.append('feDropShadow').attr('dx', 0).attr('dy', 0).attr('stdDeviation', 2.2)
         .attr('flood-color', '#fff6cf').attr('flood-opacity', 0.95);
+
+      const disputed = defs.append('pattern').attr('id', 'mp-disputed')
+        .attr('width', 6).attr('height', 6).attr('patternUnits', 'userSpaceOnUse')
+        .attr('patternTransform', 'rotate(45)');
+      disputed.append('rect').attr('width', 6).attr('height', 6).attr('fill', '#2f3a44');
+      disputed.append('line').attr('x1', 0).attr('y1', 0).attr('x2', 0).attr('y2', 6)
+        .attr('stroke', '#7c8b95').attr('stroke-width', 1.5).attr('opacity', 0.65);
 
       for (const [k, c] of Object.entries(CONF)) {
         const lg = defs.append('linearGradient').attr('id', 'mp-g-' + k)
@@ -252,6 +262,7 @@ const MapPage: React.FC = () => {
           html += `<div class="mp-item"><span class="mp-swatch" style="background:${(c as any).cor}"></span>${(c as any).nome}</div>`;
         }
         html += `<div class="mp-item"><span class="mp-swatch mp-sw-champ"></span>★ Campeão mundial</div>`;
+        html += `<div class="mp-item"><span class="mp-swatch mp-sw-disputed"></span>Saara Ocidental (território disputado)</div>`;
         html += `<div class="mp-item"><span class="mp-swatch mp-sw-grey"></span>Não classificada</div>`;
         el.innerHTML = html;
       };
@@ -267,7 +278,51 @@ const MapPage: React.FC = () => {
 
       buildLegend();
 
-      const countries = topojson.feature(world, world.objects.countries).features;
+      const worldCountries = topojson.feature(world, world.objects.countries).features;
+      let ukAdmin1: any = null;
+      try {
+        ukAdmin1 = await d3.json(UK_ADMIN_1);
+      } catch (error) {
+        console.warn('[mapa] Não foi possível carregar as divisões do Reino Unido.', error);
+      }
+      if (cancelled) return;
+
+      const reverseRingsForD3 = (geometry: any) => {
+        if (geometry.type === 'Polygon') {
+          return {
+            ...geometry,
+            coordinates: geometry.coordinates.map((ring: any[]) => [...ring].reverse()),
+          };
+        }
+        if (geometry.type === 'MultiPolygon') {
+          return {
+            ...geometry,
+            coordinates: geometry.coordinates.map((polygon: any[][]) =>
+              polygon.map((ring: any[]) => [...ring].reverse())
+            ),
+          };
+        }
+        return geometry;
+      };
+
+      const britishNations = (ukAdmin1?.features || []).map((feature: any) => {
+        const iso = feature.properties.shapeISO;
+        return {
+          ...feature,
+          id: iso === 'GB-ENG' ? '826' : iso,
+          geometry: reverseRingsForD3(feature.geometry),
+          properties: {
+            ...feature.properties,
+            name: feature.properties.shapeName,
+          },
+        };
+      });
+      const countries = britishNations.length > 0
+        ? [
+            ...worldCountries.filter((feature: any) => String(feature.id).padStart(3, '0') !== '826'),
+            ...britishNations,
+          ]
+        : worldCountries;
 
       const EUROPA = [[-12, 35], [30, 60]];
       const SO_EUROPA: Record<string, number[][]> = { '250': EUROPA, '528': EUROPA };
@@ -289,9 +344,11 @@ const MapPage: React.FC = () => {
           return t.titulos > 0 ? 'mp-country mp-team mp-champion' : 'mp-country mp-team';
         })
         .style('fill', (d: any) => {
+          if (String(d.id).padStart(3, '0') === WESTERN_SAHARA_ID) return 'url(#mp-disputed)';
           const t = TEAMS[d.id];
           return t ? `url(#mp-g-${confKey(t.conf)})` : null;
         })
+        .classed('mp-disputed', (d: any) => String(d.id).padStart(3, '0') === WESTERN_SAHARA_ID)
         .attr('d', path)
         .on('mouseenter', onEnter)
         .on('mousemove', onMove)
@@ -390,6 +447,7 @@ const MAP_CSS = `
   transition:fill .25s ease, opacity .25s ease; cursor:default}
 .mp-country.mp-team{cursor:pointer}
 .mp-country.mp-champion{stroke:#fff; stroke-width:0.55px; filter:url(#mp-champGlow)}
+.mp-country.mp-disputed{stroke:#aab6bd; stroke-dasharray:2 1.5}
 .mp-country.mp-dim{opacity:.32}
 .mp-country.mp-hl{stroke:#fff; stroke-width:1.5px; filter:url(#mp-glow)}
 .mp-sphere{fill:url(#mp-ocean)}
@@ -405,6 +463,10 @@ const MAP_CSS = `
 .mp-legend .mp-item{display:flex; align-items:center; gap:8px; font-size:12.5px; font-weight:500; color:#cdd9e2}
 .mp-swatch{width:13px; height:13px; border-radius:4px; flex:0 0 auto; box-shadow:0 0 0 1px rgba(255,255,255,.15)}
 .mp-sw-champ{background:var(--grey); box-shadow:0 0 0 2px #fff, 0 0 9px rgba(255,255,255,.7)}
+.mp-sw-disputed{
+  background:repeating-linear-gradient(45deg,#2f3a44 0 3px,#7c8b95 3px 4px);
+  border:1px dashed #aab6bd;
+}
 .mp-sw-grey{background:var(--grey)}
 
 .mp-card{

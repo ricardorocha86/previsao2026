@@ -24,16 +24,16 @@ const HexaCallout: React.FC<HexaCalloutProps> = ({ onNavigate }) => {
           </div>
 
           <h2 className="font-montserrat text-4xl font-black uppercase leading-[0.92] tracking-tight text-white sm:text-5xl lg:text-6xl">
-            O Caminho Rumo ao
+            A Copa Mudou de
             <span className="block text-brand-neon">
-              Hexa <span className="align-middle">🇧🇷</span>
+              Rosto <span className="align-middle">🇧🇷</span>
             </span>
           </h2>
 
           <p className="mt-5 max-w-xl text-base leading-relaxed text-white/65 md:text-lg">
-            Rodamos a Copa do Mundo de 2026 <strong className="font-semibold text-white">um milhão de vezes</strong>.
-            Veja, número por número, até onde o Brasil chega, quem são os carrascos da Seleção e o
-            que o modelo revelou sobre o favoritismo, as zebras e a taça.
+            Depois dos primeiros 24 jogos, rodamos a Copa novamente <strong className="font-semibold text-white">um milhão de vezes</strong>.
+            Veja quem ganhou força, onde o Brasil perdeu terreno e como a primeira rodada redesenhou
+            os grupos, o mata-mata e a corrida pela taça.
           </p>
 
           <button
@@ -50,7 +50,7 @@ const HexaCallout: React.FC<HexaCalloutProps> = ({ onNavigate }) => {
         <button
           type="button"
           onClick={onNavigate}
-          aria-label="Abrir a análise O Caminho Rumo ao Hexa"
+          aria-label="Abrir a análise A Copa Mudou de Rosto"
           className="group order-1 block w-full overflow-hidden rounded-3xl border border-brand-neon/20 shadow-2xl transition-transform duration-500 hover:scale-[1.02] lg:order-2"
         >
           <HexaArt className="block w-full" />

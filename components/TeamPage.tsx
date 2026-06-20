@@ -4,16 +4,8 @@ import { RESEARCHERS } from '../data/researchers';
 import { Researcher } from '../types';
 import { Users } from 'lucide-react';
 import PageHeader from './PageHeader';
-
-const INSTITUTIONS = [
-  { abbr: 'USP', name: 'Universidade de São Paulo' },
-  { abbr: 'UFBA', name: 'Universidade Federal da Bahia' },
-  { abbr: 'UFSCar', name: 'Universidade Federal de São Carlos' },
-  { abbr: 'UFMT', name: 'Universidade Federal de Mato Grosso' },
-  { abbr: 'UFRJ', name: 'Universidade Federal do Rio de Janeiro' },
-  { abbr: 'UFPR', name: 'Universidade Federal do Paraná' },
-  { abbr: 'NEOMA', name: 'NEOMA Business School' },
-];
+import InstitutionLogos from './InstitutionLogos';
+import { PARTNER_INSTITUTIONS, RESEARCH_CENTERS } from '../data/institutions';
 
 const LinkedinIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -147,25 +139,24 @@ const TeamPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Instituições */}
-        <div>
+        {/* Centros e instituições */}
+        <div className="space-y-14">
           <div className="w-full h-px bg-gray-200 mb-10" />
-          <p className="font-exo-italic text-brand-green text-base mb-1 uppercase tracking-widest">Parceiros</p>
-          <div className="w-10 h-0.5 bg-brand-green mb-8" />
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">
-            {INSTITUTIONS.map((inst) => (
-              <div
-                key={inst.abbr}
-                className="flex min-h-[118px] flex-col items-center justify-center gap-1 bg-white px-3 py-4 text-center border border-gray-100 rounded-xl hover:border-brand-green transition-colors"
-              >
-                <span className="font-montserrat font-bold text-brand-dark text-lg uppercase">
-                  {inst.abbr}
-                </span>
-                <span className="font-opensans text-gray-400 text-xs text-center max-w-[140px]">
-                  {inst.name}
-                </span>
-              </div>
-            ))}
+
+          <div>
+            <p className="font-exo-italic text-brand-green text-base mb-1 uppercase tracking-widest">
+              Centros de pesquisa
+            </p>
+            <div className="w-10 h-0.5 bg-brand-green mb-8" />
+            <InstitutionLogos institutions={RESEARCH_CENTERS} />
+          </div>
+
+          <div>
+            <p className="font-exo-italic text-brand-green text-base mb-1 uppercase tracking-widest">
+              Instituições associadas
+            </p>
+            <div className="w-10 h-0.5 bg-brand-green mb-8" />
+            <InstitutionLogos institutions={PARTNER_INSTITUTIONS} />
           </div>
         </div>
 

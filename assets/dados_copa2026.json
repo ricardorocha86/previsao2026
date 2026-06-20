@@ -1,5 +1,5 @@
 {
-  "_descricao": "48 seleções da Copa do Mundo 2026. Chave de 'selecoes' = código ISO 3166-1 numérico (mesmo do mapa world-atlas). iso2 = código da bandeira (flagcdn.com). conf = confederação. prob = probabilidade estimada de ser campeã (%), vinda da simulação pré-torneio da Previsão Esportiva (coluna 'Campeão'). Escócia não tem código numérico próprio (faz parte do Reino Unido no mapa), então a chave 'GB-SCT' não casa com nenhum polígono e ela não é desenhada — mas continua na base para totalizar 48.",
+  "_descricao": "48 seleções da Copa do Mundo 2026. Chave de 'selecoes' = código ISO 3166-1 numérico (mesmo do mapa world-atlas), exceto Escócia, identificada por GB-SCT. Inglaterra e Escócia usam polígonos administrativos próprios no mapa. iso2 = código da bandeira (flagcdn.com). conf = confederação. prob = probabilidade estimada de ser campeã (%), vinda da simulação pré-torneio da Previsão Esportiva (coluna 'Campeão').",
 
   "confederacoes": {
     "UEFA":     { "nome": "UEFA · Europa",               "cor": "#4ea8ff" },

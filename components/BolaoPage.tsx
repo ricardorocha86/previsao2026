@@ -438,13 +438,127 @@ const resolvedWinner = (match: CupMatch, prediction?: MatchPrediction) => {
 const isResolved = (match: CupMatch, prediction?: MatchPrediction) =>
   match.stage === 'groups' ? hasScore(prediction) : resolvedWinner(match, prediction) !== null;
 
-const sortStandings = <T extends StandingRow>(rows: T[]): T[] =>
+const sortOverallStandings = <T extends StandingRow>(rows: T[]): T[] =>
   [...rows].sort((a, b) => {
     if (b.points !== a.points) return b.points - a.points;
     if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
     if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
     return a.team.localeCompare(b.team);
   });
+
+interface HeadToHeadStats {
+  points: number;
+  goalDifference: number;
+  goalsFor: number;
+}
+
+const calculateHeadToHeadStats = (
+  tiedRows: StandingRow[],
+  matches: CupMatch[],
+  predictions: Record<string, MatchPrediction>,
+) => {
+  const tiedTeams = new Set(tiedRows.map((row) => row.team));
+  const stats = new Map<string, HeadToHeadStats>(
+    tiedRows.map((row) => [
+      row.team,
+      { points: 0, goalDifference: 0, goalsFor: 0 },
+    ]),
+  );
+
+  matches.forEach((match) => {
+    if (!tiedTeams.has(match.homeTeam) || !tiedTeams.has(match.awayTeam)) return;
+
+    const prediction = predictions[match.id];
+    if (!hasScore(prediction)) return;
+
+    const home = stats.get(match.homeTeam);
+    const away = stats.get(match.awayTeam);
+    if (!home || !away) return;
+
+    const homeGoals = prediction.homeGoals ?? 0;
+    const awayGoals = prediction.awayGoals ?? 0;
+    home.goalsFor += homeGoals;
+    away.goalsFor += awayGoals;
+    home.goalDifference += homeGoals - awayGoals;
+    away.goalDifference += awayGoals - homeGoals;
+
+    if (homeGoals > awayGoals) {
+      home.points += 3;
+    } else if (awayGoals > homeGoals) {
+      away.points += 3;
+    } else {
+      home.points += 1;
+      away.points += 1;
+    }
+  });
+
+  return stats;
+};
+
+const sameHeadToHeadStats = (left: HeadToHeadStats, right: HeadToHeadStats) =>
+  left.points === right.points &&
+  left.goalDifference === right.goalDifference &&
+  left.goalsFor === right.goalsFor;
+
+const rankTiedGroupRows = (
+  tiedRows: StandingRow[],
+  matches: CupMatch[],
+  predictions: Record<string, MatchPrediction>,
+): StandingRow[] => {
+  if (tiedRows.length <= 1) return tiedRows;
+
+  const stats = calculateHeadToHeadStats(tiedRows, matches, predictions);
+  const sorted = [...tiedRows].sort((a, b) => {
+    const statsA = stats.get(a.team)!;
+    const statsB = stats.get(b.team)!;
+    if (statsB.points !== statsA.points) return statsB.points - statsA.points;
+    if (statsB.goalDifference !== statsA.goalDifference) {
+      return statsB.goalDifference - statsA.goalDifference;
+    }
+    if (statsB.goalsFor !== statsA.goalsFor) return statsB.goalsFor - statsA.goalsFor;
+    return 0;
+  });
+
+  const equalBlocks: StandingRow[][] = [];
+  sorted.forEach((row) => {
+    const currentBlock = equalBlocks[equalBlocks.length - 1];
+    if (
+      !currentBlock ||
+      !sameHeadToHeadStats(stats.get(currentBlock[0].team)!, stats.get(row.team)!)
+    ) {
+      equalBlocks.push([row]);
+    } else {
+      currentBlock.push(row);
+    }
+  });
+
+  return equalBlocks.flatMap((block) => {
+    if (block.length === 1) return block;
+
+    // A FIFA reaplica os critérios de confronto direto somente entre as equipes
+    // que continuaram empatadas. Se nenhuma equipe foi separada, segue para os
+    // critérios gerais: saldo de gols e gols marcados em todo o grupo.
+    if (block.length < tiedRows.length) {
+      return rankTiedGroupRows(block, matches, predictions);
+    }
+    return sortOverallStandings(block);
+  });
+};
+
+const rankGroupStandings = (
+  rows: StandingRow[],
+  matches: CupMatch[],
+  predictions: Record<string, MatchPrediction>,
+) => {
+  const rowsByPoints = new Map<number, StandingRow[]>();
+  rows.forEach((row) => {
+    rowsByPoints.set(row.points, [...(rowsByPoints.get(row.points) ?? []), row]);
+  });
+
+  return [...rowsByPoints.keys()]
+    .sort((a, b) => b - a)
+    .flatMap((points) => rankTiedGroupRows(rowsByPoints.get(points)!, matches, predictions));
+};
 
 const calculateGroupStandings = (matches: CupMatch[], predictions: Record<string, MatchPrediction>) => {
   const rows = new Map<string, StandingRow>();
@@ -503,7 +617,7 @@ const calculateGroupStandings = (matches: CupMatch[], predictions: Record<string
     away.goalDifference = away.goalsFor - away.goalsAgainst;
   });
 
-  return sortStandings(Array.from(rows.values()));
+  return rankGroupStandings(Array.from(rows.values()), matches, predictions);
 };
 
 const calculateAllStandings = (predictions: Record<string, MatchPrediction>) =>
@@ -536,8 +650,8 @@ const calculateQualifiers = (standings: Record<string, StandingRow[]>) => {
     }
   });
 
-  const bestThirds = sortStandings(thirdPlaced).slice(0, 8);
-  return sortStandings([...firstAndSecond, ...bestThirds]).map((team, index) => ({
+  const bestThirds = sortOverallStandings(thirdPlaced).slice(0, 8);
+  return sortOverallStandings([...firstAndSecond, ...bestThirds]).map((team, index) => ({
     ...team,
     seedRank: index + 1,
   }));
@@ -722,8 +836,8 @@ const buildBracket = (standings: Record<string, StandingRow[]>, predictions: Rec
     }
   });
 
-  const bestThirds = sortStandings(thirdPlaced).slice(0, 8);
-  const qualifiers = sortStandings([...firstAndSecond, ...bestThirds]);
+  const bestThirds = sortOverallStandings(thirdPlaced).slice(0, 8);
+  const qualifiers = sortOverallStandings([...firstAndSecond, ...bestThirds]);
 
   // Match the 8 qualified third-placed teams to the 8 slots
   const slots = [

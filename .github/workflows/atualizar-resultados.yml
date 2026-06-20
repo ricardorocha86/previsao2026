@@ -10,11 +10,18 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: atualizar-resultados-main
+  cancel-in-progress: false
+
 jobs:
   atualizar:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -27,10 +34,14 @@ jobs:
         run: git clone --depth 1 https://github.com/ricardorocha86/previsao2026app _app
 
       - name: Atualiza resultados_jogos.json
-        run: >
-          python _app/extracao/atualizar_resultados.py
-          --saidas assets/resultados_jogos.json
-          --previsoes assets/previsoes_jogos.json
+        run: |
+          # Garante que a extração sempre parte do estado mais recente publicado
+          # no GitHub. Um push concorrente fará o job falhar com segurança, sem
+          # reescrever histórico.
+          git pull --ff-only origin main
+          python _app/extracao/atualizar_resultados.py \
+            --saidas assets/resultados_jogos.json \
+            --previsoes assets/previsoes_jogos.json
 
       - name: Commit + push (só se mudou)
         run: |
@@ -39,7 +50,7 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add assets/resultados_jogos.json
             git commit -m "Atualiza resultados da Copa (automático)"
-            git push
+            git push origin HEAD:main
           else
             echo "Nada mudou — nenhum jogo novo encerrado."
           fi

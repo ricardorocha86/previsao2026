@@ -4,6 +4,7 @@ import {
   ArrowRight, Flag, Swords, MapPin, Dices, Flame, Activity,
 } from 'lucide-react';
 import PageHeader from './PageHeader';
+import ReportEditionSelector from './ReportEditionSelector';
 
 /* ------------------------------------------------------------------ */
 /*  DADOS — retrato INÍCIO DA COPA (11/06/2026) · 1.000.000 de Copas    */
@@ -375,6 +376,7 @@ const HexaPage: React.FC = () => {
         noBreak
         description="Rodamos a Copa do Mundo de 2026 um milhão de vezes na véspera da estreia. Estas são as histórias — e os números — que saíram de dentro do nosso modelo."
       />
+      <ReportEditionSelector current="inicio-copa" />
 
       {/* LEAD */}
       <section className="border-b border-brand-dark/10 bg-white">

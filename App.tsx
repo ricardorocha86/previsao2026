@@ -6,10 +6,12 @@ import HomeOverview from './components/HomeOverview';
 import HexaCallout from './components/HexaCallout';
 import MediaHighlight from './components/MediaHighlight';
 import LegalModal, { LegalTab } from './components/LegalModal';
+import InstitutionLogos from './components/InstitutionLogos';
 import { Analytics } from '@vercel/analytics/react';
 import resultadosJogos from './assets/resultados_jogos.json';
+import { PARTNER_INSTITUTIONS, RESEARCH_CENTERS } from './data/institutions';
 
-type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa';
+type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa' | 'hexa-inicio' | 'pos-rodada';
 
 const WorldCupHub = lazy(() => import('./components/WorldCupHub'));
 const MapPage = lazy(() => import('./components/MapPage'));
@@ -20,6 +22,7 @@ const SciencePage = lazy(() => import('./components/SciencePage'));
 const MediaPage = lazy(() => import('./components/MediaPage'));
 const MethodologyPage = lazy(() => import('./components/MethodologyPage'));
 const HexaPage = lazy(() => import('./components/HexaPage'));
+const PostRoundPage = lazy(() => import('./components/PostRoundPage'));
 
 const ROUTES: Record<ViewState, string> = {
   home: '/',
@@ -32,6 +35,8 @@ const ROUTES: Record<ViewState, string> = {
   media: '/midia',
   team: '/equipe',
   hexa: '/caminho-do-hexa',
+  'hexa-inicio': '/caminho-do-hexa/inicio-da-copa',
+  'pos-rodada': '/a-copa-mudou-de-rosto',
 };
 
 const SITE_ORIGIN = 'https://www.previsaoesportiva.com.br';
@@ -119,8 +124,16 @@ const PAGE_META: Record<ViewState, { title: string; description: string }> = {
     description: 'Conheça os pesquisadores e as instituições por trás do projeto Previsão Esportiva.',
   },
   hexa: {
+    title: 'A Copa Mudou de Rosto | Previsão Esportiva',
+    description: 'O que a primeira rodada da Copa do Mundo de 2026 mudou nas probabilidades: França assume a ponta, Brasil recua e novas forças entram no mapa.',
+  },
+  'hexa-inicio': {
     title: 'O Caminho Rumo ao Hexa 🇧🇷 | Previsão Esportiva',
-    description: 'Rodamos a Copa do Mundo de 2026 um milhão de vezes. Uma análise, número por número, do caminho do Brasil rumo ao hexa e do que o modelo revelou sobre o torneio.',
+    description: 'O retrato de um milhão de simulações antes de a bola rolar na Copa do Mundo de 2026.',
+  },
+  'pos-rodada': {
+    title: 'A Copa Mudou de Rosto | Previsão Esportiva',
+    description: 'O que a primeira rodada da Copa do Mundo de 2026 mudou nas probabilidades: França assume a ponta, Brasil recua e novas forças entram no mapa.',
   },
 };
 
@@ -142,6 +155,7 @@ const PROJECT_NAV_ITEMS: Array<{ view: ViewState; label: string; mobileLabel?: s
 const getViewFromLocation = (): ViewState => {
   const hashPath = window.location.hash.startsWith('#/') ? window.location.hash.slice(1) : '';
   const currentPath = hashPath || window.location.pathname;
+  if (currentPath === '/a-copa-mudou-de-rosto') return 'hexa';
   return (Object.entries(ROUTES).find(([, path]) => path === currentPath)?.[0] as ViewState) || 'home';
 };
 
@@ -393,7 +407,8 @@ export default function App() {
             {currentView === 'science' && <SciencePage />}
             {currentView === 'media' && <MediaPage />}
             {currentView === 'methodology' && <MethodologyPage />}
-            {currentView === 'hexa' && <HexaPage />}
+            {(currentView === 'hexa' || currentView === 'pos-rodada') && <PostRoundPage />}
+            {currentView === 'hexa-inicio' && <HexaPage />}
           </Suspense>
         )}
       </main>
@@ -473,19 +488,10 @@ export default function App() {
 
         <div className="border-t border-brand-dark/10">
           <div className="max-w-[1080px] mx-auto px-4 py-8">
-            <p className="mb-4 font-montserrat text-[11px] font-bold uppercase tracking-widest text-brand-dark/40">
-              Instituições parceiras
+            <p className="mb-5 font-montserrat text-[11px] font-bold uppercase tracking-widest text-brand-dark/35">
+              Centros e instituições associadas
             </p>
-            <div className="flex flex-wrap gap-2.5">
-              {['USP', 'UFBA', 'UFMT', 'UFRJ', 'UFPR', 'UFSCar', 'NEOMA Business School'].map((inst) => (
-                <span
-                  key={inst}
-                  className="rounded-lg border border-brand-dark/10 bg-brand-light px-3 py-2 font-montserrat text-xs font-bold uppercase tracking-wide text-brand-dark/55"
-                >
-                  {inst}
-                </span>
-              ))}
-            </div>
+            <InstitutionLogos institutions={[...RESEARCH_CENTERS, ...PARTNER_INSTITUTIONS]} compact />
           </div>
         </div>
 

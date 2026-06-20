@@ -3,10 +3,14 @@ import React, { useState, useMemo } from 'react';
 import { Trophy, Search, ArrowUpDown, ArrowUp, ArrowDown, Clock, CalendarDays, MapPin, TrendingUp, Network, ChevronLeft, ChevronRight } from 'lucide-react';
 import simulacaoGeral from '../assets/simulacao_geral.json';
 import simulacaoGeralInicioCopa from '../assets/simulacao_geral_inicio_copa.json';
+import simulacaoGeralPosRodada1 from '../assets/simulacao_geral_pos_rodada1.json';
 import simulacaoGeralBayes from '../assets/simulacao_geral_bayes.json';
+import simulacaoGeralBayesPreTorneio from '../assets/simulacao_geral_bayes_pre_torneio.json';
 import previsoesJogos from '../assets/previsoes_jogos.json';
 import previsoesJogosInicioCopa from '../assets/previsoes_jogos_inicio_copa.json';
+import previsoesJogosPosRodada1 from '../assets/previsoes_jogos_pos_rodada1.json';
 import previsoesJogosBayes from '../assets/previsoes_jogos_bayes.json';
+import previsoesJogosBayesPreTorneio from '../assets/previsoes_jogos_bayes_pre_torneio.json';
 import resultadosJogos from '../assets/resultados_jogos.json';
 import flags from '../assets/flags.json';
 import PageHeader from './PageHeader';
@@ -18,21 +22,29 @@ const GROUP_STYLE = {
   border: 'rgba(32,153,39,0.24)',
 };
 
-type StageId = 'inicio-copa' | 'pre-convocacao';
+type StageId = 'inicio-copa' | 'pre-convocacao' | 'fim-rodada1';
+type BayesStageId = 'bayes-pre-torneio' | 'bayes-fim-rodada1';
 
 // Etapas da simulação do Modelo de Força (Metodologia 1), em ordem cronológica.
 const STAGES: Array<{ id: StageId; label: string; date: string; data: any[]; jogos: any[] }> = [
   { id: 'pre-convocacao', label: 'Pré-Convocação', date: '11/05/2026', data: simulacaoGeral as any[], jogos: previsoesJogos as any[] },
   { id: 'inicio-copa', label: 'Início da Copa', date: '11/06/2026', data: simulacaoGeralInicioCopa as any[], jogos: previsoesJogosInicioCopa as any[] },
+  { id: 'fim-rodada1', label: 'Fim da 1ª Rodada', date: '17/06/2026', data: simulacaoGeralPosRodada1 as any[], jogos: previsoesJogosPosRodada1 as any[] },
+];
+
+// Etapas da simulação Bayesiana (Metodologia 2), em ordem cronológica.
+const BAYES_STAGES: Array<{ id: BayesStageId; label: string; date: string; data: any[]; jogos: any[] }> = [
+  { id: 'bayes-pre-torneio', label: 'Pré-Torneio', date: '30/04/2026', data: simulacaoGeralBayesPreTorneio as any[], jogos: previsoesJogosBayesPreTorneio as any[] },
+  { id: 'bayes-fim-rodada1', label: 'Fim da 1ª Rodada', date: '17/06/2026', data: simulacaoGeralBayes as any[], jogos: previsoesJogosBayes as any[] },
 ];
 
 // Etapa exibida por padrão: a mais recente já disponível.
-const DEFAULT_STAGE_ID: StageId = 'inicio-copa';
+const DEFAULT_STAGE_ID: StageId = 'fim-rodada1';
+const DEFAULT_BAYES_STAGE_ID: BayesStageId = 'bayes-fim-rodada1';
 
 // Etapas futuras em que o modelo ainda será rodado — exibidas desabilitadas até a simulação existir.
 // Datas conforme o calendário oficial da Copa 2026 (fim de cada rodada/fase).
 const UPCOMING_STAGES: Array<{ label: string; date: string }> = [
-  { label: 'Fim da 1ª Rodada', date: '17/06/2026' },
   { label: 'Fim da 2ª Rodada', date: '23/06/2026' },
   { label: 'Fim da Fase de Grupos', date: '27/06/2026' },
   { label: 'Fim dos 16-avos', date: '03/07/2026' },
@@ -208,6 +220,7 @@ type ViewMode = 'data' | 'grupos';
 const WorldCupHub: React.FC = () => {
   const [methodology, setMethodology] = useState<1 | 2>(1);
   const [stageId, setStageId] = useState<StageId>(DEFAULT_STAGE_ID);
+  const [bayesStageId, setBayesStageId] = useState<BayesStageId>(DEFAULT_BAYES_STAGE_ID);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchTermJogos, setSearchTermJogos] = useState('');
   const [selectedGroup, setSelectedGroup] = useState('Grupo A');
@@ -220,8 +233,9 @@ const WorldCupHub: React.FC = () => {
   });
 
   const currentStage = STAGES.find((s) => s.id === stageId) ?? STAGES[STAGES.length - 1];
-  const currentSimulacaoGeral = methodology === 1 ? currentStage.data : simulacaoGeralBayes;
-  const currentPrevisoesJogos = methodology === 1 ? currentStage.jogos : previsoesJogosBayes;
+  const currentBayesStage = BAYES_STAGES.find((s) => s.id === bayesStageId) ?? BAYES_STAGES[BAYES_STAGES.length - 1];
+  const currentSimulacaoGeral = methodology === 1 ? currentStage.data : currentBayesStage.data;
+  const currentPrevisoesJogos = methodology === 1 ? currentStage.jogos : currentBayesStage.jogos;
   const theme = useMemo(() => {
     if (methodology === 1) {
       return {
@@ -485,9 +499,9 @@ const WorldCupHub: React.FC = () => {
             <div className="max-w-4xl">
               {/* Fonte fluida com teto calibrado para "Pré-Convocação" (rótulo mais largo) caber sem quebra de linha */}
               <h2 className="text-[length:clamp(1.5rem,5.5vw,3.2rem)] whitespace-nowrap font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none mb-4">
-                Simulação <span className={`${theme.accentText} italic`}>{methodology === 1 ? currentStage.label : 'Pré-Torneio'}</span>
+                Simulação <span className={`${theme.accentText} italic`}>{methodology === 1 ? currentStage.label : currentBayesStage.label}</span>
               </h2>
-              <p className="text-brand-dark/50 font-light text-lg font-opensans">Simulação realizada em {methodology === 1 ? currentStage.date : '30/04/2026'}. O torneio foi simulado 1 milhão de vezes e as probabilidades representam a frequência dos acontecimentos.</p>
+              <p className="text-brand-dark/50 font-light text-lg font-opensans">Simulação realizada em {methodology === 1 ? currentStage.date : currentBayesStage.date}. O torneio foi simulado 1 milhão de vezes e as probabilidades representam a frequência dos acontecimentos.</p>
               {methodology === 1 && (
                 <div className="mt-6">
                   <span className="block text-[10px] font-montserrat font-black uppercase tracking-[0.25em] text-brand-dark/40 mb-2">Etapa da simulação</span>
@@ -501,6 +515,42 @@ const WorldCupHub: React.FC = () => {
                           borderColor: stageId === s.id ? theme.accent : theme.accentBorder,
                           color: stageId === s.id ? '#ffffff' : theme.accent,
                           backgroundColor: stageId === s.id ? theme.accent : '#ffffff',
+                        }}
+                      >
+                        {s.label} · {s.date}
+                      </button>
+                    ))}
+                    {UPCOMING_STAGES.map((s) => (
+                      <button
+                        key={s.label}
+                        disabled
+                        title="Em breve — o modelo será rodado ao fim desta etapa"
+                        className="px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest border-2 shadow-sm cursor-not-allowed"
+                        style={{
+                          borderColor: 'rgba(42,52,46,0.12)',
+                          color: 'rgba(42,52,46,0.35)',
+                          backgroundColor: 'rgba(42,52,46,0.04)',
+                        }}
+                      >
+                        {s.label} · {s.date}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {methodology === 2 && (
+                <div className="mt-6">
+                  <span className="block text-[10px] font-montserrat font-black uppercase tracking-[0.25em] text-brand-dark/40 mb-2">Etapa da simulação</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    {BAYES_STAGES.map((s) => (
+                      <button
+                        key={s.id}
+                        onClick={() => setBayesStageId(s.id)}
+                        className="px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest border-2 transition-all shadow-sm"
+                        style={{
+                          borderColor: bayesStageId === s.id ? theme.accent : theme.accentBorder,
+                          color: bayesStageId === s.id ? '#ffffff' : theme.accent,
+                          backgroundColor: bayesStageId === s.id ? theme.accent : '#ffffff',
                         }}
                       >
                         {s.label} · {s.date}
