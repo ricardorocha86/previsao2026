@@ -151,6 +151,20 @@ const routes = [
     changefreq: 'weekly',
     priority: '0.8',
     linkLabel: 'Hexa — análise atual',
+    title: 'O Hexa Ficou Mais Difícil | Previsão Esportiva',
+    description:
+      'Após a segunda rodada, o Brasil chega a 100% de classificação nas simulações, mas cai para 5,3% de chance de título; Argentina sobe e França mantém a liderança.',
+    h1: 'O Hexa ficou mais difícil',
+    body: [
+      'Depois dos 48 jogos das duas primeiras rodadas, comparamos um milhão de novas simulações com o retrato de 18 de junho.',
+      'O Brasil chegou a 100% de classificação nas simulações, mas caiu de 6,6% para 5,3% de chance de título. A Argentina subiu para 13,3% e a França manteve a liderança.',
+    ],
+  },
+  {
+    path: '/a-copa-mudou-de-rosto',
+    changefreq: 'monthly',
+    priority: '0.6',
+    linkLabel: 'Hexa — fim da primeira rodada',
     title: 'A Copa Mudou de Rosto | Previsão Esportiva',
     description:
       'O que a primeira rodada da Copa do Mundo de 2026 mudou nas probabilidades: França assume a ponta, Brasil recua e novas forças entram no mapa.',

@@ -41,6 +41,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://www.previsaoesportiva.com.br/a-copa-mudou-de-rosto</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.previsaoesportiva.com.br/pesquisa</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

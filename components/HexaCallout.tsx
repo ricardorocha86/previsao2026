@@ -24,16 +24,16 @@ const HexaCallout: React.FC<HexaCalloutProps> = ({ onNavigate }) => {
           </div>
 
           <h2 className="font-montserrat text-4xl font-black uppercase leading-[0.92] tracking-tight text-white sm:text-5xl lg:text-6xl">
-            A Copa Mudou de
+            O Hexa Ficou
             <span className="block text-brand-neon">
-              Rosto <span className="align-middle">🇧🇷</span>
+              Mais Difícil. <span className="align-middle">🇧🇷</span>
             </span>
           </h2>
 
           <p className="mt-5 max-w-xl text-base leading-relaxed text-white/65 md:text-lg">
-            Depois dos primeiros 24 jogos, rodamos a Copa novamente <strong className="font-semibold text-white">um milhão de vezes</strong>.
-            Veja quem ganhou força, onde o Brasil perdeu terreno e como a primeira rodada redesenhou
-            os grupos, o mata-mata e a corrida pela taça.
+            Depois de 48 jogos, rodamos a Copa novamente <strong className="font-semibold text-white">um milhão de vezes</strong>.
+            O Brasil chegou a 100% de classificação nas simulações, mas caiu para 5,3% de chance
+            de título. Entenda como a segunda rodada apertou o caminho do Hexa.
           </p>
 
           <button
@@ -50,7 +50,7 @@ const HexaCallout: React.FC<HexaCalloutProps> = ({ onNavigate }) => {
         <button
           type="button"
           onClick={onNavigate}
-          aria-label="Abrir a análise A Copa Mudou de Rosto"
+          aria-label="Abrir a análise O Hexa Ficou Mais Difícil"
           className="group order-1 block w-full overflow-hidden rounded-3xl border border-brand-neon/20 shadow-2xl transition-transform duration-500 hover:scale-[1.02] lg:order-2"
         >
           <HexaArt className="block w-full" />

@@ -23,6 +23,7 @@ const MediaPage = lazy(() => import('./components/MediaPage'));
 const MethodologyPage = lazy(() => import('./components/MethodologyPage'));
 const HexaPage = lazy(() => import('./components/HexaPage'));
 const PostRoundPage = lazy(() => import('./components/PostRoundPage'));
+const SecondRoundPage = lazy(() => import('./components/SecondRoundPage'));
 
 const ROUTES: Record<ViewState, string> = {
   home: '/',
@@ -124,8 +125,8 @@ const PAGE_META: Record<ViewState, { title: string; description: string }> = {
     description: 'Conheça os pesquisadores e as instituições por trás do projeto Previsão Esportiva.',
   },
   hexa: {
-    title: 'A Copa Mudou de Rosto | Previsão Esportiva',
-    description: 'O que a primeira rodada da Copa do Mundo de 2026 mudou nas probabilidades: França assume a ponta, Brasil recua e novas forças entram no mapa.',
+    title: 'O Hexa Ficou Mais Difícil | Previsão Esportiva',
+    description: 'Após a segunda rodada, o Brasil chega a 100% de classificação nas simulações, mas cai para 5,3% de chance de título; Argentina sobe e França mantém a liderança.',
   },
   'hexa-inicio': {
     title: 'O Caminho Rumo ao Hexa 🇧🇷 | Previsão Esportiva',
@@ -155,7 +156,7 @@ const PROJECT_NAV_ITEMS: Array<{ view: ViewState; label: string; mobileLabel?: s
 const getViewFromLocation = (): ViewState => {
   const hashPath = window.location.hash.startsWith('#/') ? window.location.hash.slice(1) : '';
   const currentPath = hashPath || window.location.pathname;
-  if (currentPath === '/a-copa-mudou-de-rosto') return 'hexa';
+  if (currentPath === '/a-copa-mudou-de-rosto') return 'pos-rodada';
   return (Object.entries(ROUTES).find(([, path]) => path === currentPath)?.[0] as ViewState) || 'home';
 };
 
@@ -407,7 +408,8 @@ export default function App() {
             {currentView === 'science' && <SciencePage />}
             {currentView === 'media' && <MediaPage />}
             {currentView === 'methodology' && <MethodologyPage />}
-            {(currentView === 'hexa' || currentView === 'pos-rodada') && <PostRoundPage />}
+            {currentView === 'hexa' && <SecondRoundPage />}
+            {currentView === 'pos-rodada' && <PostRoundPage />}
             {currentView === 'hexa-inicio' && <HexaPage />}
           </Suspense>
         )}
