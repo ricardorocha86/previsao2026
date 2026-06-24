@@ -4,11 +4,13 @@ import { Trophy, Search, ArrowUpDown, ArrowUp, ArrowDown, Clock, CalendarDays, M
 import simulacaoGeral from '../assets/simulacao_geral.json';
 import simulacaoGeralInicioCopa from '../assets/simulacao_geral_inicio_copa.json';
 import simulacaoGeralPosRodada1 from '../assets/simulacao_geral_pos_rodada1.json';
+import simulacaoGeralPosRodada2 from '../assets/simulacao_geral_pos_rodada2.json';
 import simulacaoGeralBayes from '../assets/simulacao_geral_bayes.json';
 import simulacaoGeralBayesPreTorneio from '../assets/simulacao_geral_bayes_pre_torneio.json';
 import previsoesJogos from '../assets/previsoes_jogos.json';
 import previsoesJogosInicioCopa from '../assets/previsoes_jogos_inicio_copa.json';
 import previsoesJogosPosRodada1 from '../assets/previsoes_jogos_pos_rodada1.json';
+import previsoesJogosPosRodada2 from '../assets/previsoes_jogos_pos_rodada2.json';
 import previsoesJogosBayes from '../assets/previsoes_jogos_bayes.json';
 import previsoesJogosBayesPreTorneio from '../assets/previsoes_jogos_bayes_pre_torneio.json';
 import resultadosJogos from '../assets/resultados_jogos.json';
@@ -16,9 +18,10 @@ import flags from '../assets/flags.json';
 import analisePreConvocacao from '../assets/analise_pre_convocacao.json';
 import analiseInicioCopa from '../assets/analise_inicio_copa.json';
 import analisePosRodada1 from '../assets/analise_pos_rodada1.json';
+import analisePosRodada2 from '../assets/analise_pos_rodada2.json';
 import PageHeader from './PageHeader';
 
-type StageId = 'inicio-copa' | 'pre-convocacao' | 'fim-rodada1';
+type StageId = 'inicio-copa' | 'pre-convocacao' | 'fim-rodada1' | 'fim-rodada2';
 type BayesStageId = 'bayes-pre-torneio' | 'bayes-fim-rodada1';
 type InfoTab = 'probabilidades' | 'eliminacao' | 'brasil';
 
@@ -26,6 +29,7 @@ const STAGES: Array<{ id: StageId; label: string; date: string; data: any[]; jog
   { id: 'pre-convocacao', label: 'Pré-Convocação', date: '11/05/2026', data: simulacaoGeral as any[], jogos: previsoesJogos as any[] },
   { id: 'inicio-copa', label: 'Início da Copa', date: '11/06/2026', data: simulacaoGeralInicioCopa as any[], jogos: previsoesJogosInicioCopa as any[] },
   { id: 'fim-rodada1', label: 'Fim da 1ª Rodada', date: '17/06/2026', data: simulacaoGeralPosRodada1 as any[], jogos: previsoesJogosPosRodada1 as any[] },
+  { id: 'fim-rodada2', label: 'Fim da 2ª Rodada', date: '24/06/2026', data: simulacaoGeralPosRodada2 as any[], jogos: previsoesJogosPosRodada2 as any[] },
 ];
 
 const BAYES_STAGES: Array<{ id: BayesStageId; label: string; date: string; data: any[]; jogos: any[] }> = [
@@ -33,11 +37,10 @@ const BAYES_STAGES: Array<{ id: BayesStageId; label: string; date: string; data:
   { id: 'bayes-fim-rodada1', label: 'Fim da 1ª Rodada', date: '17/06/2026', data: simulacaoGeralBayes as any[], jogos: previsoesJogosBayes as any[] },
 ];
 
-const DEFAULT_STAGE_ID: StageId = 'fim-rodada1';
+const DEFAULT_STAGE_ID: StageId = 'fim-rodada2';
 const DEFAULT_BAYES_STAGE_ID: BayesStageId = 'bayes-fim-rodada1';
 
 const UPCOMING_STAGES: Array<{ label: string; date: string }> = [
-  { label: 'Fim da 2ª Rodada', date: '23/06/2026' },
   { label: 'Fim da Fase de Grupos', date: '27/06/2026' },
   { label: 'Fim dos 16-avos', date: '03/07/2026' },
   { label: 'Fim das Oitavas', date: '07/07/2026' },
@@ -50,6 +53,7 @@ const ANALISE_MAP: Record<StageId, any> = {
   'pre-convocacao': analisePreConvocacao,
   'inicio-copa': analiseInicioCopa,
   'fim-rodada1': analisePosRodada1,
+  'fim-rodada2': analisePosRodada2,
 };
 
 const getFlag = (teamName: string) => {
