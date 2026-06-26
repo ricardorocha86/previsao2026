@@ -15,6 +15,38 @@ export const FEATURED_ARTICLE = {
   image: '/assets/previsao-g1-hexa.jpg',
 } as const;
 
+export const HOME_MEDIA_ARTICLES = [
+  {
+    outlet: FEATURED_ARTICLE.outlet,
+    badge: 'G1',
+    date: FEATURED_ARTICLE.date,
+    title: FEATURED_ARTICLE.title,
+    summary: FEATURED_ARTICLE.summary,
+    link: FEATURED_ARTICLE.link,
+    image: FEATURED_ARTICLE.image,
+  },
+  {
+    outlet: 'Metrópoles',
+    badge: 'Metrópoles',
+    date: '16 de junho de 2026',
+    title: 'O Brasil ganha a Copa? Simulador criado pela USP aponta 8% de chances',
+    summary:
+      'Reportagem destaca a plataforma de previsão e a estimativa atualizada das chances brasileiras na Copa de 2026.',
+    link: 'https://www.metropoles.com/sao-paulo/brasil-copa-simulador-usp-chances',
+    image: '/assets/reportagem-metropoles.jpg',
+  },
+  {
+    outlet: 'Jornal da USP',
+    badge: 'Jornal da USP',
+    date: '16 de junho de 2026',
+    title: 'Simulador da Copa do Mundo transforma previsões em aprendizado de estatística',
+    summary:
+      'O Jornal da USP mostra como o simulador aproxima o público dos conceitos de probabilidade, estatística e previsão esportiva.',
+    link: 'https://jornal.usp.br/universidade/simulador-da-copa-do-mundo-transforma-previsoes-em-aprendizado-de-estatistica/',
+    image: '/assets/reportagem-jornal-usp.jpg',
+  },
+] as const;
+
 export const MEDIA_MENTIONS: MediaMention[] = [
   {
     id: '32',
@@ -31,7 +63,7 @@ export const MEDIA_MENTIONS: MediaMention[] = [
     edition: '2026',
     title: 'Simulador da Copa do Mundo transforma previsões em aprendizado de estatística',
     link: 'https://jornal.usp.br/universidade/simulador-da-copa-do-mundo-transforma-previsoes-em-aprendizado-de-estatistica/',
-    imageUrl: 'https://jornal.usp.br/wp-content/uploads/2026/06/20260616_grafico_copa_do_mundo_finais_mais_provaveis.jpg',
+    imageUrl: '/assets/reportagem-jornal-usp.jpg',
   },
   {
     id: '30',
@@ -40,7 +72,7 @@ export const MEDIA_MENTIONS: MediaMention[] = [
     edition: '2026',
     title: 'O Brasil ganha a Copa? Simulador criado pela USP aponta 8% de chances',
     link: 'https://www.metropoles.com/sao-paulo/brasil-copa-simulador-usp-chances',
-    imageUrl: 'https://i.metroimg.com/WcQlkVuAwUOuzdPq8wzKQ1r4b45B86JVGncHOmg-Mvs/w:600/q:85/f:webp/plain/https://images.metroimg.com/2026/06/selecao-brasileira.jpg',
+    imageUrl: '/assets/reportagem-metropoles.jpg',
   },
   {
     id: '29',

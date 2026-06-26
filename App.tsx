@@ -392,8 +392,8 @@ export default function App() {
         {currentView === 'home' && (
           <>
             <Hero onNavigate={(view) => navigateTo(view)} />
-            <MediaHighlight onNavigate={() => navigateTo('media')} />
             <HexaCallout onNavigate={() => navigateTo('hexa')} />
+            <MediaHighlight onNavigate={() => navigateTo('media')} />
             <HomeOverview onNavigate={(view) => navigateTo(view)} />
           </>
         )}
