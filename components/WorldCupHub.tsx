@@ -99,10 +99,117 @@ const getShortVenue = (value: string) => {
   return value?.split('–')[0]?.trim() || value;
 };
 
+const WEEKDAYS_PT = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+const MONTH_NAMES_PT = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+
+const TOURNAMENT_START_ISO = '2026-06-11';
+const TOURNAMENT_FINAL_ISO = '2026-07-19';
+
+const parseIsoDateParts = (iso: string) => {
+  const [year, month, day] = iso.split('-').map(Number);
+  return { year, month, day };
+};
+
+const getDateKey = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const getDateKeyFromTimestamp = (ts: number) => {
+  if (!ts) return '';
+  return getDateKey(new Date(ts));
+};
+
+const formatDataPtFromIso = (iso: string) => {
+  const { year, month, day } = parseIsoDateParts(iso);
+  const date = new Date(year, month - 1, day);
+  return `${WEEKDAYS_PT[date.getDay()]}, ${day} de ${MONTH_NAMES_PT[month - 1]} de ${year}`;
+};
+
+const formatClock = (hours: number, minutes: number) => `${hours}h${String(minutes).padStart(2, '0')}`;
+
+const formatEtClock = (timeEt: string) => {
+  const [hours, minutes] = timeEt.split(':').map(Number);
+  return formatClock(hours, minutes);
+};
+
+const formatOffsetClock = (utcMs: number, offsetHours: number, baseIso: string) => {
+  const target = new Date(utcMs + offsetHours * 60 * 60 * 1000);
+  const clock = formatClock(target.getUTCHours(), target.getUTCMinutes());
+  const targetIso = `${target.getUTCFullYear()}-${String(target.getUTCMonth() + 1).padStart(2, '0')}-${String(target.getUTCDate()).padStart(2, '0')}`;
+  if (targetIso === baseIso) return clock;
+  return `${clock} de ${target.getUTCDate()} de ${MONTH_NAMES_PT[target.getUTCMonth()]}`;
+};
+
+const formatBrasiliaTimesFromEt = (dateIso: string, timeEt: string) => {
+  const { year, month, day } = parseIsoDateParts(dateIso);
+  const [hours, minutes] = timeEt.split(':').map(Number);
+  const utcMs = Date.UTC(year, month - 1, day, hours + 4, minutes);
+  return `(${formatOffsetClock(utcMs, -3, dateIso)} em Brasília / ${formatOffsetClock(utcMs, -1, dateIso)} em Praia / ${formatOffsetClock(utcMs, 1, dateIso)} em Lisboa)`;
+};
+
+const addDays = (iso: string, days: number) => {
+  const { year, month, day } = parseIsoDateParts(iso);
+  const date = new Date(year, month - 1, day);
+  date.setDate(date.getDate() + days);
+  return getDateKey(date);
+};
+
 const MESES_PT: Record<string, number> = {
   janeiro: 0, fevereiro: 1, 'março': 2, abril: 3, maio: 4, junho: 5,
   julho: 6, agosto: 7, setembro: 8, outubro: 9, novembro: 10, dezembro: 11,
 };
+
+const OFFICIAL_KNOCKOUT_RAW = [
+  { match: 73, stage: '16-avos', date: '2026-06-28', timeEt: '15:00', venue: 'Los Angeles, nos EUA', home: 'África do Sul', away: 'Canadá', homeSeed: '2º Grupo A', awaySeed: '2º Grupo B' },
+  { match: 74, stage: '16-avos', date: '2026-06-29', timeEt: '16:30', venue: 'Boston, nos EUA', home: 'Alemanha', away: '3º Grupo A/B/C/D/F', homeSeed: '1º Grupo E', awaySeed: 'Melhor 3º colocado' },
+  { match: 75, stage: '16-avos', date: '2026-06-29', timeEt: '21:00', venue: 'Monterrey, no México', home: 'Holanda', away: 'Marrocos', homeSeed: '1º Grupo F', awaySeed: '2º Grupo C' },
+  { match: 76, stage: '16-avos', date: '2026-06-29', timeEt: '13:00', venue: 'Houston, nos EUA', home: 'Brasil', away: 'Japão', homeSeed: '1º Grupo C', awaySeed: '2º Grupo F' },
+  { match: 77, stage: '16-avos', date: '2026-06-30', timeEt: '17:00', venue: 'Nova York/Nova Jersey, nos EUA', home: '1º Grupo I', away: '3º Grupo C/D/F/G/H', homeSeed: 'A definir', awaySeed: 'Melhor 3º colocado' },
+  { match: 78, stage: '16-avos', date: '2026-06-30', timeEt: '13:00', venue: 'Dallas, nos EUA', home: 'Costa do Marfim', away: '2º Grupo I', homeSeed: '2º Grupo E', awaySeed: 'A definir' },
+  { match: 79, stage: '16-avos', date: '2026-06-30', timeEt: '21:00', venue: 'Cidade do México, no México', home: 'México', away: '3º Grupo C/E/F/H/I', homeSeed: '1º Grupo A', awaySeed: 'Melhor 3º colocado' },
+  { match: 80, stage: '16-avos', date: '2026-07-01', timeEt: '12:00', venue: 'Atlanta, nos EUA', home: '1º Grupo L', away: '3º Grupo E/H/I/J/K', homeSeed: 'A definir', awaySeed: 'Melhor 3º colocado' },
+  { match: 81, stage: '16-avos', date: '2026-07-01', timeEt: '20:00', venue: 'Santa Clara, nos EUA', home: 'Estados Unidos', away: 'Bósnia e Herzegovina', homeSeed: '1º Grupo D', awaySeed: '3º Grupo B' },
+  { match: 82, stage: '16-avos', date: '2026-07-01', timeEt: '16:00', venue: 'Seattle, nos EUA', home: '1º Grupo G', away: '3º Grupo A/E/H/I/J', homeSeed: 'A definir', awaySeed: 'Melhor 3º colocado' },
+  { match: 83, stage: '16-avos', date: '2026-07-02', timeEt: '19:00', venue: 'Toronto, no Canadá', home: '2º Grupo K', away: '2º Grupo L', homeSeed: 'A definir', awaySeed: 'A definir' },
+  { match: 84, stage: '16-avos', date: '2026-07-02', timeEt: '15:00', venue: 'Los Angeles, nos EUA', home: '1º Grupo H', away: '2º Grupo J', homeSeed: 'A definir', awaySeed: 'A definir' },
+  { match: 85, stage: '16-avos', date: '2026-07-02', timeEt: '23:00', venue: 'Vancouver, no Canadá', home: 'Suíça', away: '3º Grupo E/F/G/I/J', homeSeed: '1º Grupo B', awaySeed: 'Melhor 3º colocado' },
+  { match: 86, stage: '16-avos', date: '2026-07-03', timeEt: '18:00', venue: 'Miami, nos EUA', home: 'Argentina', away: '2º Grupo H', homeSeed: '1º Grupo J', awaySeed: 'A definir' },
+  { match: 87, stage: '16-avos', date: '2026-07-03', timeEt: '21:30', venue: 'Kansas City, nos EUA', home: '1º Grupo K', away: '3º Grupo D/E/I/J/L', homeSeed: 'A definir', awaySeed: 'Melhor 3º colocado' },
+  { match: 88, stage: '16-avos', date: '2026-07-03', timeEt: '14:00', venue: 'Dallas, nos EUA', home: 'Austrália', away: '2º Grupo G', homeSeed: '2º Grupo D', awaySeed: 'A definir' },
+  { match: 89, stage: 'Oitavas', date: '2026-07-04', timeEt: '17:00', venue: 'Filadélfia, nos EUA', home: 'Vencedor Jogo 74', away: 'Vencedor Jogo 77', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
+  { match: 90, stage: 'Oitavas', date: '2026-07-04', timeEt: '13:00', venue: 'Houston, nos EUA', home: 'Vencedor Jogo 73', away: 'Vencedor Jogo 75', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
+  { match: 91, stage: 'Oitavas', date: '2026-07-05', timeEt: '16:00', venue: 'Nova York/Nova Jersey, nos EUA', home: 'Vencedor Jogo 76', away: 'Vencedor Jogo 78', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
+  { match: 92, stage: 'Oitavas', date: '2026-07-05', timeEt: '20:00', venue: 'Cidade do México, no México', home: 'Vencedor Jogo 79', away: 'Vencedor Jogo 80', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
+  { match: 93, stage: 'Oitavas', date: '2026-07-06', timeEt: '15:00', venue: 'Dallas, nos EUA', home: 'Vencedor Jogo 83', away: 'Vencedor Jogo 84', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
+  { match: 94, stage: 'Oitavas', date: '2026-07-06', timeEt: '20:00', venue: 'Seattle, nos EUA', home: 'Vencedor Jogo 81', away: 'Vencedor Jogo 82', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
+  { match: 95, stage: 'Oitavas', date: '2026-07-07', timeEt: '12:00', venue: 'Atlanta, nos EUA', home: 'Vencedor Jogo 86', away: 'Vencedor Jogo 88', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
+  { match: 96, stage: 'Oitavas', date: '2026-07-07', timeEt: '16:00', venue: 'Vancouver, no Canadá', home: 'Vencedor Jogo 85', away: 'Vencedor Jogo 87', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
+  { match: 97, stage: 'Quartas', date: '2026-07-09', timeEt: '16:00', venue: 'Boston, nos EUA', home: 'Vencedor Jogo 89', away: 'Vencedor Jogo 90', homeSeed: 'Vencedor oitavas', awaySeed: 'Vencedor oitavas' },
+  { match: 98, stage: 'Quartas', date: '2026-07-10', timeEt: '15:00', venue: 'Los Angeles, nos EUA', home: 'Vencedor Jogo 93', away: 'Vencedor Jogo 94', homeSeed: 'Vencedor oitavas', awaySeed: 'Vencedor oitavas' },
+  { match: 99, stage: 'Quartas', date: '2026-07-11', timeEt: '17:00', venue: 'Miami, nos EUA', home: 'Vencedor Jogo 91', away: 'Vencedor Jogo 92', homeSeed: 'Vencedor oitavas', awaySeed: 'Vencedor oitavas' },
+  { match: 100, stage: 'Quartas', date: '2026-07-11', timeEt: '21:00', venue: 'Kansas City, nos EUA', home: 'Vencedor Jogo 95', away: 'Vencedor Jogo 96', homeSeed: 'Vencedor oitavas', awaySeed: 'Vencedor oitavas' },
+  { match: 101, stage: 'Semifinais', date: '2026-07-14', timeEt: '15:00', venue: 'Dallas, nos EUA', home: 'Vencedor Jogo 97', away: 'Vencedor Jogo 98', homeSeed: 'Vencedor quartas', awaySeed: 'Vencedor quartas' },
+  { match: 102, stage: 'Semifinais', date: '2026-07-15', timeEt: '15:00', venue: 'Atlanta, nos EUA', home: 'Vencedor Jogo 99', away: 'Vencedor Jogo 100', homeSeed: 'Vencedor quartas', awaySeed: 'Vencedor quartas' },
+  { match: 103, stage: 'Disputa de 3º lugar', date: '2026-07-18', timeEt: '17:00', venue: 'Miami, nos EUA', home: 'Perdedor Jogo 101', away: 'Perdedor Jogo 102', homeSeed: 'Semifinalista', awaySeed: 'Semifinalista' },
+  { match: 104, stage: 'Final', date: '2026-07-19', timeEt: '15:00', venue: 'Nova York/Nova Jersey, nos EUA', home: 'Vencedor Jogo 101', away: 'Vencedor Jogo 102', homeSeed: 'Finalista', awaySeed: 'Finalista' },
+];
+
+const OFFICIAL_KNOCKOUT_MATCHES = OFFICIAL_KNOCKOUT_RAW.map((match) => ({
+  Grupo: match.stage,
+  Fase: match.stage,
+  Tipo: 'mata-mata',
+  Jogo: match.match,
+  Data: formatDataPtFromIso(match.date),
+  'Horário/Local': `${match.venue} – ${formatEtClock(match.timeEt)} ET oficial`,
+  'Horário Brasília': formatBrasiliaTimesFromEt(match.date, match.timeEt),
+  'Seleção A': match.home,
+  'Seleção B': match.away,
+  'Origem A': match.homeSeed,
+  'Origem B': match.awaySeed,
+}));
 
 const parseDataHora = (jogo: any): number => {
   const m = String(jogo['Data'] || '').match(/(\d{1,2}) de (\S+) de (\d{4})/);
@@ -140,11 +247,25 @@ type Desfecho = 'A' | 'E' | 'B';
 const getDesfecho = (resultado: any): Desfecho =>
   resultado['Placar A'] > resultado['Placar B'] ? 'A' : resultado['Placar A'] < resultado['Placar B'] ? 'B' : 'E';
 
+const hasMatchProbabilities = (jogo: any) => Boolean(jogo['Vitória A'] && jogo['Empate'] && jogo['Vitória B']);
+
+const getAgendaBadge = (group: string) => {
+  if (group?.startsWith('Grupo ')) return getGroupLetter(group);
+  if (group === '16-avos') return '32';
+  if (group === 'Oitavas') return '16';
+  if (group === 'Quartas') return 'Q';
+  if (group === 'Semifinais') return 'S';
+  if (group === 'Disputa de 3º lugar') return '3º';
+  if (group === 'Final') return 'F';
+  return 'M';
+};
+
 // ─── JogoCard ────────────────────────────────────────────────────────────────
 
 const JogoCard: React.FC<{ jogo: any; theme: any; showGroup?: boolean }> = ({ jogo, theme, showGroup }) => {
   const resultado = getResultado(jogo);
   const desfecho = resultado ? getDesfecho(resultado) : null;
+  const hasProbabilities = hasMatchProbabilities(jogo);
   const dimClass = (d: Desfecho) => (resultado && desfecho !== d ? 'opacity-35' : '');
 
   return (
@@ -179,9 +300,15 @@ const JogoCard: React.FC<{ jogo: any; theme: any; showGroup?: boolean }> = ({ jo
             <img src={getFlag(jogo['Seleção A'])} className="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
           </div>
           <div className="space-y-1">
-            <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block h-7 flex items-center justify-center">{jogo['Seleção A']}</span>
-            <span className={`font-exo text-lg font-bold italic ${theme.accentText} block ${dimClass('A')}`}>{jogo['Vitória A']}</span>
-            <span className={`block text-[9px] font-montserrat font-bold tabular-nums text-brand-dark/30 ${dimClass('A')}`}>{formatFairOdd(jogo['Vitória A'])}</span>
+            <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block min-h-7 flex items-center justify-center break-words">{jogo['Seleção A']}</span>
+            {hasProbabilities ? (
+              <>
+                <span className={`font-exo text-lg font-bold italic ${theme.accentText} block ${dimClass('A')}`}>{jogo['Vitória A']}</span>
+                <span className={`block text-[9px] font-montserrat font-bold tabular-nums text-brand-dark/30 ${dimClass('A')}`}>{formatFairOdd(jogo['Vitória A'])}</span>
+              </>
+            ) : (
+              <span className="block text-[9px] font-montserrat font-black uppercase tracking-widest text-brand-dark/35">{jogo['Origem A'] || 'A definir'}</span>
+            )}
           </div>
         </div>
 
@@ -196,11 +323,19 @@ const JogoCard: React.FC<{ jogo: any; theme: any; showGroup?: boolean }> = ({ jo
           ) : (
             <div className="px-2.5 py-1 bg-brand-light rounded-full text-[9px] font-black text-brand-dark/25 mb-4">VS</div>
           )}
-          <div className={`flex flex-col items-center ${resultado && desfecho === 'E' ? '' : 'opacity-40'} ${dimClass('E')}`}>
-            <span className="text-[8px] font-montserrat font-black uppercase tracking-widest mb-0.5">Empate</span>
-            <span className="font-exo text-sm font-bold italic text-brand-dark">{jogo['Empate']}</span>
-            <span className="mt-0.5 text-[8px] font-montserrat font-bold tabular-nums text-brand-dark/70">{formatFairOdd(jogo['Empate'])}</span>
-          </div>
+          {hasProbabilities ? (
+            <div className={`flex flex-col items-center ${resultado && desfecho === 'E' ? '' : 'opacity-40'} ${dimClass('E')}`}>
+              <span className="text-[8px] font-montserrat font-black uppercase tracking-widest mb-0.5">Empate</span>
+              <span className="font-exo text-sm font-bold italic text-brand-dark">{jogo['Empate']}</span>
+              <span className="mt-0.5 text-[8px] font-montserrat font-bold tabular-nums text-brand-dark/70">{formatFairOdd(jogo['Empate'])}</span>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center opacity-60">
+              <span className="text-[8px] font-montserrat font-black uppercase tracking-widest mb-0.5">Jogo</span>
+              <span className="font-exo text-sm font-black tabular-nums text-brand-dark">{jogo['Jogo']}</span>
+              <span className="mt-0.5 text-[8px] font-montserrat font-bold uppercase tracking-tight text-brand-dark/60">{jogo['Fase']}</span>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col items-center text-center gap-2">
@@ -208,18 +343,30 @@ const JogoCard: React.FC<{ jogo: any; theme: any; showGroup?: boolean }> = ({ jo
             <img src={getFlag(jogo['Seleção B'])} className="w-full h-full object-cover" alt="" loading="lazy" decoding="async" />
           </div>
           <div className="space-y-1">
-            <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block h-7 flex items-center justify-center">{jogo['Seleção B']}</span>
-            <span className={`font-exo text-lg font-bold italic text-brand-blue block ${dimClass('B')}`}>{jogo['Vitória B']}</span>
-            <span className={`block text-[9px] font-montserrat font-bold tabular-nums text-brand-dark/30 ${dimClass('B')}`}>{formatFairOdd(jogo['Vitória B'])}</span>
+            <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block min-h-7 flex items-center justify-center break-words">{jogo['Seleção B']}</span>
+            {hasProbabilities ? (
+              <>
+                <span className={`font-exo text-lg font-bold italic text-brand-blue block ${dimClass('B')}`}>{jogo['Vitória B']}</span>
+                <span className={`block text-[9px] font-montserrat font-bold tabular-nums text-brand-dark/30 ${dimClass('B')}`}>{formatFairOdd(jogo['Vitória B'])}</span>
+              </>
+            ) : (
+              <span className="block text-[9px] font-montserrat font-black uppercase tracking-widest text-brand-dark/35">{jogo['Origem B'] || 'A definir'}</span>
+            )}
           </div>
         </div>
       </div>
 
-      <div className="flex h-1 overflow-hidden bg-brand-light rounded-full">
-        <div style={{ width: jogo['Vitória A'] }} className={theme.barColor} />
-        <div style={{ width: jogo['Empate'] }} className="bg-brand-dark/10" />
-        <div style={{ width: jogo['Vitória B'] }} className="bg-brand-blue" />
-      </div>
+      {hasProbabilities ? (
+        <div className="flex h-1 overflow-hidden bg-brand-light rounded-full">
+          <div style={{ width: jogo['Vitória A'] }} className={theme.barColor} />
+          <div style={{ width: jogo['Empate'] }} className="bg-brand-dark/10" />
+          <div style={{ width: jogo['Vitória B'] }} className="bg-brand-blue" />
+        </div>
+      ) : (
+        <div className="flex h-1 overflow-hidden bg-brand-light rounded-full">
+          <div className={`w-full ${theme.barColor} opacity-30`} />
+        </div>
+      )}
     </div>
   );
 };
@@ -583,7 +730,7 @@ const BrasilSection: React.FC<{ analise: any; theme: any }> = ({ analise, theme 
 
 // ─── WorldCupHub ──────────────────────────────────────────────────────────────
 
-type ViewMode = 'data' | 'grupos';
+type ViewMode = 'data' | 'grupos' | 'mataMata';
 
 const WorldCupHub: React.FC = () => {
   const [methodology, setMethodology] = useState<1 | 2>(1);
@@ -605,6 +752,10 @@ const WorldCupHub: React.FC = () => {
   const currentBayesStage = BAYES_STAGES.find((s) => s.id === bayesStageId) ?? BAYES_STAGES[BAYES_STAGES.length - 1];
   const currentSimulacaoGeral = methodology === 1 ? currentStage.data : currentBayesStage.data;
   const currentPrevisoesJogos = methodology === 1 ? currentStage.jogos : currentBayesStage.jogos;
+  const currentAgendaJogos = useMemo(() => [
+    ...(currentPrevisoesJogos as any[]),
+    ...OFFICIAL_KNOCKOUT_MATCHES,
+  ], [currentPrevisoesJogos]);
 
   // Análises detalhadas só existem para a Metodologia 1.
   const currentAnalise = methodology === 1 ? ANALISE_MAP[stageId] : null;
@@ -690,21 +841,38 @@ const WorldCupHub: React.FC = () => {
   }, [currentPrevisoesJogos]);
 
   const jogosComMeta = useMemo(() => {
-    return (currentPrevisoesJogos as any[]).map((jogo: any) => ({
-      jogo,
-      ts: parseDataHora(jogo),
-      resultado: getResultado(jogo),
-    }));
-  }, [currentPrevisoesJogos]);
+    return (currentAgendaJogos as any[]).map((jogo: any) => {
+      const ts = parseDataHora(jogo);
+      return {
+        jogo,
+        ts,
+        dateKey: getDateKeyFromTimestamp(ts),
+        isKnockout: jogo['Tipo'] === 'mata-mata',
+        resultado: getResultado(jogo),
+      };
+    }).sort((a, b) => a.ts - b.ts);
+  }, [currentAgendaJogos]);
 
   const dateOptions = useMemo(() => {
-    const porData = new Map<string, number>();
+    const datesWithGames = new Map<string, number>();
     for (const item of jogosComMeta) {
-      const data = item.jogo['Data'] || 'Data a definir';
-      const atual = porData.get(data);
-      if (atual === undefined || item.ts < atual) porData.set(data, item.ts);
+      if (!item.dateKey) continue;
+      const current = datesWithGames.get(item.dateKey);
+      if (current === undefined || item.ts < current) datesWithGames.set(item.dateKey, item.ts);
     }
-    return [...porData.entries()].sort((a, b) => a[1] - b[1]).map(([data, ts]) => ({ data, ts }));
+
+    const options = [];
+    for (let dateKey = TOURNAMENT_START_ISO; dateKey <= TOURNAMENT_FINAL_ISO; dateKey = addDays(dateKey, 1)) {
+      const { year, month, day } = parseIsoDateParts(dateKey);
+      const dayTs = new Date(year, month - 1, day).getTime();
+      options.push({
+        key: dateKey,
+        data: formatDataPtFromIso(dateKey),
+        ts: datesWithGames.get(dateKey) ?? dayTs,
+        hasGames: datesWithGames.has(dateKey),
+      });
+    }
+    return options;
   }, [jogosComMeta]);
 
   const hojeTs = useMemo(() => {
@@ -719,26 +887,43 @@ const WorldCupHub: React.FC = () => {
     return d.getTime() === hojeTs;
   };
 
+  const playableDateOptions = useMemo(() => dateOptions.filter((o) => o.hasGames), [dateOptions]);
+
   const defaultDate = useMemo(() => {
-    const hoje = dateOptions.find((o) => isHoje(o.ts));
-    const proxima = dateOptions.find((o) => o.ts >= hojeTs);
-    return (hoje ?? proxima ?? dateOptions[dateOptions.length - 1])?.data ?? '';
-  }, [dateOptions, hojeTs]);
+    const hoje = playableDateOptions.find((o) => isHoje(o.ts));
+    const proxima = playableDateOptions.find((o) => o.ts >= hojeTs);
+    return (hoje ?? proxima ?? playableDateOptions[playableDateOptions.length - 1] ?? dateOptions[dateOptions.length - 1])?.key ?? '';
+  }, [dateOptions, playableDateOptions, hojeTs]);
 
   const effectiveDate = selectedDate || defaultDate;
+  const effectiveDateOption = dateOptions.find((o) => o.key === effectiveDate);
+  const effectiveDateTs = effectiveDateOption?.ts ?? 0;
+  const effectiveDateLabel = effectiveDateOption?.data ?? '';
+
+  const agendaStageOrder = (item: any) => {
+    const stage = item.jogo['Grupo'];
+    const order = ['Grupo A', 'Grupo B', 'Grupo C', 'Grupo D', 'Grupo E', 'Grupo F', 'Grupo G', 'Grupo H', 'Grupo I', 'Grupo J', 'Grupo K', 'Grupo L', '16-avos', 'Oitavas', 'Quartas', 'Semifinais', 'Disputa de 3º lugar', 'Final'];
+    const idx = order.indexOf(stage);
+    return idx === -1 ? 99 : idx;
+  };
 
   const searchJogosAtivo = searchTermJogos.trim().length > 0;
-  const filteredJogos = jogosComMeta.filter(({ jogo }) => {
+  const filteredJogos = jogosComMeta.filter(({ jogo, dateKey, isKnockout }) => {
     if (searchJogosAtivo) {
       const term = searchTermJogos.trim().toLowerCase();
       return (
         jogo['Seleção A']?.toLowerCase().includes(term) ||
         jogo['Seleção B']?.toLowerCase().includes(term) ||
+        jogo['Fase']?.toLowerCase().includes(term) ||
         jogo['Grupo']?.toLowerCase().includes(term)
       );
     }
-    if (viewMode === 'grupos') return jogo['Grupo'] === selectedGroup;
-    return jogo['Data'] === effectiveDate;
+    if (viewMode === 'grupos') return !isKnockout && jogo['Grupo'] === selectedGroup;
+    if (viewMode === 'mataMata') return isKnockout;
+    return dateKey === effectiveDate;
+  }).sort((a, b) => {
+    if (viewMode === 'mataMata') return agendaStageOrder(a) - agendaStageOrder(b) || a.ts - b.ts;
+    return a.ts - b.ts;
   });
 
   const stepGroup = (delta: number) => {
@@ -747,7 +932,7 @@ const WorldCupHub: React.FC = () => {
     setSelectedGroup(groupOptions[next] as string);
   };
 
-  const isGroupedView = searchJogosAtivo || viewMode === 'grupos';
+  const isGroupedView = searchJogosAtivo || viewMode === 'grupos' || viewMode === 'mataMata';
 
   const jogosPorGrupo = useMemo(() => {
     if (!isGroupedView) return {};
@@ -765,13 +950,14 @@ const WorldCupHub: React.FC = () => {
   }, [filteredJogos, isGroupedView]);
 
   const stepDate = (delta: number) => {
-    const idx = dateOptions.findIndex((o) => o.data === effectiveDate);
-    const next = (idx + delta + dateOptions.length) % dateOptions.length;
-    setSelectedDate(dateOptions[next].data);
+    if (playableDateOptions.length === 0) return;
+    const idx = playableDateOptions.findIndex((o) => o.key === effectiveDate);
+    const safeIdx = idx === -1 ? 0 : idx;
+    const next = (safeIdx + delta + playableDateOptions.length) % playableDateOptions.length;
+    setSelectedDate(playableDateOptions[next].key);
   };
 
   const shortDate = (ts: number) => new Date(ts).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-  const effectiveDateTs = dateOptions.find((o) => o.data === effectiveDate)?.ts ?? 0;
 
   const requestSort = (key: string) => {
     let direction: 'asc' | 'desc' = ['Grupo', 'Seleção'].includes(key) ? 'asc' : 'desc';
@@ -791,6 +977,7 @@ const WorldCupHub: React.FC = () => {
   const VIEW_TABS: Array<{ id: ViewMode; label: string }> = [
     { id: 'data', label: 'Por Data' },
     { id: 'grupos', label: 'Por Grupo' },
+    { id: 'mataMata', label: 'Mata-mata' },
   ];
 
   const INFO_TABS: Array<{ id: InfoTab; label: string; emoji: string }> = [
@@ -1055,23 +1242,45 @@ const WorldCupHub: React.FC = () => {
                         </button>
                       ))}
                     </div>
+                  ) : viewMode === 'data' ? (
+                    <div className="flex flex-wrap justify-center md:justify-start gap-2">
+                      {dateOptions.map(({ key, ts, hasGames }) => {
+                        const isActive = effectiveDate === key;
+                        return (
+                          <button
+                            key={key}
+                            disabled={!hasGames}
+                            onClick={() => hasGames && setSelectedDate(key)}
+                            className={`px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest border transition-all shadow-sm ${
+                              hasGames ? 'bg-white hover:-translate-y-0.5' : 'cursor-not-allowed bg-brand-dark/5 text-brand-dark/25 shadow-none'
+                            }`}
+                            style={hasGames ? {
+                              borderColor: isActive ? theme.accent : theme.accentBorder,
+                              color: isActive ? '#ffffff' : theme.accent,
+                              backgroundColor: isActive ? theme.accent : '#ffffff',
+                              transform: isActive ? 'scale(1.05)' : 'none',
+                              boxShadow: isActive ? `0 10px 15px -3px ${theme.accentSoft}` : 'none'
+                            } : {
+                              borderColor: 'rgba(42,52,46,0.10)',
+                              color: 'rgba(42,52,46,0.25)',
+                              backgroundColor: 'rgba(42,52,46,0.04)',
+                            }}
+                          >
+                            {shortDate(ts)}{isHoje(ts) ? ' · Hoje' : ''}
+                          </button>
+                        );
+                      })}
+                    </div>
                   ) : (
                     <div className="flex flex-wrap justify-center md:justify-start gap-2">
-                      {dateOptions.map(({ data, ts }) => (
-                        <button
-                          key={data}
-                          onClick={() => setSelectedDate(data)}
-                          className="px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest border transition-all bg-white hover:-translate-y-0.5 shadow-sm"
-                          style={{
-                            borderColor: effectiveDate === data ? theme.accent : theme.accentBorder,
-                            color: effectiveDate === data ? '#ffffff' : theme.accent,
-                            backgroundColor: effectiveDate === data ? theme.accent : '#ffffff',
-                            transform: effectiveDate === data ? 'scale(1.05)' : 'none',
-                            boxShadow: effectiveDate === data ? `0 10px 15px -3px ${theme.accentSoft}` : 'none'
-                          }}
+                      {['16-avos', 'Oitavas', 'Quartas', 'Semifinais', '3º lugar', 'Final'].map((stage) => (
+                        <span
+                          key={stage}
+                          className="px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest border bg-white shadow-sm"
+                          style={{ borderColor: theme.accentBorder, color: theme.accent }}
                         >
-                          {shortDate(ts)}{isHoje(ts) ? ' · Hoje' : ''}
-                        </button>
+                          {stage}
+                        </span>
                       ))}
                     </div>
                   )}
@@ -1095,15 +1304,17 @@ const WorldCupHub: React.FC = () => {
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-6 py-5 border-b-2" style={{ backgroundColor: theme.accent, borderColor: theme.accent }}>
                       <div className="flex items-center gap-5">
                         <div className="w-14 h-14 flex items-center justify-center font-montserrat font-black text-3xl bg-white shadow-inner" style={{ color: theme.accent, borderRadius: 12 }}>
-                          {getGroupLetter(group)}
+                          {getAgendaBadge(group)}
                         </div>
                         <h3 className="text-3xl font-montserrat font-black text-white leading-none uppercase tracking-tight">{group}</h3>
                       </div>
-                      <div className="hidden md:flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/80">
-                        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-white" /> Vitória A</span>
-                        <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-white/40" /> Empate</span>
-                        <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-brand-blue border border-white/20" /> Vitória B</span>
-                      </div>
+                      {(itens as any[]).some((item: any) => hasMatchProbabilities(item.jogo)) && (
+                        <div className="hidden md:flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/80">
+                          <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-white" /> Vitória A</span>
+                          <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-white/40" /> Empate</span>
+                          <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-brand-blue border border-white/20" /> Vitória B</span>
+                        </div>
+                      )}
                     </div>
                     <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-5 p-5 md:p-6 bg-brand-light/20">
                       {(itens as any[]).map((item: any, idx: number) => (
@@ -1120,17 +1331,19 @@ const WorldCupHub: React.FC = () => {
                           <CalendarDays className="w-7 h-7" />
                         </div>
                         <div>
-                          <h3 className="text-xl md:text-2xl font-montserrat font-black text-white leading-none uppercase tracking-tight">{effectiveDate}</h3>
+                          <h3 className="text-xl md:text-2xl font-montserrat font-black text-white leading-none uppercase tracking-tight">{effectiveDateLabel}</h3>
                           <span className="block text-[10px] font-montserrat font-black uppercase tracking-widest text-white/70 mt-1.5">
                             {jogosDoDia.length} {jogosDoDia.length === 1 ? 'jogo' : 'jogos'}{isHoje(effectiveDateTs) ? ' · Hoje' : ''}
                           </span>
                         </div>
                       </div>
-                      <div className="hidden md:flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/80">
-                        <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-white" /> Vitória A</span>
-                        <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-white/40" /> Empate</span>
-                        <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-brand-blue border border-white/20" /> Vitória B</span>
-                      </div>
+                      {jogosDoDia.some((item: any) => hasMatchProbabilities(item.jogo)) && (
+                        <div className="hidden md:flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/80">
+                          <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-white" /> Vitória A</span>
+                          <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-white/40" /> Empate</span>
+                          <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-brand-blue border border-white/20" /> Vitória B</span>
+                        </div>
+                      )}
                     </div>
                     <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-5 p-5 md:p-6 bg-brand-light/20">
                       {jogosDoDia.map((item: any, idx: number) => (
@@ -1139,7 +1352,7 @@ const WorldCupHub: React.FC = () => {
                     </div>
                   </div>
                 )}
-                {!searchJogosAtivo && filteredJogos.length > 0 && (
+                {!searchJogosAtivo && filteredJogos.length > 0 && viewMode !== 'mataMata' && (
                   <div className="flex items-center justify-center gap-6 pt-2">
                     <button
                       onClick={() => (viewMode === 'grupos' ? stepGroup(-1) : stepDate(-1))}
@@ -1165,7 +1378,7 @@ const WorldCupHub: React.FC = () => {
                 {filteredJogos.length === 0 && (
                   <div className="bg-white border-2 border-dashed border-brand-dark/10 p-16 text-center rounded-[2rem]">
                     <p className="font-montserrat font-black uppercase text-brand-dark text-xl">Nenhum confronto encontrado</p>
-                    <p className="text-sm text-brand-dark/45 mt-2">Ajuste o filtro de data, grupo ou a busca por seleção.</p>
+                    <p className="text-sm text-brand-dark/45 mt-2">Ajuste o filtro de data, grupo, mata-mata ou a busca por seleção.</p>
                   </div>
                 )}
               </div>
