@@ -27,6 +27,10 @@ jobs:
         with:
           python-version: '3.11'
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
       - name: Instala dependências
         run: pip install requests
 
@@ -44,6 +48,7 @@ jobs:
             --previsoes assets/previsoes_jogos.json
 
       - name: Commit + push (só se mudou)
+        id: commit
         run: |
           if [[ -n "$(git status --porcelain assets/resultados_jogos.json)" ]]; then
             git config user.name "github-actions[bot]"
@@ -51,6 +56,27 @@ jobs:
             git add assets/resultados_jogos.json
             git commit -m "Atualiza resultados da Copa (automático)"
             git push origin HEAD:main
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
             echo "Nada mudou — nenhum jogo novo encerrado."
           fi
+
+      - name: Deploy Vercel do commit atualizado
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: team_jeBRd9WRPWSBhJEibXDzcEy4
+          VERCEL_PROJECT_ID: prj_zUFTSZF1u4ulKEmUsZXQaj2ieW6E
+        run: |
+          if [[ -z "$VERCEL_TOKEN" ]]; then
+            echo "::error::Configure o secret VERCEL_TOKEN no GitHub para publicar automaticamente os commits gerados pelo atualizador."
+            exit 1
+          fi
+
+          echo "Publicando no Vercel o commit ${{ steps.commit.outputs.sha }}..."
+          npx --yes vercel@54.14.2 pull --yes --environment=production --token="$VERCEL_TOKEN"
+          npx --yes vercel@54.14.2 build --prod --token="$VERCEL_TOKEN"
+          npx --yes vercel@54.14.2 deploy --prebuilt --prod --token="$VERCEL_TOKEN"
