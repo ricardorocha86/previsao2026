@@ -13,7 +13,7 @@ import {
 import PageHeader from './PageHeader';
 import ReportEditionSelector from './ReportEditionSelector';
 
-const ENG_FLAG = '🏴\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E007F}';
+const ENG_FLAG = '🏴\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}';
 const fmt = (value: number, digits = 1) => value.toFixed(digits).replace('.', ',');
 const signed = (value: number) => `${value > 0 ? '+' : value < 0 ? '−' : ''}${fmt(Math.abs(value))}`;
 
@@ -58,6 +58,8 @@ const FLAG: Record<string, string> = {
   Escócia: '🏴',
   Jordânia: '🇯🇴',
 };
+
+const teamWithFlag = (team: string) => `${FLAG[team] ?? '⚽'} ${team}`;
 
 const TITLE_RACE = [
   { team: 'França', pre: 14.7847, previous: 18.2537, current: 22.2478 },
@@ -247,6 +249,15 @@ const TeamLabel: React.FC<{ team: string; className?: string }> = ({ team, class
     <span className="truncate">{team}</span>
   </span>
 );
+
+const FinalLabel: React.FC<{ final: string }> = ({ final }) => {
+  const [left, right] = final.split(' x ');
+  return (
+    <>
+      {teamWithFlag(left)} x {teamWithFlag(right)}
+    </>
+  );
+};
 
 const TitleRaceChart: React.FC = () => (
   <div className="overflow-x-auto pb-1">
@@ -517,17 +528,18 @@ const KnockoutPage: React.FC = () => (
           </h2>
           <p className="mt-5 text-lg font-light leading-relaxed text-brand-dark/75 md:text-xl">
             Com os 72 jogos da fase de grupos travados, a simulação deixou de perguntar quem chegaria ao mata-mata
-            e passou a medir confrontos concretos. O Brasil começa contra o Japão; no topo, França e Argentina
+            e passou a medir confrontos concretos. {teamWithFlag('Brasil')} começa contra o {teamWithFlag('Japão')};
+            no topo, {teamWithFlag('França')} e {teamWithFlag('Argentina')}
             transformaram o lado de cima da projeção em uma disputa particular.
           </p>
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             {[
               ['32', 'seleções vivas'],
               ['16', 'confrontos nos 16-avos'],
-              ['42,1%', 'dos títulos em França + Argentina'],
-              ['36,4%', 'risco de queda do Brasil contra o Japão'],
+              ['42,1%', `dos títulos em ${teamWithFlag('França')} + ${teamWithFlag('Argentina')}`],
+              ['36,4%', `risco de queda do ${teamWithFlag('Brasil')} contra o ${teamWithFlag('Japão')}`],
             ].map(([value, label]) => (
-              <div key={label} className="rounded-lg border border-brand-dark/10 bg-brand-light p-5 text-center">
+              <div key={value} className="rounded-lg border border-brand-dark/10 bg-brand-light p-5 text-center">
                 <p className="font-montserrat text-4xl font-black text-brand-green">{value}</p>
                 <p className="mt-1 text-xs font-bold uppercase text-brand-dark/45">{label}</p>
               </div>
@@ -696,15 +708,15 @@ const KnockoutPage: React.FC = () => (
     <section className="bg-brand-dark py-16 text-white">
       <div className="mx-auto max-w-[1080px] px-4">
         <SectionTitle light eyebrow="Finais prováveis" title="Argentina x França virou a final mais frequente">
-          A final mais comum nas simulações reúne as duas maiores candidatas, com 12,3% de probabilidade. Brasil x França
-          aparece como a quinta final mais provável, em 4,1% das Copas simuladas. Brasil x Espanha também entra no top 12,
-          com 2,3%.
+          A final mais comum nas simulações reúne as duas maiores candidatas, com 12,3% de probabilidade.
+          {' '}{teamWithFlag('Brasil')} x {teamWithFlag('França')} aparece como a quinta final mais provável,
+          em 4,1% das Copas simuladas. {teamWithFlag('Brasil')} x {teamWithFlag('Espanha')} também entra no top 12, com 2,3%.
         </SectionTitle>
         <div className="grid gap-3 md:grid-cols-2">
           {FINALS.map(([final, value], index) => (
             <div key={final} className="grid grid-cols-[34px_minmax(0,1fr)_74px] items-center gap-3 rounded-lg border border-white/10 bg-white/5 p-4">
               <span className="font-montserrat text-sm font-black text-white/30">{index + 1}</span>
-              <span className="truncate font-montserrat text-sm font-black uppercase text-white">{final}</span>
+              <span className="truncate font-montserrat text-sm font-black uppercase text-white"><FinalLabel final={final} /></span>
               <span className="text-right font-montserrat text-lg font-black text-brand-neon">{fmt(value)}%</span>
             </div>
           ))}
