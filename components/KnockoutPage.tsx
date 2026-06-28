@@ -529,7 +529,7 @@ const KnockoutPage: React.FC = () => (
           <p className="mt-5 text-lg font-light leading-relaxed text-brand-dark/75 md:text-xl">
             Com os 72 jogos da fase de grupos travados, a simulação deixou de perguntar quem chegaria ao mata-mata
             e passou a medir confrontos concretos. {teamWithFlag('Brasil')} começa contra o {teamWithFlag('Japão')};
-            no topo, {teamWithFlag('França')} e {teamWithFlag('Argentina')}
+            no topo, {teamWithFlag('França')} e {teamWithFlag('Argentina')}{' '}
             transformaram o lado de cima da projeção em uma disputa particular.
           </p>
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
