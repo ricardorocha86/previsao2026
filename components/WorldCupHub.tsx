@@ -318,7 +318,7 @@ const JogoCard: React.FC<{ jogo: any; theme: any; showGroup?: boolean }> = ({ jo
               <>
                 <span className="block text-[7px] font-montserrat font-black uppercase tracking-widest text-brand-dark/35 mb-0.5">Avança</span>
                 <span className={`font-exo text-xl font-bold italic ${theme.accentText} block`}>{jogo['Avanço A']}</span>
-                <span className="block text-[9px] font-montserrat font-bold tabular-nums text-brand-dark/40 mt-0.5">V {jogo['Vitória A']}</span>
+                <span className="block font-exo text-xs font-bold italic text-brand-dark/70 mt-0.5">{jogo['Vitória A']}</span>
               </>
             ) : hasProbabilities ? (
               <>
@@ -373,7 +373,7 @@ const JogoCard: React.FC<{ jogo: any; theme: any; showGroup?: boolean }> = ({ jo
               <>
                 <span className="block text-[7px] font-montserrat font-black uppercase tracking-widest text-brand-dark/35 mb-0.5">Avança</span>
                 <span className="font-exo text-xl font-bold italic text-brand-blue block">{jogo['Avanço B']}</span>
-                <span className="block text-[9px] font-montserrat font-bold tabular-nums text-brand-dark/40 mt-0.5">V {jogo['Vitória B']}</span>
+                <span className="block font-exo text-xs font-bold italic text-brand-dark/70 mt-0.5">{jogo['Vitória B']}</span>
               </>
             ) : hasProbabilities ? (
               <>
@@ -767,16 +767,26 @@ const BrasilSection: React.FC<{ analise: any; theme: any }> = ({ analise, theme 
 // ─── WorldCupHub ──────────────────────────────────────────────────────────────
 
 type ViewMode = 'data' | 'grupos' | 'mataMata';
+type KnockoutStage = '16-avos' | 'Oitavas' | 'Quartas' | 'Semifinais' | 'Disputa de 3º lugar' | 'Final';
+
+const KNOCKOUT_STAGE_OPTIONS: Array<{ value: KnockoutStage; label: string }> = [
+  { value: '16-avos', label: '16-avos' },
+  { value: 'Oitavas', label: 'Oitavas' },
+  { value: 'Quartas', label: 'Quartas' },
+  { value: 'Semifinais', label: 'Semifinais' },
+  { value: 'Disputa de 3º lugar', label: '3º lugar' },
+  { value: 'Final', label: 'Final' },
+];
 
 const WorldCupHub: React.FC = () => {
   const [methodology, setMethodology] = useState<1 | 2>(1);
   const [stageId, setStageId] = useState<StageId>(DEFAULT_STAGE_ID);
   const [bayesStageId, setBayesStageId] = useState<BayesStageId>(DEFAULT_BAYES_STAGE_ID);
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchTermJogos, setSearchTermJogos] = useState('');
   const [selectedGroup, setSelectedGroup] = useState('Grupo A');
   const [viewMode, setViewMode] = useState<ViewMode>('data');
   const [selectedDate, setSelectedDate] = useState<string>('');
+  const [selectedKnockoutStage, setSelectedKnockoutStage] = useState<KnockoutStage>('16-avos');
   const [infoTab, setInfoTab] = useState<InfoTab>('probabilidades');
 
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>({
@@ -943,19 +953,9 @@ const WorldCupHub: React.FC = () => {
     return idx === -1 ? 99 : idx;
   };
 
-  const searchJogosAtivo = searchTermJogos.trim().length > 0;
   const filteredJogos = jogosComMeta.filter(({ jogo, dateKey, isKnockout }) => {
-    if (searchJogosAtivo) {
-      const term = searchTermJogos.trim().toLowerCase();
-      return (
-        jogo['Seleção A']?.toLowerCase().includes(term) ||
-        jogo['Seleção B']?.toLowerCase().includes(term) ||
-        jogo['Fase']?.toLowerCase().includes(term) ||
-        jogo['Grupo']?.toLowerCase().includes(term)
-      );
-    }
     if (viewMode === 'grupos') return !isKnockout && jogo['Grupo'] === selectedGroup;
-    if (viewMode === 'mataMata') return isKnockout;
+    if (viewMode === 'mataMata') return isKnockout && jogo['Grupo'] === selectedKnockoutStage;
     return dateKey === effectiveDate;
   }).sort((a, b) => {
     if (viewMode === 'mataMata') return agendaStageOrder(a) - agendaStageOrder(b) || a.ts - b.ts;
@@ -968,7 +968,7 @@ const WorldCupHub: React.FC = () => {
     setSelectedGroup(groupOptions[next] as string);
   };
 
-  const isGroupedView = searchJogosAtivo || viewMode === 'grupos' || viewMode === 'mataMata';
+  const isGroupedView = viewMode === 'grupos' || viewMode === 'mataMata';
 
   const jogosPorGrupo = useMemo(() => {
     if (!isGroupedView) return {};
@@ -1245,7 +1245,12 @@ const WorldCupHub: React.FC = () => {
                   {VIEW_TABS.map((tab) => (
                     <button
                       key={tab.id}
-                      onClick={() => setViewMode(tab.id)}
+                      onClick={() => {
+                        if (tab.id === 'mataMata' && viewMode !== 'mataMata') {
+                          setSelectedKnockoutStage('16-avos');
+                        }
+                        setViewMode(tab.id);
+                      }}
                       className="px-5 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest border-2 transition-all shadow-sm"
                       style={{
                         borderColor: viewMode === tab.id ? theme.accent : theme.accentBorder,
@@ -1309,28 +1314,29 @@ const WorldCupHub: React.FC = () => {
                     </div>
                   ) : (
                     <div className="flex flex-wrap justify-center md:justify-start gap-2">
-                      {['16-avos', 'Oitavas', 'Quartas', 'Semifinais', '3º lugar', 'Final'].map((stage) => (
-                        <span
-                          key={stage}
-                          className="px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest border bg-white shadow-sm"
-                          style={{ borderColor: theme.accentBorder, color: theme.accent }}
-                        >
-                          {stage}
-                        </span>
-                      ))}
+                      {KNOCKOUT_STAGE_OPTIONS.map(({ value, label }) => {
+                        const isActive = selectedKnockoutStage === value;
+                        return (
+                          <button
+                            key={value}
+                            type="button"
+                            onClick={() => setSelectedKnockoutStage(value)}
+                            className="px-4 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest border transition-all shadow-sm hover:-translate-y-0.5"
+                            style={{
+                              borderColor: isActive ? theme.accent : theme.accentBorder,
+                              color: isActive ? '#ffffff' : theme.accent,
+                              backgroundColor: isActive ? theme.accent : '#ffffff',
+                              transform: isActive ? 'scale(1.05)' : 'none',
+                              boxShadow: isActive ? `0 10px 15px -3px ${theme.accentSoft}` : 'none',
+                            }}
+                          >
+                            {label}
+                          </button>
+                        );
+                      })}
                     </div>
                   )}
 
-                  <div className="relative w-full md:w-80">
-                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-dark/30" />
-                    <input
-                      type="text"
-                      placeholder="Buscar seleção no calendário..."
-                      className={`w-full pl-14 pr-6 py-4 bg-white border-2 border-brand-dark/5 rounded-2xl text-sm outline-none ${theme.accentFocusBorder} transition-all shadow-md font-opensans`}
-                      value={searchTermJogos}
-                      onChange={(e) => setSearchTermJogos(e.target.value)}
-                    />
-                  </div>
                 </div>
               </div>
 
@@ -1344,13 +1350,6 @@ const WorldCupHub: React.FC = () => {
                         </div>
                         <h3 className="text-3xl font-montserrat font-black text-white leading-none uppercase tracking-tight">{group}</h3>
                       </div>
-                      {(itens as any[]).some((item: any) => hasMatchProbabilities(item.jogo)) && (
-                        <div className="hidden md:flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/80">
-                          <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-white" /> Vitória A</span>
-                          <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-white/40" /> Empate</span>
-                          <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-brand-blue border border-white/20" /> Vitória B</span>
-                        </div>
-                      )}
                     </div>
                     <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-5 p-5 md:p-6 bg-brand-light/20">
                       {(itens as any[]).map((item: any, idx: number) => (
@@ -1373,13 +1372,6 @@ const WorldCupHub: React.FC = () => {
                           </span>
                         </div>
                       </div>
-                      {jogosDoDia.some((item: any) => hasMatchProbabilities(item.jogo)) && (
-                        <div className="hidden md:flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-white/80">
-                          <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-white" /> Vitória A</span>
-                          <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-white/40" /> Empate</span>
-                          <span className="flex items-center gap-1.5 ml-2"><span className="w-2.5 h-2.5 rounded-full bg-brand-blue border border-white/20" /> Vitória B</span>
-                        </div>
-                      )}
                     </div>
                     <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-5 p-5 md:p-6 bg-brand-light/20">
                       {jogosDoDia.map((item: any, idx: number) => (
@@ -1388,7 +1380,7 @@ const WorldCupHub: React.FC = () => {
                     </div>
                   </div>
                 )}
-                {!searchJogosAtivo && filteredJogos.length > 0 && viewMode !== 'mataMata' && (
+                {filteredJogos.length > 0 && viewMode !== 'mataMata' && (
                   <div className="flex items-center justify-center gap-6 pt-2">
                     <button
                       onClick={() => (viewMode === 'grupos' ? stepGroup(-1) : stepDate(-1))}
