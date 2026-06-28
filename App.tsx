@@ -11,7 +11,7 @@ import { Analytics } from '@vercel/analytics/react';
 import resultadosJogos from './assets/resultados_jogos.json';
 import { PARTNER_INSTITUTIONS, RESEARCH_CENTERS } from './data/institutions';
 
-type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa' | 'hexa-inicio' | 'pos-rodada';
+type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa' | 'hexa-rodada2' | 'hexa-inicio' | 'pos-rodada';
 
 const WorldCupHub = lazy(() => import('./components/WorldCupHub'));
 const MapPage = lazy(() => import('./components/MapPage'));
@@ -24,6 +24,7 @@ const MethodologyPage = lazy(() => import('./components/MethodologyPage'));
 const HexaPage = lazy(() => import('./components/HexaPage'));
 const PostRoundPage = lazy(() => import('./components/PostRoundPage'));
 const SecondRoundPage = lazy(() => import('./components/SecondRoundPage'));
+const KnockoutPage = lazy(() => import('./components/KnockoutPage'));
 
 const ROUTES: Record<ViewState, string> = {
   home: '/',
@@ -36,6 +37,7 @@ const ROUTES: Record<ViewState, string> = {
   media: '/midia',
   team: '/equipe',
   hexa: '/caminho-do-hexa',
+  'hexa-rodada2': '/caminho-do-hexa/fim-da-segunda-rodada',
   'hexa-inicio': '/caminho-do-hexa/inicio-da-copa',
   'pos-rodada': '/a-copa-mudou-de-rosto',
 };
@@ -125,6 +127,10 @@ const PAGE_META: Record<ViewState, { title: string; description: string }> = {
     description: 'Conheça os pesquisadores e as instituições por trás do projeto Previsão Esportiva.',
   },
   hexa: {
+    title: 'Agora É Mata-Mata | Previsão Esportiva',
+    description: 'Com os 32 classificados definidos, o Brasil enfrenta o Japão nos 16-avos; França e Argentina abrem distância na nova simulação do mata-mata.',
+  },
+  'hexa-rodada2': {
     title: 'O Hexa Ficou Mais Difícil | Previsão Esportiva',
     description: 'Após a segunda rodada, o Brasil chega a 100% de classificação nas simulações, mas cai para 5,3% de chance de título; Argentina sobe e França mantém a liderança.',
   },
@@ -408,7 +414,8 @@ export default function App() {
             {currentView === 'science' && <SciencePage />}
             {currentView === 'media' && <MediaPage />}
             {currentView === 'methodology' && <MethodologyPage />}
-            {currentView === 'hexa' && <SecondRoundPage />}
+            {currentView === 'hexa' && <KnockoutPage />}
+            {currentView === 'hexa-rodada2' && <SecondRoundPage />}
             {currentView === 'pos-rodada' && <PostRoundPage />}
             {currentView === 'hexa-inicio' && <HexaPage />}
           </Suspense>

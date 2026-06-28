@@ -5,12 +5,14 @@ import simulacaoGeral from '../assets/simulacao_geral.json';
 import simulacaoGeralInicioCopa from '../assets/simulacao_geral_inicio_copa.json';
 import simulacaoGeralPosRodada1 from '../assets/simulacao_geral_pos_rodada1.json';
 import simulacaoGeralPosRodada2 from '../assets/simulacao_geral_pos_rodada2.json';
+import simulacaoGeralPosFaseGrupos from '../assets/simulacao_geral_pos_fase_grupos.json';
 import simulacaoGeralBayes from '../assets/simulacao_geral_bayes.json';
 import simulacaoGeralBayesPreTorneio from '../assets/simulacao_geral_bayes_pre_torneio.json';
 import previsoesJogos from '../assets/previsoes_jogos.json';
 import previsoesJogosInicioCopa from '../assets/previsoes_jogos_inicio_copa.json';
 import previsoesJogosPosRodada1 from '../assets/previsoes_jogos_pos_rodada1.json';
 import previsoesJogosPosRodada2 from '../assets/previsoes_jogos_pos_rodada2.json';
+import previsoesJogosPosFaseGrupos from '../assets/previsoes_jogos_pos_fase_grupos.json';
 import previsoesJogosBayes from '../assets/previsoes_jogos_bayes.json';
 import previsoesJogosBayesPreTorneio from '../assets/previsoes_jogos_bayes_pre_torneio.json';
 import resultadosJogos from '../assets/resultados_jogos.json';
@@ -19,9 +21,10 @@ import analisePreConvocacao from '../assets/analise_pre_convocacao.json';
 import analiseInicioCopa from '../assets/analise_inicio_copa.json';
 import analisePosRodada1 from '../assets/analise_pos_rodada1.json';
 import analisePosRodada2 from '../assets/analise_pos_rodada2.json';
+import analisePosFaseGrupos from '../assets/analise_pos_fase_grupos.json';
 import PageHeader from './PageHeader';
 
-type StageId = 'inicio-copa' | 'pre-convocacao' | 'fim-rodada1' | 'fim-rodada2';
+type StageId = 'inicio-copa' | 'pre-convocacao' | 'fim-rodada1' | 'fim-rodada2' | 'inicio-mata-mata';
 type BayesStageId = 'bayes-pre-torneio' | 'bayes-fim-rodada1';
 type InfoTab = 'probabilidades' | 'eliminacao' | 'brasil';
 
@@ -30,6 +33,7 @@ const STAGES: Array<{ id: StageId; label: string; date: string; data: any[]; jog
   { id: 'inicio-copa', label: 'Início da Copa', date: '11/06/2026', data: simulacaoGeralInicioCopa as any[], jogos: previsoesJogosInicioCopa as any[] },
   { id: 'fim-rodada1', label: 'Fim da 1ª Rodada', date: '17/06/2026', data: simulacaoGeralPosRodada1 as any[], jogos: previsoesJogosPosRodada1 as any[] },
   { id: 'fim-rodada2', label: 'Fim da 2ª Rodada', date: '24/06/2026', data: simulacaoGeralPosRodada2 as any[], jogos: previsoesJogosPosRodada2 as any[] },
+  { id: 'inicio-mata-mata', label: 'Início do Mata-Mata', date: '28/06/2026', data: simulacaoGeralPosFaseGrupos as any[], jogos: previsoesJogosPosFaseGrupos as any[] },
 ];
 
 const BAYES_STAGES: Array<{ id: BayesStageId; label: string; date: string; data: any[]; jogos: any[] }> = [
@@ -37,11 +41,10 @@ const BAYES_STAGES: Array<{ id: BayesStageId; label: string; date: string; data:
   { id: 'bayes-fim-rodada1', label: 'Fim da 1ª Rodada', date: '17/06/2026', data: simulacaoGeralBayes as any[], jogos: previsoesJogosBayes as any[] },
 ];
 
-const DEFAULT_STAGE_ID: StageId = 'fim-rodada2';
+const DEFAULT_STAGE_ID: StageId = 'inicio-mata-mata';
 const DEFAULT_BAYES_STAGE_ID: BayesStageId = 'bayes-fim-rodada1';
 
 const UPCOMING_STAGES: Array<{ label: string; date: string }> = [
-  { label: 'Fim da Fase de Grupos', date: '27/06/2026' },
   { label: 'Fim dos 16-avos', date: '03/07/2026' },
   { label: 'Fim das Oitavas', date: '07/07/2026' },
   { label: 'Fim das Quartas', date: '11/07/2026' },
@@ -54,6 +57,7 @@ const ANALISE_MAP: Record<StageId, any> = {
   'inicio-copa': analiseInicioCopa,
   'fim-rodada1': analisePosRodada1,
   'fim-rodada2': analisePosRodada2,
+  'inicio-mata-mata': analisePosFaseGrupos,
 };
 
 const getFlag = (teamName: string) => {
@@ -163,22 +167,22 @@ const MESES_PT: Record<string, number> = {
 };
 
 const OFFICIAL_KNOCKOUT_RAW = [
-  { match: 73, stage: '16-avos', date: '2026-06-28', timeEt: '15:00', venue: 'Los Angeles, nos EUA', home: 'África do Sul', away: 'Canadá', homeSeed: '2º Grupo A', awaySeed: '2º Grupo B' },
-  { match: 74, stage: '16-avos', date: '2026-06-29', timeEt: '16:30', venue: 'Boston, nos EUA', home: 'Alemanha', away: '3º Grupo A/B/C/D/F', homeSeed: '1º Grupo E', awaySeed: 'Melhor 3º colocado' },
-  { match: 75, stage: '16-avos', date: '2026-06-29', timeEt: '21:00', venue: 'Monterrey, no México', home: 'Holanda', away: 'Marrocos', homeSeed: '1º Grupo F', awaySeed: '2º Grupo C' },
-  { match: 76, stage: '16-avos', date: '2026-06-29', timeEt: '13:00', venue: 'Houston, nos EUA', home: 'Brasil', away: 'Japão', homeSeed: '1º Grupo C', awaySeed: '2º Grupo F' },
-  { match: 77, stage: '16-avos', date: '2026-06-30', timeEt: '17:00', venue: 'Nova York/Nova Jersey, nos EUA', home: '1º Grupo I', away: '3º Grupo C/D/F/G/H', homeSeed: 'A definir', awaySeed: 'Melhor 3º colocado' },
-  { match: 78, stage: '16-avos', date: '2026-06-30', timeEt: '13:00', venue: 'Dallas, nos EUA', home: 'Costa do Marfim', away: '2º Grupo I', homeSeed: '2º Grupo E', awaySeed: 'A definir' },
-  { match: 79, stage: '16-avos', date: '2026-06-30', timeEt: '21:00', venue: 'Cidade do México, no México', home: 'México', away: '3º Grupo C/E/F/H/I', homeSeed: '1º Grupo A', awaySeed: 'Melhor 3º colocado' },
-  { match: 80, stage: '16-avos', date: '2026-07-01', timeEt: '12:00', venue: 'Atlanta, nos EUA', home: '1º Grupo L', away: '3º Grupo E/H/I/J/K', homeSeed: 'A definir', awaySeed: 'Melhor 3º colocado' },
-  { match: 81, stage: '16-avos', date: '2026-07-01', timeEt: '20:00', venue: 'Santa Clara, nos EUA', home: 'Estados Unidos', away: 'Bósnia e Herzegovina', homeSeed: '1º Grupo D', awaySeed: '3º Grupo B' },
-  { match: 82, stage: '16-avos', date: '2026-07-01', timeEt: '16:00', venue: 'Seattle, nos EUA', home: '1º Grupo G', away: '3º Grupo A/E/H/I/J', homeSeed: 'A definir', awaySeed: 'Melhor 3º colocado' },
-  { match: 83, stage: '16-avos', date: '2026-07-02', timeEt: '19:00', venue: 'Toronto, no Canadá', home: '2º Grupo K', away: '2º Grupo L', homeSeed: 'A definir', awaySeed: 'A definir' },
-  { match: 84, stage: '16-avos', date: '2026-07-02', timeEt: '15:00', venue: 'Los Angeles, nos EUA', home: '1º Grupo H', away: '2º Grupo J', homeSeed: 'A definir', awaySeed: 'A definir' },
-  { match: 85, stage: '16-avos', date: '2026-07-02', timeEt: '23:00', venue: 'Vancouver, no Canadá', home: 'Suíça', away: '3º Grupo E/F/G/I/J', homeSeed: '1º Grupo B', awaySeed: 'Melhor 3º colocado' },
-  { match: 86, stage: '16-avos', date: '2026-07-03', timeEt: '18:00', venue: 'Miami, nos EUA', home: 'Argentina', away: '2º Grupo H', homeSeed: '1º Grupo J', awaySeed: 'A definir' },
-  { match: 87, stage: '16-avos', date: '2026-07-03', timeEt: '21:30', venue: 'Kansas City, nos EUA', home: '1º Grupo K', away: '3º Grupo D/E/I/J/L', homeSeed: 'A definir', awaySeed: 'Melhor 3º colocado' },
-  { match: 88, stage: '16-avos', date: '2026-07-03', timeEt: '14:00', venue: 'Dallas, nos EUA', home: 'Austrália', away: '2º Grupo G', homeSeed: '2º Grupo D', awaySeed: 'A definir' },
+  { match: 73, stage: '16-avos', date: '2026-06-28', timeEt: '15:00', venue: 'Los Angeles, nos EUA', home: 'África do Sul', away: 'Canadá', homeSeed: '2º Grupo A', awaySeed: '2º Grupo B', winA: '22.6%', draw: '25.6%', winB: '51.8%', advA: '32.2%', advB: '67.8%' },
+  { match: 74, stage: '16-avos', date: '2026-06-29', timeEt: '16:30', venue: 'Boston, nos EUA', home: 'Alemanha', away: 'Paraguai', homeSeed: '1º Grupo E', awaySeed: 'Melhor 3º colocado', winA: '65.5%', draw: '21.7%', winB: '12.8%', advA: '81.5%', advB: '18.5%' },
+  { match: 75, stage: '16-avos', date: '2026-06-29', timeEt: '21:00', venue: 'Monterrey, no México', home: 'Holanda', away: 'Marrocos', homeSeed: '1º Grupo F', awaySeed: '2º Grupo C', winA: '46.1%', draw: '26.6%', winB: '27.4%', advA: '61.5%', advB: '38.5%' },
+  { match: 76, stage: '16-avos', date: '2026-06-29', timeEt: '13:00', venue: 'Houston, nos EUA', home: 'Brasil', away: 'Japão', homeSeed: '1º Grupo C', awaySeed: '2º Grupo F', winA: '47.9%', draw: '26.3%', winB: '25.8%', advA: '63.5%', advB: '36.5%' },
+  { match: 77, stage: '16-avos', date: '2026-06-30', timeEt: '17:00', venue: 'Nova York/Nova Jersey, nos EUA', home: 'França', away: 'Suécia', homeSeed: '1º Grupo I', awaySeed: 'Melhor 3º colocado', winA: '71.7%', draw: '19.3%', winB: '9.1%', advA: '86.7%', advB: '13.3%' },
+  { match: 78, stage: '16-avos', date: '2026-06-30', timeEt: '13:00', venue: 'Dallas, nos EUA', home: 'Costa do Marfim', away: 'Noruega', homeSeed: '2º Grupo E', awaySeed: '2º Grupo I', winA: '23.5%', draw: '25.8%', winB: '50.7%', advA: '33.4%', advB: '66.6%' },
+  { match: 79, stage: '16-avos', date: '2026-06-30', timeEt: '21:00', venue: 'Cidade do México, no México', home: 'México', away: 'Equador', homeSeed: '1º Grupo A', awaySeed: 'Melhor 3º colocado', winA: '45.9%', draw: '26.6%', winB: '27.6%', advA: '61.2%', advB: '38.8%' },
+  { match: 80, stage: '16-avos', date: '2026-07-01', timeEt: '12:00', venue: 'Atlanta, nos EUA', home: 'Inglaterra', away: 'RD do Congo', homeSeed: '1º Grupo L', awaySeed: 'Melhor 3º colocado', winA: '64.1%', draw: '22.2%', winB: '13.6%', advA: '80.2%', advB: '19.8%' },
+  { match: 81, stage: '16-avos', date: '2026-07-01', timeEt: '20:00', venue: 'Santa Clara, nos EUA', home: 'Estados Unidos', away: 'Bósnia e Herzegovina', homeSeed: '1º Grupo D', awaySeed: '3º Grupo B', winA: '54.2%', draw: '25.1%', winB: '20.8%', advA: '70.3%', advB: '29.7%' },
+  { match: 82, stage: '16-avos', date: '2026-07-01', timeEt: '16:00', venue: 'Seattle, nos EUA', home: 'Bélgica', away: 'Senegal', homeSeed: '1º Grupo G', awaySeed: 'Melhor 3º colocado', winA: '44.3%', draw: '26.8%', winB: '29.0%', advA: '59.4%', advB: '40.6%' },
+  { match: 83, stage: '16-avos', date: '2026-07-02', timeEt: '19:00', venue: 'Toronto, no Canadá', home: 'Portugal', away: 'Croácia', homeSeed: '2º Grupo K', awaySeed: '2º Grupo L', winA: '56.0%', draw: '24.6%', winB: '19.3%', advA: '72.3%', advB: '27.7%' },
+  { match: 84, stage: '16-avos', date: '2026-07-02', timeEt: '15:00', venue: 'Los Angeles, nos EUA', home: 'Espanha', away: 'Áustria', homeSeed: '1º Grupo H', awaySeed: '2º Grupo J', winA: '65.6%', draw: '21.7%', winB: '12.7%', advA: '81.6%', advB: '18.4%' },
+  { match: 85, stage: '16-avos', date: '2026-07-02', timeEt: '23:00', venue: 'Vancouver, no Canadá', home: 'Suíça', away: 'Argélia', homeSeed: '1º Grupo B', awaySeed: 'Melhor 3º colocado', winA: '52.7%', draw: '25.4%', winB: '21.9%', advA: '68.8%', advB: '31.2%' },
+  { match: 86, stage: '16-avos', date: '2026-07-03', timeEt: '18:00', venue: 'Miami, nos EUA', home: 'Argentina', away: 'Cabo Verde', homeSeed: '1º Grupo J', awaySeed: '2º Grupo H', winA: '74.7%', draw: '17.9%', winB: '7.4%', advA: '89.2%', advB: '10.8%' },
+  { match: 87, stage: '16-avos', date: '2026-07-03', timeEt: '21:30', venue: 'Kansas City, nos EUA', home: 'Colômbia', away: 'Gana', homeSeed: '1º Grupo K', awaySeed: 'Melhor 3º colocado', winA: '56.6%', draw: '24.5%', winB: '18.9%', advA: '72.9%', advB: '27.1%' },
+  { match: 88, stage: '16-avos', date: '2026-07-03', timeEt: '14:00', venue: 'Dallas, nos EUA', home: 'Austrália', away: 'Egito', homeSeed: '2º Grupo D', awaySeed: '2º Grupo G', winA: '35.7%', draw: '27.2%', winB: '37.1%', advA: '49.1%', advB: '50.9%' },
   { match: 89, stage: 'Oitavas', date: '2026-07-04', timeEt: '17:00', venue: 'Filadélfia, nos EUA', home: 'Vencedor Jogo 74', away: 'Vencedor Jogo 77', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
   { match: 90, stage: 'Oitavas', date: '2026-07-04', timeEt: '13:00', venue: 'Houston, nos EUA', home: 'Vencedor Jogo 73', away: 'Vencedor Jogo 75', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
   { match: 91, stage: 'Oitavas', date: '2026-07-05', timeEt: '16:00', venue: 'Nova York/Nova Jersey, nos EUA', home: 'Vencedor Jogo 76', away: 'Vencedor Jogo 78', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
@@ -209,6 +213,14 @@ const OFFICIAL_KNOCKOUT_MATCHES = OFFICIAL_KNOCKOUT_RAW.map((match) => ({
   'Seleção B': match.away,
   'Origem A': match.homeSeed,
   'Origem B': match.awaySeed,
+  // Probabilidades do modelo (presentes só nos 16-avos já definidos):
+  ...((match as any).winA ? {
+    'Vitória A': (match as any).winA,
+    'Empate': (match as any).draw,
+    'Vitória B': (match as any).winB,
+    'Avanço A': (match as any).advA,
+    'Avanço B': (match as any).advB,
+  } : {}),
 }));
 
 const parseDataHora = (jogo: any): number => {
@@ -266,6 +278,7 @@ const JogoCard: React.FC<{ jogo: any; theme: any; showGroup?: boolean }> = ({ jo
   const resultado = getResultado(jogo);
   const desfecho = resultado ? getDesfecho(resultado) : null;
   const hasProbabilities = hasMatchProbabilities(jogo);
+  const hasAdvancement = Boolean(jogo['Avanço A'] && jogo['Avanço B']);
   const dimClass = (d: Desfecho) => (resultado && desfecho !== d ? 'opacity-35' : '');
 
   return (
@@ -301,7 +314,13 @@ const JogoCard: React.FC<{ jogo: any; theme: any; showGroup?: boolean }> = ({ jo
           </div>
           <div className="space-y-1">
             <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block min-h-7 flex items-center justify-center break-words">{jogo['Seleção A']}</span>
-            {hasProbabilities ? (
+            {hasAdvancement ? (
+              <>
+                <span className="block text-[7px] font-montserrat font-black uppercase tracking-widest text-brand-dark/35 mb-0.5">Avança</span>
+                <span className={`font-exo text-xl font-bold italic ${theme.accentText} block`}>{jogo['Avanço A']}</span>
+                <span className="block text-[9px] font-montserrat font-bold tabular-nums text-brand-dark/40 mt-0.5">V {jogo['Vitória A']}</span>
+              </>
+            ) : hasProbabilities ? (
               <>
                 <span className={`font-exo text-lg font-bold italic ${theme.accentText} block ${dimClass('A')}`}>{jogo['Vitória A']}</span>
                 <span className={`block text-[9px] font-montserrat font-bold tabular-nums text-brand-dark/30 ${dimClass('A')}`}>{formatFairOdd(jogo['Vitória A'])}</span>
@@ -323,7 +342,13 @@ const JogoCard: React.FC<{ jogo: any; theme: any; showGroup?: boolean }> = ({ jo
           ) : (
             <div className="px-2.5 py-1 bg-brand-light rounded-full text-[9px] font-black text-brand-dark/25 mb-4">VS</div>
           )}
-          {hasProbabilities ? (
+          {hasAdvancement ? (
+            <div className="flex flex-col items-center opacity-70">
+              <span className="text-[8px] font-montserrat font-black uppercase tracking-widest mb-0.5 text-brand-dark/50">Empate</span>
+              <span className="font-exo text-xs font-bold italic text-brand-dark/70">{jogo['Empate']}</span>
+              <span className="mt-0.5 text-[7px] font-montserrat font-bold uppercase tracking-tight text-brand-dark/40">tempo normal</span>
+            </div>
+          ) : hasProbabilities ? (
             <div className={`flex flex-col items-center ${resultado && desfecho === 'E' ? '' : 'opacity-40'} ${dimClass('E')}`}>
               <span className="text-[8px] font-montserrat font-black uppercase tracking-widest mb-0.5">Empate</span>
               <span className="font-exo text-sm font-bold italic text-brand-dark">{jogo['Empate']}</span>
@@ -344,7 +369,13 @@ const JogoCard: React.FC<{ jogo: any; theme: any; showGroup?: boolean }> = ({ jo
           </div>
           <div className="space-y-1">
             <span className="font-montserrat font-black text-brand-dark uppercase text-[11px] leading-tight block min-h-7 flex items-center justify-center break-words">{jogo['Seleção B']}</span>
-            {hasProbabilities ? (
+            {hasAdvancement ? (
+              <>
+                <span className="block text-[7px] font-montserrat font-black uppercase tracking-widest text-brand-dark/35 mb-0.5">Avança</span>
+                <span className="font-exo text-xl font-bold italic text-brand-blue block">{jogo['Avanço B']}</span>
+                <span className="block text-[9px] font-montserrat font-bold tabular-nums text-brand-dark/40 mt-0.5">V {jogo['Vitória B']}</span>
+              </>
+            ) : hasProbabilities ? (
               <>
                 <span className={`font-exo text-lg font-bold italic text-brand-blue block ${dimClass('B')}`}>{jogo['Vitória B']}</span>
                 <span className={`block text-[9px] font-montserrat font-bold tabular-nums text-brand-dark/30 ${dimClass('B')}`}>{formatFairOdd(jogo['Vitória B'])}</span>
@@ -356,7 +387,12 @@ const JogoCard: React.FC<{ jogo: any; theme: any; showGroup?: boolean }> = ({ jo
         </div>
       </div>
 
-      {hasProbabilities ? (
+      {hasAdvancement ? (
+        <div className="flex h-1 overflow-hidden bg-brand-light rounded-full">
+          <div style={{ width: jogo['Avanço A'] }} className={theme.barColor} />
+          <div style={{ width: jogo['Avanço B'] }} className="bg-brand-blue" />
+        </div>
+      ) : hasProbabilities ? (
         <div className="flex h-1 overflow-hidden bg-brand-light rounded-full">
           <div style={{ width: jogo['Vitória A'] }} className={theme.barColor} />
           <div style={{ width: jogo['Empate'] }} className="bg-brand-dark/10" />

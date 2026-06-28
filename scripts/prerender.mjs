@@ -151,6 +151,20 @@ const routes = [
     changefreq: 'weekly',
     priority: '0.8',
     linkLabel: 'Hexa — análise atual',
+    title: 'Agora É Mata-Mata | Previsão Esportiva',
+    description:
+      'Com os 32 classificados definidos, o Brasil enfrenta o Japão nos 16-avos; França e Argentina abrem distância na nova simulação do mata-mata.',
+    h1: 'Agora é mata-mata',
+    body: [
+      'Depois dos 72 jogos da fase de grupos, comparamos um milhão de novas simulações com o retrato de 24 de junho e com a previsão inicial da Copa.',
+      'O Brasil enfrenta o Japão nos 16-avos e tem 5,7% de chance de título. França e Argentina concentram 42,1% dos títulos simulados no início do mata-mata.',
+    ],
+  },
+  {
+    path: '/caminho-do-hexa/fim-da-segunda-rodada',
+    changefreq: 'monthly',
+    priority: '0.6',
+    linkLabel: 'Hexa — fim da segunda rodada',
     title: 'O Hexa Ficou Mais Difícil | Previsão Esportiva',
     description:
       'Após a segunda rodada, o Brasil chega a 100% de classificação nas simulações, mas cai para 5,3% de chance de título; Argentina sobe e França mantém a liderança.',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowUpRight, CalendarDays, Check, Newspaper } from 'lucide-react';
 
-type EditionId = 'pos-rodada2' | 'pos-rodada1' | 'inicio-copa';
+type EditionId = 'pos-fase-grupos' | 'pos-rodada2' | 'pos-rodada1' | 'inicio-copa';
 
 const EDITIONS: Array<{
   id: EditionId;
@@ -12,11 +12,19 @@ const EDITIONS: Array<{
   number: string;
 }> = [
   {
+    id: 'pos-fase-grupos',
+    title: 'Agora É Mata-Mata',
+    date: '28/06/2026',
+    description: 'O retrato no início da segunda fase',
+    href: '/caminho-do-hexa',
+    number: '04',
+  },
+  {
     id: 'pos-rodada2',
     title: 'O Hexa Ficou Mais Difícil',
     date: '24/06/2026',
     description: 'O retrato depois da segunda rodada',
-    href: '/caminho-do-hexa',
+    href: '/caminho-do-hexa/fim-da-segunda-rodada',
     number: '03',
   },
   {
@@ -42,7 +50,7 @@ const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) =>
     <div className="mx-auto grid max-w-[1080px] gap-4 px-4 py-8 lg:grid-cols-[220px_minmax(0,1fr)]">
       <div className="relative overflow-hidden rounded-3xl bg-brand-dark p-6 text-white shadow-xl">
         <div className="pointer-events-none absolute -right-3 -top-10 font-montserrat text-[8rem] font-black leading-none text-white/[0.045]">
-          03
+          04
         </div>
         <div className="relative">
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-brand-neon/25 bg-brand-neon/10">
@@ -55,7 +63,7 @@ const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) =>
             Arquivo de reportagens
           </h2>
           <p className="mt-3 text-xs leading-relaxed text-white/50">
-            Três retratos do torneio, atualizados conforme a bola muda as probabilidades.
+            Quatro retratos do torneio, atualizados conforme a bola muda as probabilidades.
           </p>
         </div>
       </div>
@@ -71,11 +79,11 @@ const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) =>
             </p>
           </div>
           <span className="hidden font-montserrat text-[9px] font-bold uppercase tracking-widest text-brand-dark/35 sm:block">
-            3 edições publicadas
+            4 edições publicadas
           </span>
         </div>
 
-        <div className="grid flex-1 gap-3 md:grid-cols-3">
+        <div className="grid flex-1 gap-3 md:grid-cols-4">
           {EDITIONS.map((edition) => {
             const selected = edition.id === current;
             return (
