@@ -17,7 +17,7 @@ export const RESEARCH_CENTERS: Institution[] = [
     abbr: 'CER/UFBA',
     name: 'Centro de Estudos do Risco da Universidade Federal da Bahia',
     logo: '/assets/instituicoes/cer-ufba.webp',
-    url: 'https://www.ufba.br/',
+    url: 'https://cer.ufba.br/',
   },
 ];
 

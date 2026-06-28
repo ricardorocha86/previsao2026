@@ -21,6 +21,7 @@ import {
   ZoomOut,
   ShieldCheck,
   Share2,
+  Percent,
   X,
 } from 'lucide-react';
 import { db } from '../lib/firebase';
@@ -32,6 +33,7 @@ import flags from '../assets/flags.json';
 import forcaSelecoes from '../assets/forca_selecoes.json';
 import { toPng } from 'html-to-image';
 import { buildShareCardInnerHTML, getMontserratEmbedCSS, CARD_W, CARD_H, STAGE_W, STAGE_H, STAGE_OFFSET_X, STAGE_OFFSET_Y, type ShareCardData, type SCMatch } from './shareCard';
+import { officialThirdPlaceAssignment, type ThirdPlaceAssignmentColumn } from '../data/thirdPlaceAnnexC';
 
 type SourceMatch = Record<string, string>;
 type MatchStage = 'groups' | 'roundOf32' | 'roundOf16' | 'quarterfinals' | 'semifinals' | 'thirdPlace' | 'final';
@@ -722,35 +724,16 @@ const buildPairedRound = (stage: KnockoutStage, entrants: Array<QualifiedTeam | 
   return matches;
 };
 
-const matchThirds = (
-  qualifiedThirds: QualifiedTeam[],
-  slots: { matchId: string; allowed: string[] }[]
-): QualifiedTeam[] | null => {
-  const result: QualifiedTeam[] = new Array(slots.length);
-  const used = new Set<string>();
-
-  const backtrack = (slotIndex: number): boolean => {
-    if (slotIndex === slots.length) return true;
-
-    const allowed = slots[slotIndex].allowed;
-    for (let i = 0; i < qualifiedThirds.length; i++) {
-      const team = qualifiedThirds[i];
-      if (used.has(team.team)) continue;
-
-      const letter = groupLetter(team.group);
-      if (allowed.includes(letter)) {
-        used.add(team.team);
-        result[slotIndex] = team;
-        if (backtrack(slotIndex + 1)) return true;
-        used.delete(team.team);
-      }
-    }
-    return false;
-  };
-
-  if (backtrack(0)) return result;
-  return null;
-};
+const thirdPlaceSlotMatches: { matchId: string; winnerGroup: ThirdPlaceAssignmentColumn }[] = [
+  { matchId: 'ko-roundOf32-1', winnerGroup: 'E' },
+  { matchId: 'ko-roundOf32-2', winnerGroup: 'I' },
+  { matchId: 'ko-roundOf32-7', winnerGroup: 'D' },
+  { matchId: 'ko-roundOf32-8', winnerGroup: 'G' },
+  { matchId: 'ko-roundOf32-11', winnerGroup: 'A' },
+  { matchId: 'ko-roundOf32-12', winnerGroup: 'L' },
+  { matchId: 'ko-roundOf32-15', winnerGroup: 'B' },
+  { matchId: 'ko-roundOf32-16', winnerGroup: 'K' },
+];
 
 const getTeamByRank = (
   standings: Record<string, StandingRow[]>,
@@ -839,30 +822,22 @@ const buildBracket = (standings: Record<string, StandingRow[]>, predictions: Rec
   const bestThirds = sortOverallStandings(thirdPlaced).slice(0, 8);
   const qualifiers = sortOverallStandings([...firstAndSecond, ...bestThirds]);
 
-  // Match the 8 qualified third-placed teams to the 8 slots
-  const slots = [
-    { matchId: 'ko-roundOf32-1', allowed: ['A', 'B', 'C', 'D', 'F'] }, // Jogo 74: 1º E vs 3º A/B/C/D/F
-    { matchId: 'ko-roundOf32-2', allowed: ['C', 'D', 'F', 'G', 'H'] }, // Jogo 77: 1º I vs 3º C/D/F/G/H
-    { matchId: 'ko-roundOf32-7', allowed: ['B', 'E', 'F', 'I', 'J'] }, // Jogo 81: 1º D vs 3º B/E/F/I/J
-    { matchId: 'ko-roundOf32-8', allowed: ['A', 'E', 'H', 'I', 'J'] }, // Jogo 82: 1º G vs 3º A/E/H/I/J
-    { matchId: 'ko-roundOf32-11', allowed: ['C', 'E', 'F', 'H', 'I'] }, // Jogo 79: 1º A vs 3º C/E/F/H/I
-    { matchId: 'ko-roundOf32-12', allowed: ['E', 'H', 'I', 'J', 'K'] }, // Jogo 80: 1º L vs 3º E/H/I/J/K
-    { matchId: 'ko-roundOf32-15', allowed: ['E', 'F', 'G', 'I', 'J'] }, // Jogo 85: 1º B vs 3º E/F/G/I/J
-    { matchId: 'ko-roundOf32-16', allowed: ['D', 'E', 'I', 'J', 'L'] }, // Jogo 87: 1º K vs 3º D/E/I/J/L
-  ];
-
-  const matchedThirds = matchThirds(bestThirds, slots);
   const assignedThirds = new Map<string, QualifiedTeam>();
-  if (matchedThirds) {
-    slots.forEach((slot, index) => {
-      assignedThirds.set(slot.matchId, matchedThirds[index]);
+
+  // FIFA Annex C assigns the third-place teams by the exact combination of
+  // qualified third-place groups, not by best-third ranking order.
+  const thirdByGroup = new Map(bestThirds.map((team) => [groupLetter(team.group), team]));
+  const thirdAssignment = officialThirdPlaceAssignment([...thirdByGroup.keys()]);
+  if (thirdAssignment) {
+    thirdPlaceSlotMatches.forEach(({ matchId, winnerGroup }) => {
+      const assignedGroup = thirdAssignment[winnerGroup];
+      const team = thirdByGroup.get(assignedGroup);
+      if (team) assignedThirds.set(matchId, team);
     });
   } else {
-    // Fallback: assign bestThirds in order to the slots
-    slots.forEach((slot, index) => {
-      if (bestThirds[index]) {
-        assignedThirds.set(slot.matchId, bestThirds[index]);
-      }
+    thirdPlaceSlotMatches.forEach(({ matchId }, index) => {
+      const team = bestThirds[index];
+      if (team) assignedThirds.set(matchId, team);
     });
   }
 
@@ -982,14 +957,17 @@ const suggestedScore = (match: CupMatch): MatchPrediction => {
   return { homeGoals: away - home > 50 ? 0 : 1, awayGoals: away - home > 35 ? 2 : 1, penaltyWinner: null };
 };
 
-// Tabela de força das seleções (ELO normalizado para 0,1-1) e média de gols por partida,
-// carregadas de assets/forca_selecoes.json. Mesma estrutura da metodologia oficial
-// (compute_match_probabilities em forca_core.py): distribuímos a média de gols entre os
-// dois times proporcionalmente à força de cada um (share) e sorteamos uma Poisson por lado.
+// Tabela de força otimizada e parâmetros do modelo carregados de
+// assets/forca_selecoes.json. Mantém a mesma estrutura da metodologia oficial
+// (compute_match_probabilities em forca_core.py): distribuímos a média de gols entre
+// os dois times proporcionalmente à força de cada um (share).
 const FORCAS_SELECOES = forcaSelecoes.forcas as Record<string, number>;
 const MEDIA_GOLS_COPA = forcaSelecoes.mediaGols ?? 3.0;
 const FORCA_PADRAO = 0.5; // seleção sem dado de Elo (ex.: vaga de repescagem ainda indefinida)
-const MAX_GOLS_SORTEIO = 7; // teto de segurança para evitar placares absurdos
+const MAX_GOLS_POISSON = 10;
+const MAX_GOLS_PRORROGACAO = 15;
+const USAR_DIXON_COLES = forcaSelecoes.dixonColes ?? true;
+const RHO_DIXON_COLES = forcaSelecoes.rhoDixonColes ?? -0.13;
 
 const forcaSelecao = (team: string): number => FORCAS_SELECOES[team] ?? FORCA_PADRAO;
 
@@ -1006,25 +984,160 @@ const samplePoisson = (lambda: number): number => {
   return k - 1;
 };
 
-// Sorteia o placar de um jogo preservando a força de cada seleção. Pega a força (Elo
-// normalizado) de cada time, monta o share = força_casa / (força_casa + força_fora),
-// deriva lambda_casa/lambda_fora como média_gols * share e sorteia uma Poisson para cada
-// lado. Seleção forte marca mais e vence mais na proporção certa; a fraca ainda pode dar
-// zebra, mas com a probabilidade baixa correta — não mais com 9% fixo do sorteio uniforme.
-const randomScoreByStrength = (match: CupMatch): { homeGoals: number; awayGoals: number } => {
+const poissonSeries = (lambda: number, maxGoals: number) => {
+  const probabilities = Array.from({ length: maxGoals + 1 }, () => 0);
+  probabilities[0] = Math.exp(-lambda);
+  for (let goals = 1; goals <= maxGoals; goals += 1) {
+    probabilities[goals] = probabilities[goals - 1] * lambda / goals;
+  }
+  const residual = Math.max(0, 1 - probabilities.reduce((sum, value) => sum + value, 0));
+  probabilities[maxGoals] += residual;
+  return probabilities;
+};
+
+const dixonColesCorrection = (
+  homeGoals: number,
+  awayGoals: number,
+  lambdaHome: number,
+  lambdaAway: number,
+  rho = RHO_DIXON_COLES,
+) => {
+  if (homeGoals === 0 && awayGoals === 0) return 1 - lambdaHome * lambdaAway * rho;
+  if (homeGoals === 0 && awayGoals === 1) return 1 + lambdaHome * rho;
+  if (homeGoals === 1 && awayGoals === 0) return 1 + lambdaAway * rho;
+  if (homeGoals === 1 && awayGoals === 1) return 1 - rho;
+  return 1;
+};
+
+const poissonMatrix = (
+  lambdaHome: number,
+  lambdaAway: number,
+  maxGoals = MAX_GOLS_POISSON,
+  usarDixonColes = USAR_DIXON_COLES,
+  rhoDixonColes = RHO_DIXON_COLES,
+) => {
+  const homeProbabilities = poissonSeries(lambdaHome, maxGoals);
+  const awayProbabilities = poissonSeries(lambdaAway, maxGoals);
+  const matrix = homeProbabilities.map((homeProbability, homeGoals) =>
+    awayProbabilities.map((awayProbability, awayGoals) => {
+      const correction = usarDixonColes
+        ? dixonColesCorrection(homeGoals, awayGoals, lambdaHome, lambdaAway, rhoDixonColes)
+        : 1;
+      return homeProbability * awayProbability * correction;
+    })
+  );
+  const total = matrix.flat().reduce((sum, value) => sum + value, 0) || 1;
+  return matrix.map((row) => row.map((value) => value / total));
+};
+
+interface MatchProbabilities {
+  shareHome: number;
+  shareAway: number;
+  lambdaHome: number;
+  lambdaAway: number;
+  winHome: number;
+  draw: number;
+  winAway: number;
+  matrix: number[][];
+}
+
+interface KnockoutProbabilities extends MatchProbabilities {
+  extraWinHome: number;
+  extraDraw: number;
+  extraWinAway: number;
+  advanceHome: number;
+  advanceAway: number;
+}
+
+const matchProbabilities = (match: CupMatch): MatchProbabilities => {
   const forcaHome = forcaSelecao(match.homeTeam);
   const forcaAway = forcaSelecao(match.awayTeam);
 
   const total = forcaHome + forcaAway;
   const shareHome = total > 0 ? forcaHome / total : 0.5;
+  const shareAway = 1 - shareHome;
 
   const lambdaHome = MEDIA_GOLS_COPA * shareHome;
-  const lambdaAway = MEDIA_GOLS_COPA * (1 - shareHome);
+  const lambdaAway = MEDIA_GOLS_COPA * shareAway;
+  const matrix = poissonMatrix(lambdaHome, lambdaAway);
 
-  const homeGoals = Math.min(samplePoisson(lambdaHome), MAX_GOLS_SORTEIO);
-  const awayGoals = Math.min(samplePoisson(lambdaAway), MAX_GOLS_SORTEIO);
+  let winHome = 0;
+  let draw = 0;
+  let winAway = 0;
+  matrix.forEach((row, homeGoals) => {
+    row.forEach((probability, awayGoals) => {
+      if (homeGoals > awayGoals) winHome += probability;
+      else if (awayGoals > homeGoals) winAway += probability;
+      else draw += probability;
+    });
+  });
 
-  return { homeGoals, awayGoals };
+  return {
+    shareHome,
+    shareAway,
+    lambdaHome,
+    lambdaAway,
+    winHome,
+    draw,
+    winAway,
+    matrix,
+  };
+};
+
+const knockoutProbabilities = (match: CupMatch): KnockoutProbabilities => {
+  const base = matchProbabilities(match);
+  const extraMatrix = poissonMatrix(
+    base.lambdaHome * 0.3,
+    base.lambdaAway * 0.3,
+    MAX_GOLS_PRORROGACAO,
+    false,
+  );
+
+  let extraWinHome = 0;
+  let extraDraw = 0;
+  let extraWinAway = 0;
+  extraMatrix.forEach((row, homeGoals) => {
+    row.forEach((probability, awayGoals) => {
+      if (homeGoals > awayGoals) extraWinHome += probability;
+      else if (awayGoals > homeGoals) extraWinAway += probability;
+      else extraDraw += probability;
+    });
+  });
+
+  const advanceHome = base.winHome + base.draw * (extraWinHome + extraDraw * base.shareHome);
+  const advanceAway = base.winAway + base.draw * (extraWinAway + extraDraw * base.shareAway);
+
+  return {
+    ...base,
+    extraWinHome,
+    extraDraw,
+    extraWinAway,
+    advanceHome,
+    advanceAway,
+  };
+};
+
+const sampleScoreFromMatrix = (matrix: number[][]): { homeGoals: number; awayGoals: number } => {
+  const target = Math.random();
+  let cumulative = 0;
+  for (let homeGoals = 0; homeGoals < matrix.length; homeGoals += 1) {
+    for (let awayGoals = 0; awayGoals < matrix[homeGoals].length; awayGoals += 1) {
+      cumulative += matrix[homeGoals][awayGoals];
+      if (target <= cumulative) return { homeGoals, awayGoals };
+    }
+  }
+  return { homeGoals: matrix.length - 1, awayGoals: matrix[matrix.length - 1].length - 1 };
+};
+
+const formatProbability = (value: number) =>
+  new Intl.NumberFormat('pt-BR', {
+    style: 'percent',
+    maximumFractionDigits: 0,
+  }).format(value);
+
+const randomScoreByStrength = (match: CupMatch): { homeGoals: number; awayGoals: number } => {
+  const probabilities = matchProbabilities(match);
+  return sampleScoreFromMatrix(probabilities.matrix);
 };
 
 // Fase de grupos: empate é resultado válido, então não há pênaltis.
@@ -1033,14 +1146,41 @@ const randomGroupScore = (match: CupMatch): MatchPrediction => ({
   penaltyWinner: null,
 });
 
-// Mata-mata: precisa de vencedor. Sorteia o placar pela força e, em caso de empate no
-// tempo normal, decide o classificado nos pênaltis de forma aleatória (50/50 entre os
-// dois times), independente da força — pênalti é loteria.
+// Mata-mata: mesmo fluxo do app Streamlit. Sorteia o tempo normal pela matriz
+// Poisson+Dixon-Coles; empate vai para prorrogacao com lambda * 0.3; se persistir,
+// os penaltis seguem o share de forca do confronto.
 const randomKnockoutScore = (match: CupMatch): MatchPrediction => {
-  const { homeGoals, awayGoals } = randomScoreByStrength(match);
-  const penaltyWinner =
-    homeGoals === awayGoals ? (Math.random() < 0.5 ? match.homeTeam : match.awayTeam) : null;
+  const probabilities = matchProbabilities(match);
+  let { homeGoals, awayGoals } = sampleScoreFromMatrix(probabilities.matrix);
+  let penaltyWinner: string | null = null;
+
+  if (homeGoals === awayGoals) {
+    homeGoals += samplePoisson(probabilities.lambdaHome * 0.3);
+    awayGoals += samplePoisson(probabilities.lambdaAway * 0.3);
+    if (homeGoals === awayGoals) {
+      penaltyWinner = Math.random() < probabilities.shareHome ? match.homeTeam : match.awayTeam;
+    }
+  }
+
   return { homeGoals, awayGoals, penaltyWinner };
+};
+
+const randomKnockoutScoreForWinner = (match: CupMatch, team: string): MatchPrediction => {
+  for (let attempt = 0; attempt < 200; attempt += 1) {
+    const prediction = randomKnockoutScore(match);
+    if (resolvedWinner(match, prediction) === team) return prediction;
+  }
+
+  const prediction = randomKnockoutScore(match);
+  const homeWins = team === match.homeTeam;
+  if ((prediction.homeGoals ?? 0) === (prediction.awayGoals ?? 0)) {
+    return { ...prediction, penaltyWinner: team };
+  }
+  return {
+    homeGoals: homeWins ? Math.max(prediction.homeGoals ?? 0, (prediction.awayGoals ?? 0) + 1) : prediction.homeGoals,
+    awayGoals: homeWins ? prediction.awayGoals : Math.max(prediction.awayGoals ?? 0, (prediction.homeGoals ?? 0) + 1),
+    penaltyWinner: null,
+  };
 };
 
 const formatSaveTime = (value: string | null) => {
@@ -1148,11 +1288,11 @@ const ScoreInput: React.FC<{
       type="text"
       inputMode="numeric"
       pattern="[0-9]*"
-      maxLength={1}
+      maxLength={2}
       value={value ?? ''}
       disabled={disabled}
       onChange={(event) => {
-        const next = event.target.value.replace(/\D/g, '').slice(0, 1);
+        const next = event.target.value.replace(/\D/g, '').slice(0, 2);
         onChange(next === '' ? null : Number(next));
       }}
       className="h-12 w-12 rounded-lg border border-brand-dark/10 bg-white text-center font-montserrat text-2xl font-black text-brand-dark shadow-sm outline-none transition focus:border-brand-green focus:ring-4 focus:ring-brand-green/10 disabled:opacity-50"
@@ -1333,24 +1473,18 @@ const CompactScoreInput: React.FC<{
     type="text"
     inputMode="numeric"
     pattern="[0-9]*"
-    maxLength={1}
+    maxLength={2}
     value={value ?? ''}
     disabled={disabled || official}
     data-group-score-input={inputKey}
     onKeyDown={(event) => {
-      if (/^[0-9]$/.test(event.key)) {
-        event.preventDefault();
-        onChange(Number(event.key));
-        return;
-      }
-
       if (event.key === 'Backspace' || event.key === 'Delete') {
         event.preventDefault();
         onChange(null);
       }
     }}
     onChange={(event) => {
-      const next = event.target.value.replace(/\D/g, '').slice(-1);
+      const next = event.target.value.replace(/\D/g, '').slice(-2);
       onChange(next === '' ? null : Number(next));
     }}
     className={`h-8 w-8 rounded-md border text-center font-montserrat text-sm font-black outline-none transition focus:border-brand-green focus:ring-2 focus:ring-brand-green/15 sm:h-9 sm:w-9 ${
@@ -1455,11 +1589,11 @@ const KnockoutScoreInput: React.FC<{
     type="text"
     inputMode="numeric"
     pattern="[0-9]*"
-    maxLength={1}
+    maxLength={2}
     value={value ?? ''}
     disabled={disabled}
     onChange={(event) => {
-      const next = event.target.value.replace(/\D/g, '').slice(0, 1);
+      const next = event.target.value.replace(/\D/g, '').slice(0, 2);
       onChange(next === '' ? null : Number(next));
     }}
     className="h-[18px] w-5 rounded border border-brand-dark/15 bg-white text-center font-montserrat text-[11px] font-black leading-none text-brand-dark outline-none transition focus:border-brand-green focus:ring-2 focus:ring-brand-green/15 disabled:opacity-50"
@@ -1561,11 +1695,14 @@ const KnockoutTeamRow: React.FC<{
   winner: string | null;
   disabled: boolean;
   align: 'left' | 'right';
+  advanceProbability?: number | null;
   onScore: (match: CupMatch, side: 'homeGoals' | 'awayGoals', value: number | null) => void;
   onPickWinner: (match: CupMatch, team: string) => void;
-}> = ({ match, team, seed, side, prediction, winner, disabled, align, onScore, onPickWinner }) => {
+}> = ({ match, team, seed, side, prediction, winner, disabled, align, advanceProbability, onScore, onPickWinner }) => {
   const code = teamCode(team);
   const selected = winner === team;
+  const probabilityLabel = advanceProbability == null ? null : formatProbability(advanceProbability);
+  const displayLabel = probabilityLabel ?? code;
   const teamButton = (
     <button
       type="button"
@@ -1576,10 +1713,11 @@ const KnockoutTeamRow: React.FC<{
         align === 'right' ? 'flex-row-reverse justify-start text-left' : 'justify-start text-left'
       }`}
     >
-      <CompactFlag team={team} square />
-      <span className="min-w-0 truncate font-montserrat text-[9px] font-black uppercase text-brand-dark/70">
-        {code}
+      {align === 'right' ? null : <CompactFlag team={team} square />}
+      <span className={`min-w-0 truncate font-montserrat text-[9px] font-black uppercase ${probabilityLabel ? 'tabular-nums text-brand-dark/45' : 'text-brand-dark/70'}`}>
+        {displayLabel}
       </span>
+      {align === 'right' ? <CompactFlag team={team} square /> : null}
       {seed && <small className="sr-only">{seed}</small>}
       <span className="sr-only">{team}</span>
     </button>
@@ -1623,10 +1761,11 @@ const BracketMatchCard: React.FC<{
   disabled: boolean;
   align: 'left' | 'right';
   isFinal?: boolean;
+  showProbabilities?: boolean;
   onScore: (match: CupMatch, side: 'homeGoals' | 'awayGoals', value: number | null) => void;
   onPenalty: (match: CupMatch, team: string) => void;
   onPickWinner: (match: CupMatch, team: string) => void;
-}> = ({ match, stage, slot, predictions, disabled, align, isFinal = false, onScore, onPenalty, onPickWinner }) => {
+}> = ({ match, stage, slot, predictions, disabled, align, isFinal = false, showProbabilities = false, onScore, onPenalty, onPickWinner }) => {
   if (!match) {
     return (
       <article className="grid min-h-[58px] place-items-center rounded-lg border border-dashed border-brand-dark/15 bg-white/40 px-2 py-1 text-center transition duration-200 hover:bg-white/60">
@@ -1639,6 +1778,7 @@ const BracketMatchCard: React.FC<{
   const tied = hasScore(prediction) && prediction.homeGoals === prediction.awayGoals;
   const winner = resolvedWinner(match, prediction);
   const needsPenalty = tied && match.stage !== 'groups';
+  const probabilities = showProbabilities ? knockoutProbabilities(match) : null;
 
   return (
     <article
@@ -1651,16 +1791,6 @@ const BracketMatchCard: React.FC<{
           ? stageMeta[stage].title
           : `${stageMeta[stage].title} ${slot + 1}`}
       </span>
-      {winner && (
-        <span
-          className={`absolute ${
-            winner === match.awayTeam ? '-bottom-1' : '-top-1'
-          } -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-brand-green text-white shadow-sm ring-2 ring-white z-20`}
-        >
-          <CheckCircle2 className="h-2.5 w-2.5" />
-        </span>
-      )}
-
       <div className="grid gap-1">
         <KnockoutTeamRow
           match={match}
@@ -1671,6 +1801,7 @@ const BracketMatchCard: React.FC<{
           winner={winner}
           disabled={disabled}
           align={align}
+          advanceProbability={probabilities?.advanceHome ?? null}
           onScore={onScore}
           onPickWinner={onPickWinner}
         />
@@ -1683,6 +1814,7 @@ const BracketMatchCard: React.FC<{
           winner={winner}
           disabled={disabled}
           align={align}
+          advanceProbability={probabilities?.advanceAway ?? null}
           onScore={onScore}
           onPickWinner={onPickWinner}
         />
@@ -1717,10 +1849,11 @@ const BracketRoundColumn: React.FC<{
   predictions: Record<string, MatchPrediction>;
   disabled: boolean;
   align: 'left' | 'right';
+  showProbabilities: boolean;
   onScore: (match: CupMatch, side: 'homeGoals' | 'awayGoals', value: number | null) => void;
   onPenalty: (match: CupMatch, team: string) => void;
   onPickWinner: (match: CupMatch, team: string) => void;
-}> = ({ stage, matches, predictions, disabled, align, onScore, onPenalty, onPickWinner }) => {
+}> = ({ stage, matches, predictions, disabled, align, showProbabilities, onScore, onPenalty, onPickWinner }) => {
   const slots = roundSlots[stage] / 2;
   const completed = matches.filter((match) => isResolved(match, predictions[match.id])).length;
 
@@ -1750,6 +1883,7 @@ const BracketRoundColumn: React.FC<{
                 predictions={predictions}
                 disabled={disabled}
                 align={align}
+                showProbabilities={showProbabilities}
                 onScore={onScore}
                 onPenalty={onPenalty}
                 onPickWinner={onPickWinner}
@@ -1849,10 +1983,11 @@ const FinalStandoff: React.FC<{
   match?: CupMatch;
   prediction: MatchPrediction;
   disabled: boolean;
+  showProbabilities: boolean;
   onScore: (match: CupMatch, side: 'homeGoals' | 'awayGoals', value: number | null) => void;
   onPenalty: (match: CupMatch, team: string) => void;
   onPickWinner: (match: CupMatch, team: string) => void;
-}> = ({ match, prediction, disabled, onScore, onPenalty, onPickWinner }) => {
+}> = ({ match, prediction, disabled, showProbabilities, onScore, onPenalty, onPickWinner }) => {
   if (!match) {
     return (
       <article className="grid min-h-[64px] place-items-center rounded-xl border border-dashed border-brand-yellow/30 bg-white/40 px-2 py-2 text-center">
@@ -1863,9 +1998,12 @@ const FinalStandoff: React.FC<{
 
   const tied = hasScore(prediction) && prediction.homeGoals === prediction.awayGoals;
   const winner = resolvedWinner(match, prediction);
+  const probabilities = showProbabilities ? knockoutProbabilities(match) : null;
 
-  const teamButton = (team: string, seed?: string) => {
+  const teamButton = (team: string, seed?: string, advanceProbability?: number | null) => {
     const selected = winner === team;
+    const probabilityLabel = advanceProbability == null ? null : formatProbability(advanceProbability);
+    const displayLabel = probabilityLabel ?? teamCode(team);
     return (
       <button
         type="button"
@@ -1881,7 +2019,9 @@ const FinalStandoff: React.FC<{
         <span className="grid h-8 w-12 place-items-center overflow-hidden rounded border border-brand-dark/10 bg-white">
           <img src={flagFor(team)} alt="" className="h-full w-full object-cover" loading="lazy" decoding="async" />
         </span>
-        <span className="font-montserrat text-[9px] font-black uppercase tracking-wide text-brand-dark/80">{teamCode(team)}</span>
+        <span className={`font-montserrat text-[9px] font-black uppercase tracking-wide ${probabilityLabel ? 'tabular-nums text-brand-dark/45' : 'text-brand-dark/80'}`}>
+          {displayLabel}
+        </span>
       </button>
     );
   };
@@ -1891,11 +2031,11 @@ const FinalStandoff: React.FC<{
       type="text"
       inputMode="numeric"
       pattern="[0-9]*"
-      maxLength={1}
+      maxLength={2}
       value={value ?? ''}
       disabled={disabled}
       onChange={(event) => {
-        const next = event.target.value.replace(/\D/g, '').slice(0, 1);
+        const next = event.target.value.replace(/\D/g, '').slice(0, 2);
         onScore(match, side, next === '' ? null : Number(next));
       }}
       className="h-6 w-6 rounded-md border border-brand-dark/15 bg-white text-center font-montserrat text-xs font-black text-brand-dark outline-none transition focus:border-brand-green focus:ring-2 focus:ring-brand-green/15 disabled:opacity-50"
@@ -1910,13 +2050,13 @@ const FinalStandoff: React.FC<{
       }`}
     >
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1">
-        {teamButton(match.homeTeam, match.homeSeed)}
+        {teamButton(match.homeTeam, match.homeSeed, probabilities?.advanceHome ?? null)}
         <div className="flex items-center gap-0.5">
           {finalScoreInput(`${match.homeTeam} gols`, prediction.homeGoals, 'homeGoals')}
           <span className="font-montserrat text-[10px] font-black uppercase text-brand-dark/30">x</span>
           {finalScoreInput(`${match.awayTeam} gols`, prediction.awayGoals, 'awayGoals')}
         </div>
-        {teamButton(match.awayTeam, match.awaySeed)}
+        {teamButton(match.awayTeam, match.awaySeed, probabilities?.advanceAway ?? null)}
       </div>
 
       {tied && (
@@ -1947,10 +2087,12 @@ const KnockoutBracket: React.FC<{
   predictions: Record<string, MatchPrediction>;
   champion: string | null;
   disabled: boolean;
+  showProbabilities: boolean;
+  onToggleProbabilities: () => void;
   onScore: (match: CupMatch, side: 'homeGoals' | 'awayGoals', value: number | null) => void;
   onPenalty: (match: CupMatch, team: string) => void;
   onPickWinner: (match: CupMatch, team: string) => void;
-}> = ({ bracket, predictions, champion, disabled, onScore, onPenalty, onPickWinner }) => {
+}> = ({ bracket, predictions, champion, disabled, showProbabilities, onToggleProbabilities, onScore, onPenalty, onPickWinner }) => {
   const leftStages: KnockoutStage[] = ['roundOf32', 'roundOf16', 'quarterfinals', 'semifinals'];
   const rightStages: KnockoutStage[] = ['semifinals', 'quarterfinals', 'roundOf16', 'roundOf32'];
   const [zoom, setZoom] = useState(1);
@@ -2030,7 +2172,7 @@ const KnockoutBracket: React.FC<{
       observer.disconnect();
       window.removeEventListener('resize', measure);
     };
-  }, [bracket, predictions, zoom]);
+  }, [bracket, predictions, zoom, showProbabilities]);
 
   const changeZoom = (direction: -1 | 1) => {
     setZoom((current) => {
@@ -2169,7 +2311,22 @@ const KnockoutBracket: React.FC<{
 
   return (
     <div className="min-w-0 max-w-full">
-      <div className="mb-2 flex items-center justify-end gap-1">
+      <div className="mb-2 flex flex-wrap items-center justify-end gap-1">
+        <button
+          type="button"
+          onClick={onToggleProbabilities}
+          className={`inline-flex h-8 items-center justify-center gap-1.5 rounded-md border px-2.5 font-montserrat text-[10px] font-black uppercase tracking-[0.08em] transition ${
+            showProbabilities
+              ? 'border-brand-dark/20 bg-brand-dark/5 text-brand-dark/60'
+              : 'border-brand-dark/10 bg-white text-brand-dark/50 hover:border-brand-green/35 hover:text-brand-green'
+          }`}
+          aria-pressed={showProbabilities}
+          aria-label={showProbabilities ? 'Ocultar probabilidades do mata-mata' : 'Incluir probabilidades no mata-mata'}
+          title={showProbabilities ? 'Ocultar probabilidades' : 'Incluir probabilidades'}
+        >
+          <Percent className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline">Probabilidades</span>
+        </button>
         <button
           type="button"
           onClick={() => changeZoom(-1)}
@@ -2243,6 +2400,7 @@ const KnockoutBracket: React.FC<{
               predictions={predictions}
               disabled={disabled}
               align="left"
+              showProbabilities={showProbabilities}
               onScore={onScore}
               onPenalty={onPenalty}
               onPickWinner={onPickWinner}
@@ -2308,6 +2466,7 @@ const KnockoutBracket: React.FC<{
                     match={finalMatch}
                     prediction={finalMatch ? predictions[finalMatch.id] ?? emptyPrediction() : emptyPrediction()}
                     disabled={disabled}
+                    showProbabilities={showProbabilities}
                     onScore={onScore}
                     onPenalty={onPenalty}
                     onPickWinner={onPickWinner}
@@ -2330,6 +2489,7 @@ const KnockoutBracket: React.FC<{
                     predictions={predictions}
                     disabled={disabled}
                     align="left"
+                    showProbabilities={showProbabilities}
                     onScore={onScore}
                     onPenalty={onPenalty}
                     onPickWinner={onPickWinner}
@@ -2348,6 +2508,7 @@ const KnockoutBracket: React.FC<{
               predictions={predictions}
               disabled={disabled}
               align="right"
+              showProbabilities={showProbabilities}
               onScore={onScore}
               onPenalty={onPenalty}
               onPickWinner={onPickWinner}
@@ -2439,6 +2600,7 @@ const BolaoPage: React.FC = () => {
   const [modalState, setModalState] = useState<'none' | 'sending' | 'success' | 'error'>('none');
   const [acceptedTerms, setAcceptedTerms] = useState(true);
   const [legalModal, setLegalModal] = useState<{ open: boolean; tab: LegalTab }>({ open: false, tab: 'terms' });
+  const [showKnockoutProbabilities, setShowKnockoutProbabilities] = useState(false);
   const shareCardRef = useRef<HTMLDivElement>(null);
   const [cardPng, setCardPng] = useState<string | null>(null);
   const [isGeneratingCard, setIsGeneratingCard] = useState(false);
@@ -2737,12 +2899,7 @@ const BolaoPage: React.FC = () => {
     updateDraft((current) => {
       const predictions = resetDownstream(current.predictions, match);
       const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
-      const homeWins = team === match.homeTeam;
-      predictions[match.id] = {
-        homeGoals: homeWins ? 1 : 0,
-        awayGoals: homeWins ? 0 : 1,
-        penaltyWinner: null,
-      };
+      predictions[match.id] = randomKnockoutScoreForWinner(match, team);
       predictionSources[match.id] = 'manual';
       return { ...current, predictions, predictionSources };
     });
@@ -3177,6 +3334,8 @@ const BolaoPage: React.FC = () => {
                 predictions={draft.predictions}
                 champion={champion}
                 disabled={isSubmitted}
+                showProbabilities={showKnockoutProbabilities}
+                onToggleProbabilities={() => setShowKnockoutProbabilities((current) => !current)}
                 onScore={setScore}
                 onPenalty={setPenalty}
                 onPickWinner={setKnockoutWinner}
