@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Avaliação retroativa de modelos probabilísticos — Copa do Mundo 2026</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #f2f0eb;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 16px;
+  line-height: 1.75;
+  color: #1a1a1a;
+}
+
+article {
+  max-width: 780px;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 3rem 3.5rem;
+  border: 1px solid #ddd;
+}
+
+/* ---- HEADER ---- */
+.art-title {
+  font-size: 1.55rem;
+  font-weight: normal;
+  line-height: 1.35;
+  color: #0d2145;
+  margin-bottom: 0.5rem;
+}
+.art-meta {
+  font-family: 'Arial', sans-serif;
+  font-size: 0.78rem;
+  color: #666;
+  letter-spacing: 0.03em;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid #0d2145;
+}
+
+/* ---- ABSTRACT ---- */
+.abstract {
+  background: #f7f9fc;
+  border-left: 4px solid #2a5298;
+  padding: 1rem 1.25rem;
+  margin-bottom: 2rem;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: #333;
+}
+.abstract strong { font-family: 'Arial', sans-serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: #2a5298; }
+
+/* ---- SECTIONS ---- */
+h2 {
+  font-family: 'Arial', sans-serif;
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: #0d2145;
+  margin-top: 2.25rem;
+  margin-bottom: 0.6rem;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #c8d4e8;
+}
+h3 {
+  font-family: 'Arial', sans-serif;
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #1a1a1a;
+  margin-top: 1.5rem;
+  margin-bottom: 0.4rem;
+}
+p { margin-bottom: 0.75rem; text-align: justify; }
+
+/* ---- MATH DISPLAY ---- */
+.math-block { overflow-x: auto; margin: 1rem 0; padding: 0.5rem 0; text-align: center; }
+.katex-display { margin: 0 !important; }
+
+/* ---- TABLES ---- */
+.tbl-wrap { overflow-x: auto; margin: 0.4rem 0; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Arial', sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+thead tr { background: #1f3e72; color: #fff; }
+thead th { padding: 7px 10px; text-align: left; font-weight: normal; letter-spacing: 0.01em; }
+tbody tr:nth-child(even) { background: #f0f4fb; }
+tbody tr:nth-child(odd)  { background: #fff; }
+tbody td { padding: 5px 10px; border-bottom: 1px solid #dce4f0; vertical-align: middle; }
+tbody tr.baseline-row td { color: #888; font-style: italic; }
+.tbl-caption {
+  font-family: 'Arial', sans-serif;
+  font-size: 0.78rem;
+  color: #555;
+  font-style: italic;
+  margin-top: 0.3rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+}
+.tbl-title {
+  font-family: 'Arial', sans-serif;
+  font-size: 0.82rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.35rem;
+  margin-top: 1.25rem;
+}
+td.center { text-align: center; }
+.hit-yes { color: #1a8c44; font-weight: bold; }
+.hit-no  { color: #cc2200; }
+/* per-bin calibration table: compact + non-wrapping first column */
+.bins-table { font-size: 0.72rem; }
+.bins-table th:first-child, .bins-table td:first-child { white-space: nowrap; padding-right: 12px; }
+
+/* ---- CALIBRATION CHART ---- */
+.chart-wrap {
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  background: #f9fafc;
+  border: 1px solid #dce4f0;
+  border-radius: 4px;
+}
+.chart-title {
+  font-family: 'Arial', sans-serif;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #0d2145;
+  margin-bottom: 6px;
+}
+.chart-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 10px; }
+.chart-legend span {
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'Arial', sans-serif; font-size: 0.78rem; color: #444;
+}
+.swatch { width: 28px; height: 2.5px; border-radius: 2px; display: inline-block; }
+.swatch-dash { background: repeating-linear-gradient(90deg,#888 0 5px,transparent 5px 9px); }
+/* square canvas wrapper */
+.chart-canvas-wrap { position: relative; width: min(100%, 520px); margin: 0 auto; }
+/* legend overlaid in the lower-right corner of the plot */
+.cal-legend {
+  position: absolute; right: 10px; bottom: 48px;
+  background: rgba(255,255,255,0.88);
+  border: 1px solid #dce4f0; border-radius: 4px;
+  padding: 6px 9px;
+  display: flex; flex-direction: column; gap: 4px;
+  font-family: 'Arial', sans-serif; font-size: 0.7rem; color: #3a3a3a;
+  pointer-events: none;
+}
+.cal-legend span { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.cal-legend i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+.fig-caption {
+  font-family: 'Arial', sans-serif;
+  font-size: 0.78rem; color: #555; font-style: italic;
+  margin-top: 0.5rem; line-height: 1.5;
+}
+
+/* ---- CALLOUT ---- */
+.callout {
+  background: #fff8e6;
+  border-left: 4px solid #c8860a;
+  padding: 0.6rem 1rem;
+  margin: 0.75rem 0;
+  font-size: 0.85rem;
+  color: #4a3000;
+}
+.callout strong { color: #7a5200; }
+
+/* ---- SUMMARY BOXES ---- */
+.stat-row { display: flex; gap: 10px; margin: 0.75rem 0; flex-wrap: wrap; }
+.stat-box {
+  flex: 1; min-width: 120px;
+  background: #f7f9fc;
+  border: 1px solid #d0d9f0;
+  border-radius: 5px;
+  padding: 0.6rem 0.75rem;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+}
+.stat-box .val { font-size: 1.35rem; font-weight: bold; color: #1f3e72; }
+.stat-box .lbl { font-size: 0.72rem; color: #777; margin-top: 2px; }
+
+/* ---- DIVERGENCE CARDS ---- */
+.div-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+  margin: 1rem 0;
+}
+.div-card {
+  border: 1px solid #d3ddec;
+  border-radius: 6px;
+  overflow: hidden;
+  font-family: 'Arial', sans-serif;
+  background: #fff;
+}
+.dc-head {
+  background: #1f3e72; color: #fff;
+  padding: 6px 10px;
+  display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+}
+.dc-match { font-weight: bold; font-size: 0.82rem; line-height: 1.3; }
+.dc-jr { font-size: 0.68rem; opacity: 0.85; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.dc-res { padding: 5px 10px; background: #eef2f9; font-size: 0.76rem; border-bottom: 1px solid #dce4f0; }
+.dc-res b { color: #0d2145; }
+.dc-rows { padding: 3px 0; }
+.dc-row {
+  display: grid; grid-template-columns: 1fr auto 1.2rem;
+  gap: 8px; align-items: center;
+  padding: 3px 10px; font-size: 0.78rem;
+}
+.dc-row.diss { background: #fff7e6; }
+.dc-row .m-name { color: #444; }
+.dc-row .m-pred { text-align: right; font-weight: bold; white-space: nowrap; }
+.dc-row .m-pred small { font-weight: normal; color: #888; }
+.dc-row .m-mark { text-align: center; }
+.diss-tag {
+  display: inline-block; font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.04em;
+  color: #9a6a00; background: #ffe6b0; border-radius: 3px; padding: 0 4px; margin-left: 3px; vertical-align: middle;
+}
+.dc-foot { padding: 5px 10px; border-top: 1px solid #eee; font-size: 0.72rem; color: #555; font-style: italic; line-height: 1.4; }
+.m-ok { color: #1a8c44; font-weight: bold; }
+.m-no { color: #cc2200; }
+
+/* ---- CONFUSION MATRICES (divergence games) ---- */
+.cm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 0.6rem 0 0.3rem; }
+.cm-box { font-family: 'Arial', sans-serif; }
+.cm-title { font-weight: bold; color: #0d2145; font-size: 0.74rem; text-align: center; margin-bottom: 4px; }
+.cm-table { width: 100%; border-collapse: collapse; }
+.cm-table td, .cm-table th { border: 1px solid #e6e6e6; text-align: center; padding: 5px 3px; font-weight: normal; }
+.cm-table th, .cm-table .cm-rowlab { color: #777; font-size: 0.62rem; background: #f5f7fb; white-space: nowrap; }
+.cm-corner { background: #fff !important; border: none !important; }
+.cm-cell { font-size: 0.78rem; font-variant-numeric: tabular-nums; color: #333; }
+.cm-cell.diag { font-weight: bold; }
+@media (max-width: 560px) { .cm-grid { grid-template-columns: 1fr; max-width: 320px; margin-left: auto; margin-right: auto; } }
+
+/* significant paired difference */
+.sig-cell { background: #e9f7ee !important; font-weight: bold; }
+table td small { color: #888; }
+/* paired-comparison table: wider first column, point estimate over its interval */
+.paired-table td { text-align: center; }
+.paired-table th:first-child, .paired-table td:first-child { white-space: nowrap; text-align: left; padding-right: 18px; }
+.paired-table small { display: block; white-space: nowrap; font-weight: normal; margin-top: 1px; }
+
+/* ---- FOOTER ---- */
+footer {
+  font-family: 'Arial', sans-serif;
+  font-size: 0.77rem;
+  color: #777;
+  border-top: 1px solid #ddd;
+  padding-top: 0.8rem;
+  margin-top: 2.5rem;
+  line-height: 1.6;
+}
+
+@media print {
+  body { background: white; }
+  article { border: none; margin: 0; padding: 1.5cm 2cm; max-width: 100%; }
+}
+</style>
+</head>
+<body>
+<article>
+
+<!-- ========== CABEÇALHO ========== -->
+<header>
+  <h1 class="art-title">Avaliação retroativa de modelos probabilísticos na fase de grupos — Copa do Mundo 2026</h1>
+  <div class="art-meta">
+    72 jogos &nbsp;·&nbsp; 3 rodadas (24 por rodada) &nbsp;·&nbsp; 3 competidores &nbsp;·&nbsp; 28 jun. 2026
+  </div>
+</header>
+
+<!-- ========== RESUMO ========== -->
+<!-- ========== 1. INTRODUÇÃO ========== -->
+<h2>1. Introdução</h2>
+<p>
+  A Copa do Mundo de 2026 realizou sua fase de grupos entre 12 e 27 de junho, com 48 seleções disputando
+  72 jogos em campo neutro — eliminando o fator mandante convencional. Três sistemas de previsão foram
+  colocados à prova retroativamente: (i) um modelo estatístico baseado em distribuição de Poisson,
+  (ii) um modelo bayesiano com atualização sequencial, e (iii) a média do bolão, agregação dos palpites
+  de 18 participantes registrados antes do início do torneio.
+</p>
+<p>
+  A avaliação vai além do acerto bruto. O objetivo é mensurar quão bem calibradas estavam as
+  <em>distribuições de probabilidade</em> sobre os três resultados possíveis de cada jogo
+  — vitória da seleção A, empate ou vitória da seleção B —, tarefa que recompensa confiança
+  adequada e penaliza confiança excessiva em previsões erradas.
+</p>
+
+<!-- ========== 2. COMPETIDORES ========== -->
+<h2>2. Competidores e dados</h2>
+
+<h3>2.1 Modelo de Força</h3>
+<p>
+  Baseado em Poisson bivariado com correção de Dixon-Coles (\(\rho = -0{,}13\)) para placares de baixa
+  pontuação. As forças de ataque e defesa de cada seleção são estimadas a partir de resultados históricos
+  ponderados por recência e nível da competição. O modelo é <strong>reatualizado após cada rodada</strong>;
+  cada rodada é avaliada com o <em>snapshot</em> tomado estritamente antes dela.
+</p>
+
+<h3>2.2 Modelo Bayesiano</h3>
+<p>
+  Incorpora priors informados por rankings Elo e FIFA e os atualiza sequencialmente com os resultados
+  observados. Por limitação operacional, o <em>snapshot</em> pós-R2 não foi produzido a tempo; a
+  Rodada 3 é avaliada com o mesmo <em>snapshot</em> de R2 — assimetria em relação à Força.
+</p>
+
+<h3>2.3 Palpiteiros e suavização de Laplace</h3>
+<p>
+  Dezoito participantes registraram palpites de placar antes do início da Copa. Cada placar é
+  convertido em voto de resultado e os votos são contados por jogo. Trata-se de um competidor
+  <strong>estático</strong>: a mesma distribuição calculada pré-torneio é usada nas três rodadas,
+  sem atualização. Seja \((h, d, a)\) o número de votos para vitória A, empate e vitória B, com
+  \(n = h + d + a = 18\). A frequência bruta \(\hat{p}_k = h_k/18\) colapsa para zero quando
+  nenhum participante votou num resultado, tornando o log loss infinito se aquele resultado ocorrer.
+  Aplicamos <strong>suavização de Laplace (add-one)</strong>:
+</p>
+<div class="math-block">
+  \[\hat{p}_k = \frac{h_k + 1}{n + 3}, \quad k \in \{V_A,\, E,\, V_B\}\]
+</div>
+<p>
+  Equivale a começar cada resultado com um voto pseudobservado — um prior uniforme, conservador e
+  sem hiperparâmetros livres a ajustar; o denominador \(n + 3 = 21\) garante \(\sum_k \hat{p}_k = 1\).
+  A compressão resultante restringe as probabilidades ao intervalo
+  \([4{,}8\%,\; 90{,}5\%]\), com consequências para o acerto (ver §6.1). A Tabela 1 mostra,
+  num caso extremo (16–2–0 votos), por que a Laplace é preferível às alternativas.
+</p>
+
+<p class="tbl-title">Tabela 1 — Efeito de diferentes métodos de suavização (exemplo: 16 votos-A, 2 votos-Emp, 0 votos-B; \(n = 18\))</p>
+<div class="tbl-wrap"><table>
+  <thead><tr>
+    <th>Método</th><th>\(\hat{p}(V_A)\)</th><th>\(\hat{p}(E)\)</th>
+    <th>\(\hat{p}(V_B)\)</th><th>LogLoss se \(V_B\) ocorre</th>
+  </tr></thead>
+  <tbody>
+    <tr><td>Bruta \(h_k/n\)</td><td>88,9%</td><td>11,1%</td>
+        <td style="color:#c0392b;font-weight:bold">0,0%</td>
+        <td style="color:#c0392b;font-weight:bold">\(\infty\)</td></tr>
+    <tr style="background:#e8f4e8 !important"><td><strong>Laplace add-1</strong> &nbsp;← usada</td>
+        <td>81,0%</td><td>14,3%</td><td>4,8%</td><td>3,04</td></tr>
+    <tr><td>Jeffreys \(\alpha = \tfrac{1}{2}\)</td><td>84,6%</td><td>12,8%</td><td>2,6%</td><td>3,66</td></tr>
+    <tr><td>Add-0,1</td><td>88,0%</td><td>11,5%</td><td>0,5%</td><td>5,21</td></tr>
+    <tr><td>Clip \(\varepsilon = 1\%\) + renorm</td><td>88,0%</td><td>11,0%</td><td>1,0%</td><td>4,62</td></tr>
+    <tr><td>Shrinkage \(\lambda=0{,}8\) para \(\tfrac{1}{3}\)</td><td>77,8%</td><td>15,6%</td><td>6,7%</td><td>2,71</td></tr>
+  </tbody>
+</table></div>
+<p class="tbl-caption">Linha verde: método escolhido. A Laplace é simétrica, sem hiperparâmetros livres, e protege contra log loss infinito. O shrinkage teria menor penalidade neste caso extremo, mas exige estimação de \(\lambda\).</p>
+
+<!-- ========== 3. MÉTRICAS ========== -->
+<h2>3. Métricas de avaliação</h2>
+
+<h3>3.1 Taxa de acerto</h3>
+<div class="math-block">
+  \[\text{Acerto} = \frac{1}{n}\sum_{i=1}^{n}\mathbf{1}\!\left[\arg\max_{k}\,\hat{p}_{ik} = c_i\right], \quad c_i \in \{0,1,2\}\]
+</div>
+<p>
+  Verifica apenas se o resultado de maior probabilidade prevista coincide com o observado.
+  Ignora toda a informação de confiança: dizer 34% e dizer 99% valem igual quando ambos acertam.
+  Não recompensa calibração nem penaliza falsa confiança.
+</p>
+<p>
+  Como referência de não-habilidade usamos o preditor <strong>uniforme</strong>
+  \((\tfrac{1}{3},\tfrac{1}{3},\tfrac{1}{3})\), cujo acerto esperado é \(1/3 \approx 33{,}3\%\):
+  qualquer modelo informativo deve superá-lo. Referências mais exigentes são comentadas
+  junto à Tabela 2.
+</p>
+
+<h3>3.2 Brier Score e BSS</h3>
+<div class="math-block">
+  \[\text{BS} = \frac{1}{n}\sum_{i=1}^{n}\sum_{k=0}^{2}\left(\hat{p}_{ik} - o_{ik}\right)^2, \qquad o_{ik} = \mathbf{1}[c_i = k]\]
+</div>
+<p>
+  Varia de 0 (perfeição) a 2 (máximo erro). O baseline uniforme obtém
+  \(\text{BS}_{\text{unif}} = \tfrac{2}{3}\). Penaliza quadraticamente: alta confiança numa
+  previsão errada custa muito mais do que baixa confiança. O <strong>Brier Skill Score</strong>
+  expressa melhoria relativa ao acaso:
+</p>
+<div class="math-block">
+  \[\text{BSS} = 1 - \frac{\text{BS}_{\text{modelo}}}{\text{BS}_{\text{unif}}}, \quad \text{BS}_{\text{unif}} = \frac{2}{3}\]
+</div>
+<p>BSS \(> 0\) indica melhoria em relação ao acaso; BSS \(= 1\) é perfeição.</p>
+
+<h3>3.3 Ranked Probability Score (RPS) e RPSS</h3>
+<div class="math-block">
+  \[\text{RPS} = \frac{1}{K-1}\sum_{j=0}^{K-2}\left(\sum_{k \le j}\hat{p}_{k} - \sum_{k \le j}o_{k}\right)^2, \quad K = 3\]
+</div>
+<p>
+  Penaliza proporcionalmente à distância ordinal: errar vitória A prevendo empate é menos
+  custoso do que errar vitória A prevendo vitória B. O <strong>Ranked Probability Skill Score</strong>
+  é definido analogamente:
+</p>
+<div class="math-block">
+  \[\text{RPSS} = 1 - \frac{\text{RPS}_{\text{modelo}}}{\text{RPS}_{\text{unif}}}\]
+</div>
+<p>
+  O baseline uniforme obtém \(\text{RPS}_{\text{unif}} = \tfrac{2}{9} + \tfrac{2}{9} \cdot \tfrac{1}{2} \approx 0{,}2315\)
+  para \(K = 3\) classes equiprováveis.
+</p>
+<div class="callout">
+  <strong>Limitação em campo neutro:</strong> O RPS pressupõe ordenação natural \(V_A \to E \to V_B\).
+  Em jogos em campo neutro — como todos desta Copa — essa ordenação é arbitrária e sem suporte
+  teórico. O ranking de modelos pelo RPS coincide com o do Brier, confirmando que a métrica não
+  acrescenta informação independente aqui. Mantemos por completeza e comparabilidade futura.
+</div>
+
+<h3>3.4 Log Loss</h3>
+<div class="math-block">
+  \[\mathcal{L} = -\frac{1}{n}\sum_{i=1}^{n}\log\!\max\!\left(\hat{p}_{i,c_i},\;\varepsilon\right), \quad \varepsilon = 10^{-3}\]
+</div>
+<p>
+  Penaliza severamente alta confiança em previsões erradas, divergindo para \(\infty\) quando
+  \(\hat{p}_{i,c_i} \to 0\). O clipping \(\varepsilon\) evita divergência numérica; após a suavização
+  de Laplace o mínimo possível é \(\hat{p} = 1/21 \approx 4{,}8\%\), tornando \(\varepsilon\)
+  inativo na prática. Baseline uniforme: \(-\log\tfrac{1}{3} = \ln 3 \approx 1{,}099\).
+</p>
+
+<!-- ========== 4. BOOTSTRAP ========== -->
+<h2>4. Intervalos de confiança — bootstrap percentil</h2>
+<p>Para cada competidor e métrica, o IC 95% é construído conforme:</p>
+<ol style="padding-left:1.5rem; margin-bottom:0.75rem;">
+  <li style="margin-bottom:0.3rem">Calcula-se \(\hat{\theta}\) nos \(n = 72\) jogos observados.</li>
+  <li style="margin-bottom:0.3rem">Geram-se \(B = 30{.}000\) amostras com reposição de tamanho \(n\).</li>
+  <li style="margin-bottom:0.3rem">Computa-se \(\hat{\theta}^{(b)}\) em cada reamostra \(b\).</li>
+  <li>IC 95% \(= \bigl[\hat{\theta}_{(0{,}025)},\; \hat{\theta}_{(0{,}975)}\bigr]\) — percentis empíricos de \(\bigl\{\hat{\theta}^{(b)}\bigr\}_{b=1}^{B}\).</li>
+</ol>
+<p>
+  A reamostragem é ao nível do <strong>jogo inteiro</strong>, preservando a dependência entre as três
+  probabilidades. Com \(n = 72\), os ICs são tipicamente \(\pm 11\) p.p. no acerto — amplos, mas
+  esperados para esse tamanho amostral. As comparações pareadas (§5.5) confirmam que Força e
+  Bayesiano são indistinguíveis e que a vantagem dos Palpiteiros é significativa nas métricas
+  probabilísticas — completa sobre o Bayesiano, parcial sobre a Força.
+</p>
+
+<!-- ========== 5. RESULTADOS ========== -->
+<h2>5. Resultados</h2>
+
+<h3>5.1 Estimativas gerais — 72 jogos</h3>
+
+<p class="tbl-title">Tabela 2 — Taxa de acerto &nbsp;<small style="font-weight:normal;color:#555">(↑ melhor)</small></p>
+<div class="tbl-wrap"><table>
+  <thead><tr><th>Competidor</th><th>Acerto</th><th>IC 95%</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Bayesiano</strong></td><td><strong>63,9%</strong></td><td>[52,8%; 75,0%]</td></tr>
+    <tr><td>Força</td><td>61,1%</td><td>[50,0%; 72,2%]</td></tr>
+    <tr><td>Palpiteiros</td><td>56,9%</td><td>[45,8%; 68,1%]</td></tr>
+    <tr class="baseline-row"><td>Baseline uniforme \(\tfrac{1}{3}\)</td><td>33,3%</td><td>—</td></tr>
+  </tbody>
+</table></div>
+
+<p class="tbl-title">Tabela 3 — Brier Score &nbsp;<small style="font-weight:normal;color:#555">(↓ melhor)</small></p>
+<div class="tbl-wrap"><table>
+  <thead><tr><th>Competidor</th><th>Brier</th><th>IC 95%</th><th>BSS</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Palpiteiros</strong></td><td><strong>0,4855</strong></td><td>[0,3966; 0,5802]</td><td><strong>0,272</strong></td></tr>
+    <tr><td>Força</td><td>0,5313</td><td>[0,4559; 0,6082]</td><td>0,203</td></tr>
+    <tr><td>Bayesiano</td><td>0,5494</td><td>[0,4576; 0,6451]</td><td>0,176</td></tr>
+    <tr class="baseline-row"><td>Baseline uniforme \(\tfrac{1}{3}\)</td><td>0,6667</td><td>—</td><td>0,000</td></tr>
+  </tbody>
+</table></div>
+
+<p class="tbl-title">Tabela 4 — RPS &nbsp;<small style="font-weight:normal;color:#555">(↓ melhor)</small></p>
+<div class="tbl-wrap"><table>
+  <thead><tr><th>Competidor</th><th>RPS</th><th>IC 95%</th><th>RPSS</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Palpiteiros</strong></td><td><strong>0,1431</strong></td><td>[0,1162; 0,1724]</td><td><strong>0,382</strong></td></tr>
+    <tr><td>Força</td><td>0,1654</td><td>[0,1426; 0,1907]</td><td>0,285</td></tr>
+    <tr><td>Bayesiano</td><td>0,1728</td><td>[0,1446; 0,2047]</td><td>0,254</td></tr>
+    <tr class="baseline-row"><td>Baseline uniforme \(\tfrac{1}{3}\)</td><td>0,2315</td><td>—</td><td>0,000</td></tr>
+  </tbody>
+</table></div>
+
+<p class="tbl-title">Tabela 5 — Log Loss &nbsp;<small style="font-weight:normal;color:#555">(↓ melhor)</small></p>
+<div class="tbl-wrap"><table>
+  <thead><tr><th>Competidor</th><th>LogLoss</th><th>IC 95%</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Palpiteiros</strong></td><td><strong>0,8049</strong></td><td>[0,6810; 0,9374]</td></tr>
+    <tr><td>Força</td><td>0,8972</td><td>[0,7930; 1,0012]</td></tr>
+    <tr><td>Bayesiano</td><td>0,9300</td><td>[0,7981; 1,0689]</td></tr>
+    <tr class="baseline-row"><td>Baseline uniforme \(\tfrac{1}{3}\)</td><td>1,0986</td><td>—</td></tr>
+  </tbody>
+</table></div>
+<p class="tbl-caption">Tabelas 2–5. Estimativas pontuais e IC 95% bootstrap para os 72 jogos. BSS e RPSS expressam melhoria relativa ao baseline uniforme \((\tfrac{1}{3},\tfrac{1}{3},\tfrac{1}{3})\). Negrito: melhor valor por métrica.</p>
+
+<p>
+  No <strong>acerto</strong> (Tabela 2) o Bayesiano lidera com 63,9%, mas os três competidores batem
+  com folga não só o uniforme (33,3%) como a referência mais dura de apostar sempre na classe
+  majoritária — "Vitória A", o resultado mais frequente, em 34 dos 72 jogos (47,2%). Nas três métricas
+  <strong>probabilísticas</strong> (Tabelas 3–5) a ordem se inverte: os Palpiteiros vencem todas, e o
+  ranking é idêntico entre Brier, RPS e log loss — indício de que, em campo neutro, as três medem
+  essencialmente a mesma qualidade. Essa inversão — pior no acerto, melhor nas probabilidades — é o
+  paradoxo dissecado na §6.1; a significância estatística dessas diferenças é testada na §5.5.
+</p>
+
+<h3>5.2 Resultados por rodada</h3>
+<p class="tbl-title">Tabela 6 — Estimativas pontuais por rodada (24 jogos cada)</p>
+<div class="tbl-wrap"><table>
+  <thead>
+    <tr>
+      <th rowspan="2">Competidor</th>
+      <th colspan="3" style="text-align:center;border-right:1px solid #3a5d9a">Acerto</th>
+      <th colspan="3" style="text-align:center;border-right:1px solid #3a5d9a">Brier</th>
+      <th colspan="3" style="text-align:center">Log Loss</th>
+    </tr>
+    <tr>
+      <th>R1</th><th>R2</th><th style="border-right:1px solid #3a5d9a">R3</th>
+      <th>R1</th><th>R2</th><th style="border-right:1px solid #3a5d9a">R3</th>
+      <th>R1</th><th>R2</th><th>R3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Força</td>
+      <td>50,0%</td><td><strong>75,0%</strong></td><td style="border-right:1px solid #dce4f0">58,3%</td>
+      <td>0,604</td><td><strong>0,467</strong></td><td style="border-right:1px solid #dce4f0">0,523</td>
+      <td>0,987</td><td><strong>0,802</strong></td><td>0,903</td>
+    </tr>
+    <tr>
+      <td>Bayesiano</td>
+      <td><strong>58,3%</strong></td><td>70,8%</td><td style="border-right:1px solid #dce4f0"><strong>62,5%</strong></td>
+      <td>0,635</td><td>0,452</td><td style="border-right:1px solid #dce4f0">0,562</td>
+      <td>1,053</td><td>0,779</td><td>0,959</td>
+    </tr>
+    <tr>
+      <td>Palpiteiros</td>
+      <td>50,0%</td><td>66,7%</td><td style="border-right:1px solid #dce4f0">54,2%</td>
+      <td><strong>0,553</strong></td><td>0,446</td><td style="border-right:1px solid #dce4f0"><strong>0,458</strong></td>
+      <td><strong>0,914</strong></td><td>0,736</td><td><strong>0,764</strong></td>
+    </tr>
+    <tr class="baseline-row">
+      <td>Baseline uniforme</td>
+      <td>33,3%</td><td>33,3%</td><td style="border-right:1px solid #dce4f0">33,3%</td>
+      <td>0,667</td><td>0,667</td><td style="border-right:1px solid #dce4f0">0,667</td>
+      <td>1,099</td><td>1,099</td><td>1,099</td>
+    </tr>
+  </tbody>
+</table></div>
+<p class="tbl-caption">Negrito: melhor entre competidores por coluna. Baseline = preditor uniforme \((\tfrac{1}{3})\). ICs por rodada omitidos (mais amplos, dado \(n=24\)).</p>
+<p>
+  A Tabela 6 desagrega o desempenho por rodada e expõe forte heterogeneidade temporal: a R2 foi
+  nitidamente a mais previsível (todos com acerto ≥ 67% e Brier ≈ 0,45), enquanto a R1 foi a mais
+  turbulenta (Brier ≈ 0,60). O Bayesiano é o único a liderar o acerto na R3 (62,5%). A leitura dessas
+  diferenças está na §6.3.
+</p>
+
+<h3>5.3 Calibração — ECE e diagrama</h3>
+<p>
+  O Erro de Calibração Esperado (ECE) é a média ponderada dos desvios por bin:
+</p>
+<div class="math-block">
+  \[\text{ECE} = \sum_{b=1}^{B}\frac{n_b}{N}\left|\bar{p}_b - \bar{y}_b\right|\]
+</div>
+<p>
+  onde \(\bar{p}_b\) é a probabilidade média prevista no bin \(b\), \(\bar{y}_b\) a frequência
+  observada, \(n_b\) o número de observações e \(N = 72 \times 3 = 216\) o total de pares
+  jogo × classe por modelo (cada jogo contribui com três pares — um por resultado possível,
+  agrupados num único conjunto de bins).
+</p>
+
+<p class="tbl-title">Tabela 7 — ECE por competidor (bins de 10 p.p.)</p>
+<div class="tbl-wrap"><table>
+  <thead><tr><th>Competidor</th><th>ECE</th><th>IC 95%</th><th>Maior desvio (bins com \(n \ge 10\))</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Força</strong></td><td><strong>0,067</strong></td><td>[0,047; 0,133]</td><td>60–70%: \(\bar{p}=64{,}9\%\), \(\bar{y}=50{,}0\%\), \(n=14\)</td></tr>
+    <tr><td>Palpiteiros</td><td>0,083</td><td>[0,056; 0,147]</td><td>60–70%: \(\bar{p}=63{,}7\%\), \(\bar{y}=92{,}3\%\), \(n=13\)</td></tr>
+    <tr><td>Bayesiano</td><td>0,084</td><td>[0,050; 0,152]</td><td>40–50%: \(\bar{p}=44{,}4\%\), \(\bar{y}=58{,}8\%\), \(n=17\)</td></tr>
+  </tbody>
+</table></div>
+<p class="tbl-caption">\(N = 216\) pares (jogo × classe) por competidor. IC 95% por bootstrap ao nível do jogo (\(B = 30{.}000\)). O ECE binado é um estimador enviesado para cima, daí os ICs assimétricos — o ponto-estimativa fica perto do limite inferior.</p>
+<p>
+  A Tabela 7 ordena pelo ECE pontual — Força (0,067), Palpiteiros (0,083), Bayesiano (0,084) —, mas os
+  ICs se sobrepõem por completo e nenhuma diferença pareada de ECE é significativa: com 72 jogos, a
+  calibração dos três é estatisticamente <strong>indistinguível</strong>. A Tabela 7a abre os bins e a
+  Figura 1 os representa graficamente.
+</p>
+
+<p class="tbl-title">Tabela 7a — Detalhamento por bin: probabilidade prevista média \(\bar{p}_b\), frequência observada \(\bar{y}_b\), observações \(n_b\) e desvio absoluto \(|\Delta| = |\bar{p}_b - \bar{y}_b|\)</p>
+<div class="tbl-wrap"><table class="bins-table">
+  <thead>
+    <tr>
+      <th rowspan="2" style="width:5.5rem">Bin</th>
+      <th colspan="4" style="text-align:center;border-left:2px solid #3a5d9a;border-right:2px solid #3a5d9a">Força</th>
+      <th colspan="4" style="text-align:center;border-right:2px solid #3a5d9a">Bayesiano</th>
+      <th colspan="4" style="text-align:center">Palpiteiros</th>
+    </tr>
+    <tr>
+      <th style="border-left:2px solid #3a5d9a">\(\bar{p}_b\)</th><th>\(\bar{y}_b\)</th><th>\(n_b\)</th><th style="border-right:2px solid #3a5d9a">\(|\Delta|\)</th>
+      <th>\(\bar{p}_b\)</th><th>\(\bar{y}_b\)</th><th>\(n_b\)</th><th style="border-right:2px solid #3a5d9a">\(|\Delta|\)</th>
+      <th>\(\bar{p}_b\)</th><th>\(\bar{y}_b\)</th><th>\(n_b\)</th><th>\(|\Delta|\)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>0–10%</strong></td>
+      <td style="border-left:2px solid #dce4f0">6,6%</td><td>0,0%</td><td>9</td><td style="border-right:2px solid #dce4f0">6,6%</td>
+      <td>6,4%</td><td>11,8%</td><td>17</td><td style="border-right:2px solid #dce4f0">5,3%</td>
+      <td>7,3%</td><td>3,8%</td><td>52</td><td>3,5%</td>
+    </tr>
+    <tr>
+      <td><strong>10–20%</strong></td>
+      <td style="border-left:2px solid #dce4f0">15,7%</td><td>6,5%</td><td>31</td><td style="border-right:2px solid #dce4f0">9,3%</td>
+      <td>15,8%</td><td>22,2%</td><td>54</td><td style="border-right:2px solid #dce4f0">6,4%</td>
+      <td>15,9%</td><td>21,2%</td><td>33</td><td>5,3%</td>
+    </tr>
+    <tr>
+      <td><strong>20–30%</strong></td>
+      <td style="border-left:2px solid #dce4f0">24,9%</td><td>24,7%</td><td><strong>93</strong></td><td style="border-right:2px solid #dce4f0;color:#1a8c44"><strong>0,2%</strong></td>
+      <td>24,6%</td><td>14,3%</td><td>49</td><td style="border-right:2px solid #dce4f0">10,3%</td>
+      <td>26,3%</td><td>16,7%</td><td>30</td><td>9,7%</td>
+    </tr>
+    <tr>
+      <td><strong>30–40%</strong></td>
+      <td style="border-left:2px solid #dce4f0">34,4%</td><td>25,0%</td><td>16</td><td style="border-right:2px solid #dce4f0">9,4%</td>
+      <td>34,3%</td><td>28,6%</td><td>28</td><td style="border-right:2px solid #dce4f0">5,7%</td>
+      <td>35,3%</td><td>46,2%</td><td>26</td><td>10,8%</td>
+    </tr>
+    <tr>
+      <td><strong>40–50%</strong></td>
+      <td style="border-left:2px solid #dce4f0">45,6%</td><td>59,1%</td><td>22</td><td style="border-right:2px solid #dce4f0">13,5%</td>
+      <td>44,4%</td><td>58,8%</td><td>17</td><td style="border-right:2px solid #dce4f0;color:#c0392b"><strong>14,4%</strong></td>
+      <td>44,7%</td><td>47,8%</td><td>23</td><td>3,1%</td>
+    </tr>
+    <tr>
+      <td><strong>50–60%</strong></td>
+      <td style="border-left:2px solid #dce4f0">53,9%</td><td>68,2%</td><td>22</td><td style="border-right:2px solid #dce4f0">14,3%</td>
+      <td>54,3%</td><td>61,9%</td><td>21</td><td style="border-right:2px solid #dce4f0">7,6%</td>
+      <td>54,3%</td><td>33,3%</td><td>15</td><td>21,0%</td>
+    </tr>
+    <tr>
+      <td><strong>60–70%</strong></td>
+      <td style="border-left:2px solid #dce4f0">64,9%</td><td>50,0%</td><td>14</td><td style="border-right:2px solid #dce4f0;color:#c0392b"><strong>14,9%</strong></td>
+      <td>65,4%</td><td>69,2%</td><td>13</td><td style="border-right:2px solid #dce4f0">3,9%</td>
+      <td>63,7%</td><td>92,3%</td><td>13</td><td style="color:#c0392b"><strong>28,6%</strong></td>
+    </tr>
+    <tr>
+      <td><strong>70–80%</strong></td>
+      <td style="border-left:2px solid #dce4f0">74,9%</td><td>85,7%</td><td>7</td><td style="border-right:2px solid #dce4f0">10,8%</td>
+      <td>73,6%</td><td>60,0%</td><td>10</td><td style="border-right:2px solid #dce4f0">13,6%</td>
+      <td>73,0%</td><td>66,7%</td><td>9</td><td>6,3%</td>
+    </tr>
+    <tr>
+      <td><strong>80–90%</strong></td>
+      <td style="border-left:2px solid #dce4f0">81,2%</td><td>100,0%</td><td>2</td><td style="border-right:2px solid #dce4f0">18,8%</td>
+      <td>83,3%</td><td>66,7%</td><td>6</td><td style="border-right:2px solid #dce4f0">16,7%</td>
+      <td>83,8%</td><td>80,0%</td><td>15</td><td>3,8%</td>
+    </tr>
+    <tr>
+      <td><strong>90–100%</strong></td>
+      <td style="border-left:2px solid #dce4f0;color:#aaa">—</td><td style="color:#aaa">—</td><td style="color:#aaa">—</td><td style="border-right:2px solid #dce4f0;color:#aaa">—</td>
+      <td>91,2%</td><td>100,0%</td><td>1</td><td style="border-right:2px solid #dce4f0">8,8%</td>
+      <td style="color:#aaa">—</td><td style="color:#aaa">—</td><td style="color:#aaa">—</td><td style="color:#aaa">—</td>
+    </tr>
+    <tr style="background:#e8eef8 !important;font-weight:bold">
+      <td>ECE total</td>
+      <td style="border-left:2px solid #dce4f0;color:#aaa">—</td><td style="color:#aaa">—</td><td style="color:#aaa">—</td><td style="border-right:2px solid #dce4f0">0,067</td>
+      <td style="color:#aaa">—</td><td style="color:#aaa">—</td><td style="color:#aaa">—</td><td style="border-right:2px solid #dce4f0">0,084</td>
+      <td style="color:#aaa">—</td><td style="color:#aaa">—</td><td style="color:#aaa">—</td><td>0,083</td>
+    </tr>
+  </tbody>
+</table></div>
+<p class="tbl-caption">
+  \(\bar{p}_b\) = probabilidade média prevista no bin; \(\bar{y}_b\) = frequência observada; \(n_b\) = número de pares (jogo × classe) no bin; \(|\Delta| = |\bar{p}_b - \bar{y}_b|\).
+  Em <span style="color:#c0392b"><strong>vermelho</strong></span>, o maior desvio de cada modelo entre os bins com amostra relevante (\(n \ge 10\)) — bins muito pequenos (p.ex. Força 80–90%, \(n=2\)) têm \(|\Delta|\) dominado por ruído amostral e não são destacados.
+  Em <span style="color:#1a8c44"><strong>verde</strong></span>, o bin mais bem calibrado de todos (Força 20–30%, \(n=93\)).
+  Bins vazios (—) indicam ausência de previsões naquela faixa.
+</p>
+
+<!-- CALIBRATION CHART -->
+<div class="chart-wrap">
+  <div class="chart-title">Figura 1 — Diagrama de calibração: probabilidade prevista vs. frequência observada</div>
+  <div class="chart-canvas-wrap" id="chartWrap">
+    <canvas id="calChart"></canvas>
+    <div class="cal-legend">
+      <span><i style="background:#2a78d6"></i>Força — ECE 0,067</span>
+      <span><i style="background:#1baf7a"></i>Bayesiano — ECE 0,084</span>
+      <span><i style="background:#e08700"></i>Palpiteiros — ECE 0,083</span>
+    </div>
+  </div>
+  <p class="fig-caption">
+    Cada ponto é um bin; a <strong>intensidade da cor</strong> indica o número de observações
+    (\(N = 216\) pares por modelo) — bins com mais dados aparecem mais saturados. As linhas conectam
+    os bins de cada modelo. A diagonal tracejada é a calibração perfeita: acima dela = subconfiança,
+    abaixo = superconfiança. Passe o cursor sobre os pontos para os valores exatos.
+  </p>
+</div>
+
+<p>
+  A Figura 1 e a Tabela 7a evidenciam padrões qualitativamente distintos para cada competidor.
+  A <strong>Força</strong> concentra 43% de suas observações no bin 20–30% (\(n = 93\)), onde o
+  desvio é de apenas 0,2 p.p. — calibração quase perfeita e, por ter o maior peso, responsável pelo
+  menor ECE global. No bin 10–20% (\(n = 31\)) ela superestima eventos improváveis (prevê 15,7% para
+  resultados que ocorrem 6,5% das vezes); seu maior desvio confiável está no bin 60–70% (\(n = 14\)),
+  onde fica superconfiante (64,9% previsto contra 50,0% observado).
+</p>
+<p>
+  O <strong>Bayesiano</strong> zigzagueia em torno da diagonal: <em>subconfiante</em> no bin 10–20%
+  (\(n = 54\): 15,8% contra 22,2%) e <em>superconfiante</em> no 20–30% (\(n = 49\): 24,6% contra
+  14,3%); seu maior desvio confiável é no bin 40–50% (\(n = 17\)), onde subestima (44,4% previsto
+  contra 58,8% observado).
+</p>
+<p>
+  O achado mais marcante é o dos <strong>Palpiteiros</strong> no bin 60–70% (\(n = 13\)):
+  quando a maioria do bolão aponta um resultado com probabilidade declarada de 63,7%, ele ocorre
+  em <strong>92,3%</strong> das vezes — subconfiança de quase 29 p.p., consequência direta da
+  suavização de Laplace comprimindo o sinal coletivo. O cluster 0–10% (\(n = 52\)) mostra
+  leve superconfiança — prevê 7,3% para eventos que ocorrem 3,8% das vezes.
+</p>
+
+<!-- ========== 5.4 DIVERGÊNCIAS ========== -->
+<h3>5.4 Jogos com divergência entre modelos</h3>
+<p>
+  Em 52 dos 72 jogos os três modelos concordam no resultado mais provável; nos restantes 20 jogos
+  ao menos um diverge. Nesses 20 jogos as diferenças de filosofia entre os competidores ficam
+  mais expostas — e são precisamente eles que explicam as diferenças de acerto individual.
+</p>
+
+<div class="stat-row">
+  <div class="stat-box"><div class="val">52</div><div class="lbl">jogos em consenso</div></div>
+  <div class="stat-box"><div class="val">67,3%</div><div class="lbl">acerto no consenso<br><small>(35/52)</small></div></div>
+  <div class="stat-box"><div class="val">20</div><div class="lbl">jogos com divergência</div></div>
+  <div class="stat-box"><div class="val">17</div><div class="lbl">consenso errado<br><small>(todos falham)</small></div></div>
+</div>
+
+<p>
+  O consenso tem acerto de 67,3% — acima de qualquer modelo individual. Nos 17 jogos de consenso
+  errado, todos falham por definição. A diferença de acerto geral entre os modelos provém
+  inteiramente dos 20 jogos de divergência.
+</p>
+
+<p class="tbl-title">Tabela 8 — Acerto nos 20 jogos com divergência</p>
+<div class="tbl-wrap"><table>
+  <thead><tr><th>Competidor</th><th>Acertos</th><th>Total</th><th>Acerto (%)</th><th>Acerto geral resultante</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Bayesiano</strong></td><td><strong>11</strong></td><td>20</td><td><strong>55,0%</strong></td><td>35 + 11 = 46/72 = 63,9%</td></tr>
+    <tr><td>Força</td><td>9</td><td>20</td><td>45,0%</td><td>35 + 9 = 44/72 = 61,1%</td></tr>
+    <tr><td>Palpiteiros</td><td>6</td><td>20</td><td>30,0%</td><td>35 + 6 = 41/72 = 56,9%</td></tr>
+  </tbody>
+</table></div>
+<p class="tbl-caption">A diferença de acerto global entre Bayesiano (63,9%) e Força (61,1%) reduz-se a 2 jogos a mais nos 20 de divergência. Os 35 acertos em consenso são idênticos para todos.</p>
+
+<p>
+  Decompondo por <em>quem</em> diverge: os <strong>Palpiteiros</strong> são o dissidente solitário
+  em 12 dos 20 jogos (Força e Bayesiano concordam, os Palpiteiros discordam — tipicamente prevendo
+  empate onde os outros indicam favorito). Nesses 12 jogos os Palpiteiros acertam apenas 3 (25%),
+  enquanto Força e Bayesiano acertam 7 cada. Quando a <strong>Força</strong> é a dissidente solitária
+  (3 jogos), suas apostas contrárias falham em duas (acerta 1/3), ao passo que o Bayesiano, alinhado à
+  maioria, leva 2/3. Quando o <strong>Bayesiano</strong> é o dissidente (4 jogos), seu palpite contrário
+  acerta só uma vez — e nesses jogos difíceis todos os modelos terminam com 1/4. O único jogo de três
+  vias (J32, Turquia × Paraguai) foi vencido pelo Paraguai, e apenas o Bayesiano o previu.
+</p>
+<p>
+  A pequena vantagem de acerto do Bayesiano sobre a Força (11 vs. 9 nos jogos de divergência) não vem,
+  portanto, de ser um bom contrarianista — isolado, ele acerta só 1 de 4. Vem de (i) não cometer as
+  apostas solitárias malsucedidas da Força e (ii) ter vencido o único jogo de três vias.
+</p>
+
+<p class="tbl-title">Figura 2 — Matrizes de confusão nos 20 jogos com divergência (previsto × real)</p>
+<div class="cm-grid" id="cmGrid"></div>
+<p class="tbl-caption">
+  Uma matriz por modelo; linhas = resultado previsto (argmax), colunas = resultado observado.
+  A <span style="color:#1a8c44"><strong>diagonal</strong></span> (verde) são os acertos; fora dela, os
+  erros (vermelho), com intensidade proporcional à contagem. Salta aos olhos a Força, que
+  <strong>nunca</strong> prevê empate, e os Palpiteiros, que preveem empate em 12 dos 20 jogos mas
+  acertam só 2 — a superprodução de empates que lhes custa o acerto.
+</p>
+
+<p class="tbl-title">Os 20 jogos com divergência — previsão de cada modelo</p>
+<p style="font-size:0.84rem;margin-bottom:0.6rem;color:#3a3a3a">
+  Cada cartão mostra os três palpites e, entre parênteses, a probabilidade que o modelo atribuiu ao
+  resultado em que apostou (sua convicção). <span class="m-ok">✓</span> = acertou;
+  <span class="m-no">✗</span> = errou. A faixa âmbar marca o <strong>modelo dissidente</strong> —
+  o único a discordar dos outros dois.
+</p>
+<div class="div-grid" id="divGrid"></div>
+<p class="tbl-caption">Ordenados por número do jogo. "A" é a seleção à esquerda; "B", a da direita.</p>
+
+<!-- ========== 5.5 TESTE PAREADO ========== -->
+<h3>5.5 As diferenças são significativas? Teste pareado</h3>
+<p>
+  Os ICs marginais das Tabelas 2–5 se sobrepõem, mas isso não decide se as diferenças são reais:
+  os competidores são avaliados nos <em>mesmos</em> jogos e, portanto, correlacionados. A Tabela 9
+  testa cada diferença diretamente — para cada par e métrica, tomamos o desvio jogo a jogo e seu
+  IC 95% por bootstrap pareado (\(B = 30{.}000\), reamostrando os mesmos jogos para os dois modelos).
+</p>
+
+<p class="tbl-title">Tabela 9 — Diferença pareada entre competidores (\(\Delta = A - B\), IC 95%)</p>
+<div class="tbl-wrap"><table class="paired-table">
+  <thead><tr><th>Comparação (A − B)</th><th>Δ Brier</th><th>Δ RPS</th><th>Δ LogLoss</th><th>Δ Acerto</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Palpiteiros − Força</td>
+      <td>−0,046 <small>[−0,103; +0,013]</small></td>
+      <td class="sig-cell">−0,022 ✓ <small>[−0,045; −0,001]</small></td>
+      <td class="sig-cell">−0,092 ✓ <small>[−0,179; −0,002]</small></td>
+      <td>−4,2 pp <small>[−13,9; +5,6]</small></td>
+    </tr>
+    <tr>
+      <td>Palpiteiros − Bayesiano</td>
+      <td class="sig-cell">−0,064 ✓ <small>[−0,122; −0,006]</small></td>
+      <td class="sig-cell">−0,030 ✓ <small>[−0,051; −0,010]</small></td>
+      <td class="sig-cell">−0,125 ✓ <small>[−0,215; −0,036]</small></td>
+      <td>−6,9 pp <small>[−16,7; +2,8]</small></td>
+    </tr>
+    <tr>
+      <td>Bayesiano − Força</td>
+      <td>+0,018 <small>[−0,025; +0,062]</small></td>
+      <td>+0,007 <small>[−0,011; +0,026]</small></td>
+      <td>+0,033 <small>[−0,035; +0,103]</small></td>
+      <td>+2,8 pp <small>[−4,2; +9,7]</small></td>
+    </tr>
+  </tbody>
+</table></div>
+<p class="tbl-caption">
+  Δ negativo favorece A em Brier, RPS e log loss (onde menor é melhor); Δ de acerto positivo favorece A.
+  Células em <span style="background:#e9f7ee;font-weight:bold">verde</span> com ✓: o IC 95% não cruza zero
+  (diferença significativa). Bootstrap pareado, \(B = 30{.}000\).
+</p>
+<p>
+  Três leituras. (i) <strong>Força e Bayesiano são indistinguíveis</strong> — nenhuma das quatro
+  diferenças é significativa, confirmando o empate estatístico. (ii) A vantagem dos <strong>Palpiteiros
+  sobre o Bayesiano</strong> é robusta: significativa nas três métricas probabilísticas. (iii) Sobre a
+  <strong>Força</strong>, a vantagem dos Palpiteiros é mais tênue — significativa em RPS e log loss, mas
+  <em>não</em> em Brier (o IC cruza zero por pouco). No <strong>acerto</strong>, nenhuma diferença é
+  significativa: com 72 jogos, a métrica é cega demais para separar os competidores.
+</p>
+
+<!-- ========== 6. DISCUSSÃO ========== -->
+<h2>6. Discussão</h2>
+
+<h3>6.1 O paradoxo dos Palpiteiros</h3>
+<p>
+  Os Palpiteiros têm o pior acerto (56,9%) mas lideram em Brier, RPS e LogLoss. A aparente
+  contradição dissolve-se ao separar <em>resolução</em> — capacidade de ser confiante quando
+  certo — de <em>calibração</em> — precisão dos números declarados. A suavização de Laplace
+  comprime as probabilidades para \([4{,}8\%,\; 90{,}5\%]\), evitando penalidades catastróficas
+  em previsões de alta confiança que falham. O acerto não reconhece margem de confiança e
+  penaliza exatamente essa compressão: quando o favorito perde, os Palpiteiros pagam
+  \(-\log(0{,}40) \approx 0{,}92\) contra \(-\log(0{,}35) \approx 1{,}05\) dos modelos.
+  A evidência mais clara está no diagrama de calibração (bin 60–70%: 92,3% de ocorrência real) —
+  o sinal coletivo é mais forte do que a suavização permite expressar. Calibração posterior
+  (Platt scaling ou regressão isotônica) aplicada sobre os votos crus provavelmente ampliaria
+  ainda mais a vantagem dos Palpiteiros nas métricas logarítmicas.
+</p>
+
+<h3>6.2 Força vs. Bayesiano</h3>
+<p>
+  Os ICs se sobrepõem amplamente em todas as métricas globais (empate estatístico com \(n = 72\)).
+  A diferença de acerto (63,9% vs. 61,1%) não é individualmente significativa. A Força tem o menor
+  ECE pontual (0,067 vs. 0,084), graças ao bin dominante 20–30% quase perfeito — mas os ICs de ECE
+  também se sobrepõem (§5.3), então é uma tendência, não uma diferença significativa. A análise dos jogos de divergência refina o
+  quadro: a pequena vantagem de acerto do Bayesiano <strong>não</strong> decorre de acertos
+  contrarianistas — quando é o único a discordar, acerta apenas 1 de 4 — mas de evitar as apostas
+  solitárias malsucedidas da Força e de vencer o único jogo de três vias. É uma diferença frágil,
+  dentro do empate estatístico.
+</p>
+
+<h3>6.3 Estrutura temporal das rodadas</h3>
+<p>
+  A Rodada 2 foi a mais previsível: todos os modelos tiveram Brier ≈ 0,45–0,47 e acerto ≥ 67%
+  — favoritos venceram consistentemente. A R1 foi a mais turbulenta (Brier ≈ 0,60). A R3
+  apresentou perfil intermediário com peculiaridade: seleções já classificadas pouparam
+  titulares, gerando resultados imprevisíveis para qualquer modelo paramétrico. O Bayesiano
+  manteve o melhor acerto em R3 (62,5%), provavelmente por ter incorporado os resultados das
+  duas primeiras rodadas em seus parâmetros.
+</p>
+
+<h3>6.4 Limitações e próximas etapas</h3>
+<p>
+  Com 72 jogos, todos os ICs são amplos (\(\pm 11\) p.p. no acerto). O RPS tem suporte
+  teórico reduzido em campo neutro (§3.3). Os Palpiteiros são avaliados com probabilidades
+  suavizadas, não brutas. O Bayesiano não foi atualizado pós-R2. Próximas etapas:
+  (i) calibração posterior sobre os votos crus do bolão;
+  (ii) avaliação de placar exato — o bolão registra placares e a Força gera matrizes Poisson completas;
+  (iii) repetir a análise ao final do mata-mata para Força e Bayesiano.
+</p>
+
+<!-- ========== 7. CONCLUSÃO ========== -->
+<h2>7. Conclusão</h2>
+<p>
+  Avaliamos três preditores — Modelo de Força (Poisson/Dixon-Coles), Modelo Bayesiano e Palpiteiros
+  (agregação do bolão de 18 participantes) — nos 72 jogos da fase de grupos da Copa do Mundo de 2026,
+  em quatro métricas com intervalos de confiança por bootstrap. Os Palpiteiros superaram ambos os
+  modelos nas três métricas probabilísticas (Brier 0,486; RPSS 0,38; log loss 0,805), mas ficaram em
+  último no acerto (56,9%) — paradoxo explicado pelo efeito regularizador da suavização de Laplace,
+  que troca resolução por calibração. Força e Bayesiano foram estatisticamente equivalentes em tudo,
+  com leve vantagem pontual do Bayesiano no acerto (63,9% vs. 61,1%), concentrada nos 20 jogos de
+  divergência e frágil sob teste.
+</p>
+<p>
+  A lição transversal é de cautela estatística: com apenas 72 jogos, os intervalos são largos e quase
+  nenhuma diferença sobrevive ao teste pareado. A única vantagem robusta é a dos Palpiteiros sobre o
+  Bayesiano nas métricas probabilísticas; sobre a Força ela é parcial (significativa em RPS e log loss,
+  não em Brier), e a melhor calibração aparente da Força (menor ECE pontual) fica dentro do ruído.
+  Repetir a análise ao fim do mata-mata e confrontar os modelos com as probabilidades implícitas do
+  mercado são os próximos passos naturais para ganhar poder estatístico e contexto.
+</p>
+
+</article>
+
+<!-- ===== KaTeX render ===== -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '\\(', right: '\\)', display: false},
+      {left: '\\[', right: '\\]', display: true}
+    ],
+    throwOnError: false
+  });
+});
+</script>
+
+<!-- ===== Calibration chart ===== -->
+<script>
+(function() {
+  // Bolhas de tamanho CONSTANTE (pequeno-médio); o n é codificado pela
+  // INTENSIDADE da cor de preenchimento — bins com mais dados ficam mais saturados.
+  const R = 6;
+  const NMAX = 93;                                   // maior n (Força, bin 20–30%)
+  const alpha = n => (0.18 + 0.82 * Math.sqrt(n / NMAX)).toFixed(3);
+
+  // [x = prob prevista, y = freq observada, n]
+  const F = [[0.066,0.000,9],[0.157,0.065,31],[0.249,0.247,93],[0.344,0.250,16],
+             [0.456,0.591,22],[0.539,0.682,22],[0.649,0.500,14],[0.749,0.857,7],[0.812,1.000,2]];
+  const B = [[0.064,0.118,17],[0.158,0.222,54],[0.246,0.143,49],[0.343,0.286,28],[0.444,0.588,17],
+             [0.543,0.619,21],[0.654,0.692,13],[0.736,0.600,10],[0.833,0.667,6],[0.912,1.000,1]];
+  const P = [[0.073,0.038,52],[0.159,0.212,33],[0.263,0.167,30],[0.353,0.462,26],[0.447,0.478,23],
+             [0.543,0.333,15],[0.637,0.923,13],[0.730,0.667,9],[0.838,0.800,15]];
+
+  const COL = { F:'42,120,214', B:'27,175,122', P:'224,135,0' };
+  const pts  = arr => arr.map(([x,y,n]) => ({x, y, r:R, n}));
+  const fill = (arr, rgb) => arr.map(([,,n]) => `rgba(${rgb},${alpha(n)})`);
+  const line = arr => arr.map(([x,y]) => ({x, y}));
+  const FIXED_TICKS = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0];
+
+  // Make canvas wrapper square
+  const wrap = document.getElementById('chartWrap');
+  function squareUp() {
+    const w = Math.min(wrap.offsetWidth, 520);
+    wrap.style.height = w + 'px';
+  }
+  squareUp();
+  window.addEventListener('resize', squareUp);
+
+  new Chart(document.getElementById('calChart'), {
+    data: {
+      datasets: [
+        // --- Reference diagonal ---
+        {type:'line', label:'_diag', data:[{x:0,y:0},{x:1,y:1}],
+         borderColor:'#bbb', borderWidth:1.2, borderDash:[7,5],
+         pointRadius:0, tension:0, order:0},
+        // --- Connecting lines (behind bubbles), agora mais visíveis ---
+        {type:'line', label:'_F_line', data:line(F),
+         borderColor:`rgba(${COL.F},0.85)`, borderWidth:2.2,
+         pointRadius:0, tension:0.1, order:1},
+        {type:'line', label:'_B_line', data:line(B),
+         borderColor:`rgba(${COL.B},0.85)`, borderWidth:2.2,
+         pointRadius:0, tension:0.1, order:2},
+        {type:'line', label:'_P_line', data:line(P),
+         borderColor:`rgba(${COL.P},0.85)`, borderWidth:2.2,
+         pointRadius:0, tension:0.1, order:3},
+        // --- Bubble points (on top): tamanho fixo, alpha ∝ n ---
+        {type:'bubble', label:'Força', data:pts(F),
+         backgroundColor:fill(F,COL.F), borderColor:`rgb(${COL.F})`, borderWidth:1.3, order:4},
+        {type:'bubble', label:'Bayesiano', data:pts(B),
+         backgroundColor:fill(B,COL.B), borderColor:`rgb(${COL.B})`, borderWidth:1.3, order:5},
+        {type:'bubble', label:'Palpiteiros', data:pts(P),
+         backgroundColor:fill(P,COL.P), borderColor:`rgb(${COL.P})`, borderWidth:1.3, order:6},
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: { padding: 4 },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          filter: item => !item.dataset.label.startsWith('_'),
+          callbacks: {
+            title: ctx => ctx[0].dataset.label,
+            label: c => {
+              const d = c.raw;
+              if (!('n' in d)) return null;
+              return [
+                `previsto  = ${(d.x*100).toFixed(1)}%`,
+                `observado = ${(d.y*100).toFixed(1)}%`,
+                `n = ${d.n}`
+              ];
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type:'linear', min:-0.05, max:1.05,
+          afterBuildTicks: a => { a.ticks = FIXED_TICKS.map(v => ({value:v})); },
+          title:{ display:true, text:'Probabilidade prevista  p̄_b', color:'#555',
+                  font:{size:12, family:'Arial'} },
+          ticks:{ color:'#666', callback:v=>Math.round(v*100)+'%', font:{size:11} },
+          grid:{ color:'#ececec' }
+        },
+        y: {
+          type:'linear', min:-0.05, max:1.05,
+          afterBuildTicks: a => { a.ticks = FIXED_TICKS.map(v => ({value:v})); },
+          title:{ display:true, text:'Frequência observada  ȳ_b', color:'#555',
+                  font:{size:12, family:'Arial'} },
+          ticks:{ color:'#666', callback:v=>Math.round(v*100)+'%', font:{size:11} },
+          grid:{ color:'#ececec' }
+        }
+      }
+    }
+  });
+})();
+</script>
+
+<!-- ===== Divergence cards (one per game) ===== -->
+<script>
+(function() {
+  // res/fp/bp/pp: 0=Vitória A, 1=Empate, 2=Vitória B.
+  // fP/bP/pP: probabilidades [V.A, Emp, V.B] (%) de cada modelo.
+  const DIV = [
+    {j:2,r:1,a:'Coreia do Sul',b:'Tcheca',pl:'2–1',res:0,fp:2,bp:0,pp:0,fP:[35, 27, 38],bP:[47, 23, 31],pP:[43, 33, 24]},
+    {j:4,r:1,a:'Estados Unidos',b:'Paraguai',pl:'4–1',res:0,fp:0,bp:0,pp:1,fP:[49, 26, 25],bP:[39, 25, 36],pP:[24, 43, 33]},
+    {j:11,r:1,a:'Costa do Marfim',b:'Equador',pl:'1–0',res:0,fp:2,bp:2,pp:1,fP:[30, 27, 42],bP:[26, 19, 55],pP:[14, 52, 33]},
+    {j:16,r:1,a:'Irã',b:'Nova Zelândia',pl:'2–2',res:1,fp:0,bp:1,pp:0,fP:[51, 26, 23],bP:[33, 41, 26],pP:[52, 43, 5]},
+    {j:25,r:2,a:'Tcheca',b:'África do Sul',pl:'1–1',res:1,fp:0,bp:0,pp:1,fP:[50, 26, 24],bP:[49, 30, 21],pP:[29, 38, 33]},
+    {j:28,r:2,a:'México',b:'Coreia do Sul',pl:'1–0',res:0,fp:0,bp:0,pp:1,fP:[48, 26, 26],bP:[43, 20, 37],pP:[33, 38, 29]},
+    {j:32,r:2,a:'Turquia',b:'Paraguai',pl:'0–1',res:2,fp:0,bp:2,pp:1,fP:[47, 26, 27],bP:[28, 30, 41],pP:[33, 38, 29]},
+    {j:33,r:2,a:'Holanda',b:'Suécia',pl:'5–1',res:0,fp:0,bp:2,pp:0,fP:[53, 25, 22],bP:[41, 17, 42],pP:[76, 19, 5]},
+    {j:43,r:2,a:'Noruega',b:'Senegal',pl:'3–2',res:0,fp:0,bp:0,pp:1,fP:[43, 27, 30],bP:[61, 16, 23],pP:[38, 43, 19]},
+    {j:44,r:2,a:'Jordânia',b:'Argélia',pl:'1–2',res:2,fp:2,bp:1,pp:1,fP:[19, 25, 56],bP:[32, 35, 32],pP:[24, 43, 33]},
+    {j:50,r:3,a:'Bósnia e Herzegovina',b:'Catar',pl:'3–1',res:0,fp:0,bp:0,pp:1,fP:[50, 26, 24],bP:[43, 30, 27],pP:[38, 43, 19]},
+    {j:57,r:3,a:'Japão',b:'Suécia',pl:'1–1',res:1,fp:0,bp:2,pp:0,fP:[49, 26, 25],bP:[40, 17, 44],pP:[52, 38, 10]},
+    {j:59,r:3,a:'Turquia',b:'Estados Unidos',pl:'3–2',res:0,fp:2,bp:2,pp:0,fP:[12, 21, 67],bP:[13, 16, 71],pP:[48, 29, 24]},
+    {j:60,r:3,a:'Paraguai',b:'Austrália',pl:'0–0',res:1,fp:2,bp:2,pp:0,fP:[33, 27, 40],bP:[30, 24, 45],pP:[48, 29, 24]},
+    {j:61,r:3,a:'Senegal',b:'Iraque',pl:'5–0',res:0,fp:2,bp:0,pp:0,fP:[36, 27, 37],bP:[54, 26, 21],pP:[67, 24, 10]},
+    {j:62,r:3,a:'Noruega',b:'França',pl:'1–4',res:2,fp:2,bp:2,pp:1,fP:[20, 25, 56],bP:[34, 15, 51],pP:[14, 43, 43]},
+    {j:64,r:3,a:'Uruguai',b:'Espanha',pl:'0–1',res:2,fp:2,bp:2,pp:1,fP:[15, 23, 63],bP:[35, 25, 40],pP:[14, 52, 33]},
+    {j:67,r:3,a:'Colômbia',b:'Portugal',pl:'0–0',res:1,fp:2,bp:0,pp:2,fP:[24, 26, 51],bP:[49, 19, 33],pP:[10, 43, 48]},
+    {j:68,r:3,a:'RD do Congo',b:'Uzbequistão',pl:'3–1',res:0,fp:0,bp:0,pp:1,fP:[43, 27, 30],bP:[35, 30, 34],pP:[43, 48, 10]},
+    {j:71,r:3,a:'Argélia',b:'Áustria',pl:'3–3',res:1,fp:2,bp:2,pp:1,fP:[28, 27, 46],bP:[15, 20, 66],pP:[29, 48, 24]},
+  ];
+
+  const LBL  = ['Vitória de A', 'Empate', 'Vitória de B'];
+  const NAME = {F:'Força', B:'Bayesiano', P:'Palpiteiros'};
+
+  function isoOf(d) {
+    const a = [['F',d.fp], ['B',d.bp], ['P',d.pp]];
+    const cnt = {};
+    a.forEach(([,v]) => cnt[v] = (cnt[v]||0) + 1);
+    if (Object.keys(cnt).length === 3) return '3';
+    for (const [w,v] of a) { if (cnt[v] === 1) return w; }
+    return null;
+  }
+
+  // ----- per-game cards -----
+  const grid = document.getElementById('divGrid');
+  DIV.forEach(d => {
+    const iso = isoOf(d);
+    const models = [
+      {k:'F', pred:d.fp, prob:d.fP},
+      {k:'B', pred:d.bp, prob:d.bP},
+      {k:'P', pred:d.pp, prob:d.pP},
+    ];
+
+    let rowsHtml = '';
+    models.forEach(m => {
+      const hit  = m.pred === d.res;
+      const pOwn = m.prob[m.pred];
+      const diss = (iso === m.k);
+      const mark = hit ? '<span class="m-ok">✓</span>' : '<span class="m-no">✗</span>';
+      rowsHtml += `<div class="dc-row${diss ? ' diss' : ''}">
+        <span class="m-name">${NAME[m.k]}${diss ? '<span class="diss-tag">dissidente</span>' : ''}</span>
+        <span class="m-pred ${hit ? 'm-ok' : 'm-no'}">${LBL[m.pred]} <small>(${pOwn}%)</small></span>
+        <span class="m-mark">${mark}</span>
+      </div>`;
+    });
+
+    const card = document.createElement('div');
+    card.className = 'div-card';
+    card.innerHTML = `
+      <div class="dc-head">
+        <span class="dc-match">${d.a} ${d.pl} ${d.b}</span>
+        <span class="dc-jr">J${d.j}·R${d.r}</span>
+      </div>
+      <div class="dc-res">Resultado real: <b>${LBL[d.res]}</b></div>
+      <div class="dc-rows">${rowsHtml}</div>`;
+    grid.appendChild(card);
+  });
+
+  // ----- confusion matrices (predicted × actual) over the 20 games -----
+  const CM_LBL = ['Vit. A', 'Emp.', 'Vit. B'];
+  const CM_MODELS = [{key:'fp', name:'Força'}, {key:'bp', name:'Bayesiano'}, {key:'pp', name:'Palpiteiros'}];
+  const cmGrid = document.getElementById('cmGrid');
+  CM_MODELS.forEach(m => {
+    const M = [[0,0,0],[0,0,0],[0,0,0]];
+    DIV.forEach(d => { M[d[m.key]][d.res]++; });
+    const max  = Math.max.apply(null, M.flat());
+    const diag = M[0][0] + M[1][1] + M[2][2];
+    let body = '';
+    for (let i = 0; i < 3; i++) {
+      let cells = `<td class="cm-rowlab">prev. ${CM_LBL[i]}</td>`;
+      for (let j = 0; j < 3; j++) {
+        const c = M[i][j];
+        const isDiag = i === j;
+        const a = c === 0 ? 0 : (0.14 + 0.66 * (c / max));
+        const rgb = isDiag ? '26,140,68' : '204,34,0';
+        const bg = c === 0 ? '#fafafa' : `rgba(${rgb},${a.toFixed(2)})`;
+        cells += `<td class="cm-cell${isDiag ? ' diag' : ''}" style="background:${bg}">${c}</td>`;
+      }
+      body += `<tr>${cells}</tr>`;
+    }
+    const box = document.createElement('div');
+    box.className = 'cm-box';
+    box.innerHTML = `
+      <div class="cm-title">${m.name} — acertos ${diag}/20</div>
+      <table class="cm-table">
+        <thead>
+          <tr><td class="cm-corner"></td><th colspan="3">resultado real</th></tr>
+          <tr><td class="cm-corner"></td><th>Vit. A</th><th>Emp.</th><th>Vit. B</th></tr>
+        </thead>
+        <tbody>${body}</tbody>
+      </table>`;
+    cmGrid.appendChild(box);
+  });
+})();
+</script>
+
+</body>
+</html>
