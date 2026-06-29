@@ -364,50 +364,64 @@ interface OfficialResult {
   'Placar A': number;
   'Placar B': number;
   Status: string;
+  Vencedor?: string;
 }
 
 const officialResultKey = (home: string, away: string) => `${home}|${away}`;
 
-const OFFICIAL_RESULTS_BY_ID: Record<string, MatchPrediction> = (() => {
+const OFFICIAL_RESULTS_BY_PAIR: Map<string, MatchPrediction> = (() => {
   const byKey = new Map<string, MatchPrediction>();
   (resultadosJogos as OfficialResult[]).forEach((result) => {
     if (result.Status === 'encerrado') {
+      const penaltyWinner = result.Vencedor && result['Placar A'] === result['Placar B'] ? result.Vencedor : null;
       byKey.set(officialResultKey(result['Seleção A'], result['Seleção B']), {
         homeGoals: result['Placar A'],
         awayGoals: result['Placar B'],
-        penaltyWinner: null,
+        penaltyWinner,
       });
       byKey.set(officialResultKey(result['Seleção B'], result['Seleção A']), {
         homeGoals: result['Placar B'],
         awayGoals: result['Placar A'],
-        penaltyWinner: null,
+        penaltyWinner,
       });
     }
   });
+  return byKey;
+})();
 
+const officialPredictionForMatch = (match: Pick<CupMatch, 'homeTeam' | 'awayTeam'>) =>
+  OFFICIAL_RESULTS_BY_PAIR.get(officialResultKey(match.homeTeam, match.awayTeam)) ?? null;
+
+const officialResultsByIdForMatches = (matches: CupMatch[]): Record<string, MatchPrediction> => {
   const map: Record<string, MatchPrediction> = {};
-  GROUP_MATCHES.forEach((match) => {
-    const result = byKey.get(officialResultKey(match.homeTeam, match.awayTeam));
+  matches.forEach((match) => {
+    const result = officialPredictionForMatch(match);
     if (result) {
       map[match.id] = result;
     }
   });
   return map;
-})();
+};
 
-const LOCKED_MATCH_IDS = new Set(Object.keys(OFFICIAL_RESULTS_BY_ID));
+const OFFICIAL_RESULTS_BY_ID: Record<string, MatchPrediction> = officialResultsByIdForMatches(GROUP_MATCHES);
 
-const isLockedMatch = (matchId: string) => LOCKED_MATCH_IDS.has(matchId);
+const isLockedMatch = (match: CupMatch) => Boolean(officialPredictionForMatch(match));
 
 // Força os placares oficiais nas predições, sobrescrevendo qualquer palpite salvo para jogos já encerrados.
-const withOfficialResults = (predictions: Record<string, MatchPrediction>): Record<string, MatchPrediction> => ({
+const withOfficialResults = (
+  predictions: Record<string, MatchPrediction>,
+  matches: CupMatch[] = GROUP_MATCHES,
+): Record<string, MatchPrediction> => ({
   ...predictions,
-  ...OFFICIAL_RESULTS_BY_ID,
+  ...officialResultsByIdForMatches(matches),
 });
 
-const withOfficialSources = (sources: Record<string, PredictionSource>): Record<string, PredictionSource> => {
+const withOfficialSources = (
+  sources: Record<string, PredictionSource>,
+  matches: CupMatch[] = GROUP_MATCHES,
+): Record<string, PredictionSource> => {
   const next = { ...sources };
-  LOCKED_MATCH_IDS.forEach((id) => {
+  Object.keys(officialResultsByIdForMatches(matches)).forEach((id) => {
     next[id] = 'official';
   });
   return next;
@@ -1609,7 +1623,7 @@ const GroupMatchRow: React.FC<{
   awayInputKey: string;
   onScore: (match: CupMatch, side: 'homeGoals' | 'awayGoals', value: number | null) => void;
 }> = ({ match, prediction, disabled, homeInputKey, awayInputKey, onScore }) => {
-  const locked = isLockedMatch(match.id);
+  const locked = isLockedMatch(match);
   return (
     <div
       className={`grid grid-cols-[minmax(0,1fr)_28px_32px_12px_32px_28px_minmax(0,1fr)] items-center gap-1.5 border-t border-brand-dark/8 py-2 first:border-t-0 sm:grid-cols-[minmax(0,1fr)_32px_36px_14px_36px_32px_minmax(0,1fr)] sm:gap-2 ${
@@ -2634,6 +2648,33 @@ const BolaoPage: React.FC = () => {
   const champion = finalMatch ? resolvedWinner(finalMatch, draft.predictions[finalMatch.id]) : null;
   const isSubmitted = draft.submittedAt !== null;
 
+  useEffect(() => {
+    const officialPredictions = officialResultsByIdForMatches(allVisibleMatches);
+    const officialIds = Object.keys(officialPredictions);
+    if (officialIds.length === 0) return;
+
+    setDraft((current) => {
+      const needsPredictionUpdate = officialIds.some((id) => {
+        const currentPrediction = current.predictions[id];
+        const officialPrediction = officialPredictions[id];
+        return (
+          !currentPrediction ||
+          currentPrediction.homeGoals !== officialPrediction.homeGoals ||
+          currentPrediction.awayGoals !== officialPrediction.awayGoals ||
+          currentPrediction.penaltyWinner !== officialPrediction.penaltyWinner
+        );
+      });
+      const needsSourceUpdate = officialIds.some((id) => current.predictionSources[id] !== 'official');
+      if (!needsPredictionUpdate && !needsSourceUpdate) return current;
+      return {
+        ...current,
+        predictions: withOfficialResults(current.predictions, allVisibleMatches),
+        predictionSources: withOfficialSources(current.predictionSources, allVisibleMatches),
+        lastSavedAt: new Date().toISOString(),
+      };
+    });
+  }, [allVisibleMatches]);
+
   const isEmailValid = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
@@ -2826,7 +2867,7 @@ const BolaoPage: React.FC = () => {
   };
 
   const setScore = (match: CupMatch, side: 'homeGoals' | 'awayGoals', value: number | null) => {
-    if (isSubmitted || isLockedMatch(match.id)) return;
+    if (isSubmitted || isLockedMatch(match)) return;
     updateDraft((current) => {
       const predictions = resetDownstream(current.predictions, match);
       let predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
@@ -2881,7 +2922,7 @@ const BolaoPage: React.FC = () => {
   };
 
   const setPenalty = (match: CupMatch, team: string) => {
-    if (isSubmitted || isLockedMatch(match.id)) return;
+    if (isSubmitted || isLockedMatch(match)) return;
     updateDraft((current) => {
       const predictions = resetDownstream(current.predictions, match);
       const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
@@ -2895,7 +2936,7 @@ const BolaoPage: React.FC = () => {
   };
 
   const setKnockoutWinner = (match: CupMatch, team: string) => {
-    if (isSubmitted || match.stage === 'groups') return;
+    if (isSubmitted || match.stage === 'groups' || isLockedMatch(match)) return;
     updateDraft((current) => {
       const predictions = resetDownstream(current.predictions, match);
       const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
@@ -2918,7 +2959,7 @@ const BolaoPage: React.FC = () => {
     updateDraft((current) => {
       let predictions = { ...current.predictions };
       matches.forEach((match) => {
-        if (isResolved(match, predictions[match.id])) return;
+        if (isResolved(match, predictions[match.id]) || isLockedMatch(match)) return;
         predictions = resetDownstream(predictions, match);
         predictions[match.id] = randomKnockoutScore(match);
       });
@@ -2936,7 +2977,7 @@ const BolaoPage: React.FC = () => {
       const predictions = clearKnockoutPredictions(current.predictions);
       const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       (groupMatchesByLetter[letter] ?? []).forEach((match) => {
-        if (isLockedMatch(match.id)) return; // jogo encerrado: placar oficial permanece
+        if (isLockedMatch(match)) return; // jogo encerrado: placar oficial permanece
         predictions[match.id] = suggestedScore(match);
         delete predictionSources[match.id];
       });
@@ -2950,7 +2991,7 @@ const BolaoPage: React.FC = () => {
       const predictions = clearKnockoutPredictions(current.predictions);
       const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       GROUP_MATCHES.forEach((match) => {
-        if (isLockedMatch(match.id)) return; // jogo encerrado: placar oficial permanece
+        if (isLockedMatch(match)) return; // jogo encerrado: placar oficial permanece
         predictions[match.id] = suggestedScore(match);
         delete predictionSources[match.id];
       });
@@ -2964,7 +3005,7 @@ const BolaoPage: React.FC = () => {
       const predictions = clearKnockoutPredictions(current.predictions);
       const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       (groupMatchesByLetter[selectedGroup] ?? []).forEach((match) => {
-        if (isLockedMatch(match.id)) return; // jogo encerrado: placar oficial permanece
+        if (isLockedMatch(match)) return; // jogo encerrado: placar oficial permanece
         predictions[match.id] = randomGroupScore(match);
         predictionSources[match.id] = 'randomGroup';
       });
@@ -2978,7 +3019,7 @@ const BolaoPage: React.FC = () => {
       const predictions = clearKnockoutPredictions(current.predictions);
       const predictionSources = removeOrphanPredictionSources(current.predictionSources, predictions);
       (groupMatchesByLetter[letter] ?? []).forEach((match) => {
-        if (isLockedMatch(match.id)) return; // jogo encerrado: placar oficial permanece
+        if (isLockedMatch(match)) return; // jogo encerrado: placar oficial permanece
         delete predictions[match.id];
         delete predictionSources[match.id];
       });
