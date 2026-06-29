@@ -1257,7 +1257,7 @@ const ChampionFlagBadge: React.FC<{ team: string; compact?: boolean }> = ({ team
               className="h-full w-full animate-player-pulse object-contain drop-shadow-[0_6px_8px_rgba(0,0,0,0.28)]"
               loading="eager"
               decoding="async"
-              fetchPriority="high"
+              fetchpriority="high"
             />
           </span>
         )}
@@ -1282,7 +1282,7 @@ const ChampionFlagBadge: React.FC<{ team: string; compact?: boolean }> = ({ team
             className="h-full w-full animate-player-pulse object-contain drop-shadow-[0_12px_14px_rgba(0,0,0,0.35)]"
             loading="eager"
             decoding="async"
-            fetchPriority="high"
+            fetchpriority="high"
           />
         </span>
       )}
