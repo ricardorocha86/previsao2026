@@ -8,6 +8,7 @@ import simulacaoGeralPosRodada2 from '../assets/simulacao_geral_pos_rodada2.json
 import simulacaoGeralPosFaseGrupos from '../assets/simulacao_geral_pos_fase_grupos.json';
 import simulacaoGeralBayes from '../assets/simulacao_geral_bayes.json';
 import simulacaoGeralBayesPreTorneio from '../assets/simulacao_geral_bayes_pre_torneio.json';
+import simulacaoGeralBayesInicioMataMata from '../assets/simulacao_geral_bayes_inicio_mata_mata.json';
 import previsoesJogos from '../assets/previsoes_jogos.json';
 import previsoesJogosInicioCopa from '../assets/previsoes_jogos_inicio_copa.json';
 import previsoesJogosPosRodada1 from '../assets/previsoes_jogos_pos_rodada1.json';
@@ -25,7 +26,7 @@ import analisePosFaseGrupos from '../assets/analise_pos_fase_grupos.json';
 import PageHeader from './PageHeader';
 
 type StageId = 'inicio-copa' | 'pre-convocacao' | 'fim-rodada1' | 'fim-rodada2' | 'inicio-mata-mata';
-type BayesStageId = 'bayes-pre-torneio' | 'bayes-fim-rodada1';
+type BayesStageId = 'bayes-pre-torneio' | 'bayes-fim-rodada1' | 'bayes-inicio-mata-mata';
 type InfoTab = 'probabilidades' | 'eliminacao' | 'brasil';
 
 const STAGES: Array<{ id: StageId; label: string; date: string; data: any[]; jogos: any[] }> = [
@@ -39,10 +40,11 @@ const STAGES: Array<{ id: StageId; label: string; date: string; data: any[]; jog
 const BAYES_STAGES: Array<{ id: BayesStageId; label: string; date: string; data: any[]; jogos: any[] }> = [
   { id: 'bayes-pre-torneio', label: 'Pré-Torneio', date: '30/04/2026', data: simulacaoGeralBayesPreTorneio as any[], jogos: previsoesJogosBayesPreTorneio as any[] },
   { id: 'bayes-fim-rodada1', label: 'Fim da 1ª Rodada', date: '17/06/2026', data: simulacaoGeralBayes as any[], jogos: previsoesJogosBayes as any[] },
+  { id: 'bayes-inicio-mata-mata', label: 'Início do Mata-Mata', date: '28/06/2026', data: simulacaoGeralBayesInicioMataMata as any[], jogos: [] },
 ];
 
 const DEFAULT_STAGE_ID: StageId = 'inicio-mata-mata';
-const DEFAULT_BAYES_STAGE_ID: BayesStageId = 'bayes-fim-rodada1';
+const DEFAULT_BAYES_STAGE_ID: BayesStageId = 'bayes-inicio-mata-mata';
 
 const UPCOMING_STAGES: Array<{ label: string; date: string }> = [
   { label: 'Fim dos 16-avos', date: '03/07/2026' },
@@ -1226,6 +1228,7 @@ const WorldCupHub: React.FC = () => {
             </section>
 
             {/* Games list */}
+            {methodology === 1 && (
             <section>
               <div className="mb-10 space-y-6">
                 <h2 className="text-[length:clamp(1.5rem,5.5vw,3.2rem)] whitespace-nowrap font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none mb-4">
@@ -1411,6 +1414,7 @@ const WorldCupHub: React.FC = () => {
                 )}
               </div>
             </section>
+            )}
           </div>
         )}
 
