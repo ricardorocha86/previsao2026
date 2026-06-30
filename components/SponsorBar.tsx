@@ -23,7 +23,7 @@ const SPONSORS: Sponsor[] = [
     cta: 'Ver edital',
     tone: 'bg-white',
     logo: '/assets/ads/logo-pgecd.jpeg',
-    logoClassName: 'max-h-7 max-w-[5.5rem] object-contain sm:max-h-8 sm:max-w-[6.5rem]',
+    logoClassName: 'max-h-5 max-w-[3.8rem] object-contain sm:max-h-8 sm:max-w-[6.5rem]',
   },
   {
     id: 'enialabs',
@@ -31,10 +31,10 @@ const SPONSORS: Sponsor[] = [
     title: 'Consultoria em engenharia de IA',
     detail: 'Treinamentos para empresas e soluções personalizadas',
     href: 'https://enialabs.com/para-empresas',
-    cta: 'Ver soluções',
+    cta: 'Quero conhecer',
     tone: 'bg-white',
     logo: '/assets/ads/logo-enialabs-horizontal-branco.png',
-    logoClassName: 'max-h-7 max-w-[5.5rem] object-contain sm:max-h-8 sm:max-w-[6.5rem]',
+    logoClassName: 'max-h-5 max-w-[3.8rem] object-contain sm:max-h-8 sm:max-w-[6.5rem]',
   },
 ];
 
@@ -61,10 +61,10 @@ const SponsorBar: React.FC = () => {
           href={sponsor.href}
           target="_blank"
           rel="noopener noreferrer sponsored"
-          className="group flex min-h-[48px] items-center gap-2.5 rounded-xl border border-brand-dark/20 bg-white px-2.5 py-2 text-brand-dark shadow-[0_14px_42px_rgba(0,0,0,0.20)] transition hover:-translate-y-0.5 hover:border-brand-green/35 hover:shadow-[0_18px_52px_rgba(0,0,0,0.24)] sm:min-h-[54px] sm:gap-3 sm:px-3"
+          className="group flex min-h-[46px] items-center gap-1 rounded-xl border border-brand-dark/20 bg-white px-1.5 py-1.5 text-brand-dark shadow-[0_14px_42px_rgba(0,0,0,0.20)] transition hover:-translate-y-0.5 hover:border-brand-green/35 hover:shadow-[0_18px_52px_rgba(0,0,0,0.24)] sm:min-h-[54px] sm:gap-3 sm:px-3 sm:py-2"
         >
           <span
-            className={`flex h-8 w-24 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg border border-brand-dark/10 ${sponsor.tone} shadow-sm sm:h-9 sm:w-28`}
+            className={`flex h-7 w-[4.25rem] flex-shrink-0 items-center justify-center overflow-hidden rounded-lg border border-brand-dark/10 ${sponsor.tone} shadow-sm sm:h-9 sm:w-28`}
             aria-hidden="true"
           >
             <img
@@ -77,23 +77,19 @@ const SponsorBar: React.FC = () => {
           </span>
 
           <span className="min-w-0 flex-1">
-            <span className="flex items-center gap-2">
-              <span className="font-montserrat text-[10px] font-black uppercase tracking-[0.18em] text-brand-green">
-                {sponsor.label}
-              </span>
-            </span>
-
-            <span className="mt-0.5 block truncate font-montserrat text-xs font-black uppercase leading-tight text-brand-dark sm:text-sm">
+            <span className="block truncate font-montserrat text-[10.5px] font-black uppercase leading-tight text-brand-dark sm:text-sm">
               {sponsor.title}
             </span>
-            <span className="block truncate text-[11px] leading-snug text-brand-dark/62 sm:text-xs">
+            <span className="mt-0.5 block truncate text-[9.5px] leading-snug text-brand-dark/62 sm:text-xs">
               {sponsor.detail}
             </span>
           </span>
 
-          <span className="inline-flex flex-shrink-0 items-center gap-1 rounded-lg bg-brand-green px-2.5 py-1.5 font-montserrat text-[9px] font-black uppercase tracking-wider text-white transition group-hover:bg-brand-grad2 sm:px-3 sm:text-[10px]">
-            {sponsor.cta}
-            <ArrowUpRight className="h-3.5 w-3.5" />
+          <span className="inline-flex w-16 flex-shrink-0 items-center justify-center gap-0.5 rounded-lg bg-brand-green px-1 py-1.5 font-montserrat text-[7px] font-black uppercase leading-[0.95] tracking-normal text-white transition group-hover:bg-brand-grad2 sm:w-auto sm:gap-1 sm:px-3 sm:text-[10px] sm:leading-normal sm:tracking-wider">
+            <span className="max-w-full whitespace-normal text-center">
+              {sponsor.cta}
+            </span>
+            <ArrowUpRight className="hidden h-3.5 w-3.5 sm:block" />
           </span>
         </a>
       </div>
