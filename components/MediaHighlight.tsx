@@ -1,9 +1,8 @@
 import React from 'react';
-import { ArrowUpRight, CalendarDays, ExternalLink, Newspaper, Sparkles } from 'lucide-react';
-import { HOME_MEDIA_ARTICLES } from '../data/mediaMentions';
+import { ArrowUpRight, CalendarDays, ExternalLink, MonitorPlay, Newspaper, Play, Sparkles } from 'lucide-react';
+import { HOME_MEDIA_ARTICLES, TVE_VIDEO_FEATURE } from '../data/mediaMentions';
 
 interface MediaHighlightProps {
-  /** Navega para a página "Na Mídia" com todos os destaques. */
   onNavigate: () => void;
 }
 
@@ -32,8 +31,56 @@ const MediaHighlight: React.FC<MediaHighlightProps> = ({ onNavigate }) => {
           </button>
         </div>
 
+        <article className="mb-5 overflow-hidden rounded-3xl border border-brand-dark/10 bg-white shadow-xl shadow-brand-dark/5">
+          <div className="grid lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)]">
+            <div className="relative bg-brand-dark">
+              <video
+                className="aspect-video w-full bg-brand-dark object-cover"
+                controls
+                preload="metadata"
+              >
+                <source src={TVE_VIDEO_FEATURE.video} type="video/mp4" />
+              </video>
+              <div className="pointer-events-none absolute left-5 top-5 inline-flex items-center gap-2 rounded-full border-2 border-white/90 bg-brand-green px-4 py-2 font-montserrat text-[11px] font-black uppercase tracking-[0.16em] text-white shadow-[0_8px_20px_rgba(0,0,0,0.32)]">
+                <MonitorPlay className="h-3.5 w-3.5" />
+                TVE
+              </div>
+              <div className="pointer-events-none absolute right-5 top-5 inline-flex items-center gap-1.5 rounded-full bg-brand-neon px-3 py-1.5 font-montserrat text-xs font-black uppercase tracking-widest text-brand-dark shadow-lg">
+                <Sparkles className="h-3.5 w-3.5" />
+                Novo
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-between gap-5 p-6 sm:p-8">
+              <div className="space-y-3">
+                <span className="inline-flex items-center gap-1.5 font-montserrat text-[11px] uppercase tracking-widest text-brand-dark/45">
+                  <CalendarDays className="h-3.5 w-3.5" />
+                  {TVE_VIDEO_FEATURE.outlet} - {TVE_VIDEO_FEATURE.date}
+                </span>
+
+                <h3 className="font-montserrat text-xl font-black leading-tight text-brand-dark sm:text-2xl">
+                  {TVE_VIDEO_FEATURE.title}
+                </h3>
+
+                <p className="text-sm leading-relaxed text-brand-dark/65">
+                  {TVE_VIDEO_FEATURE.summary}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={onNavigate}
+                className="inline-flex items-center gap-2 border-t border-brand-dark/10 pt-4 text-left font-montserrat text-xs font-bold uppercase tracking-wider text-brand-green"
+              >
+                <Play className="h-4 w-4 fill-brand-green" />
+                Ver na página de mídia
+              </button>
+            </div>
+          </div>
+        </article>
+
         <div className="grid gap-5 md:grid-cols-3">
-          {HOME_MEDIA_ARTICLES.map((article, index) => (
+          {HOME_MEDIA_ARTICLES.map((article) => (
             <a
               key={article.link}
               href={article.link}
@@ -47,7 +94,7 @@ const MediaHighlight: React.FC<MediaHighlightProps> = ({ onNavigate }) => {
                     src={article.image}
                     alt={article.title}
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading={index === 0 ? 'eager' : 'lazy'}
+                    loading="lazy"
                     decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/65 via-brand-dark/10 to-transparent" />
@@ -56,19 +103,13 @@ const MediaHighlight: React.FC<MediaHighlightProps> = ({ onNavigate }) => {
                     {article.badge}
                   </div>
 
-                  {index === 0 && (
-                    <div className="absolute right-5 top-5 inline-flex items-center gap-1.5 rounded-full bg-brand-neon px-3 py-1.5 font-montserrat text-xs font-black uppercase tracking-widest text-brand-dark shadow-lg">
-                      <Sparkles className="h-3.5 w-3.5" />
-                      Novo
-                    </div>
-                  )}
                 </div>
 
                 <div className="flex flex-1 flex-col justify-between gap-5 p-6">
                   <div className="space-y-3">
                     <span className="inline-flex items-center gap-1.5 font-montserrat text-[11px] uppercase tracking-widest text-brand-dark/45">
                       <CalendarDays className="h-3.5 w-3.5" />
-                      {article.outlet} · {article.date}
+                      {article.outlet} - {article.date}
                     </span>
 
                     <h3 className="font-montserrat text-lg font-black leading-tight text-brand-dark transition-colors group-hover:text-brand-green">

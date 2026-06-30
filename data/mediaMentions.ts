@@ -1,5 +1,15 @@
 import { MediaMention } from '../types';
 
+export const TVE_VIDEO_FEATURE = {
+  outlet: 'TVE',
+  section: 'Reportagem',
+  date: '29 de junho de 2026',
+  title: 'Reportagem da TVE sobre o Previsão Esportiva',
+  summary:
+    'Entrevista exibida pela TVE mostrando o projeto Previsão Esportiva, a equipe de pesquisadores e o uso de modelos estatísticos para estimar cenários da Copa.',
+  video: '/assets/reportagem-entrevista-previsao-esportiva-tve-2026-06-29.mp4',
+} as const;
+
 /**
  * Matéria em destaque (mais recente). Usada tanto no topo da página "Na Mídia"
  * quanto na chamada de destaque da página inicial.

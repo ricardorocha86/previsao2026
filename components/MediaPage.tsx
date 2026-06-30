@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MEDIA_MENTIONS, FEATURED_ARTICLE } from '../data/mediaMentions';
+import { MEDIA_MENTIONS, FEATURED_ARTICLE, TVE_VIDEO_FEATURE } from '../data/mediaMentions';
 import { ExternalLink, Newspaper, TrendingUp, Play, Tv, MonitorPlay, Sparkles, CalendarDays, ArrowUpRight } from 'lucide-react';
 import { MediaMention, MediaEdition } from '../types';
 import PageHeader from './PageHeader';
@@ -92,6 +92,52 @@ const MediaPage: React.FC = () => {
 
       <section className="w-full bg-white border-y border-brand-dark/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 space-y-10">
+          <article className="grid overflow-hidden bg-white border border-brand-dark/10 shadow-xl shadow-brand-dark/5 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)]">
+            <div className="relative bg-brand-dark">
+              <video
+                className="aspect-video h-full min-h-[260px] w-full bg-brand-dark object-cover"
+                controls
+                preload="metadata"
+              >
+                <source src={TVE_VIDEO_FEATURE.video} type="video/mp4" />
+              </video>
+            </div>
+
+            <div className="flex flex-col justify-between gap-8 p-6 sm:p-8 lg:p-10">
+              <div className="space-y-6">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="inline-flex items-center gap-2 bg-brand-green px-3 py-1.5 text-[11px] font-bold uppercase tracking-widest text-white">
+                    <Tv className="h-3.5 w-3.5" />
+                    Vídeo em destaque
+                  </span>
+                  <span className="inline-flex items-center gap-2 text-[11px] font-montserrat uppercase tracking-widest text-brand-dark/45">
+                    <CalendarDays className="h-3.5 w-3.5" />
+                    {TVE_VIDEO_FEATURE.outlet} - {TVE_VIDEO_FEATURE.date}
+                  </span>
+                </div>
+
+                <div className="space-y-4">
+                  <h2 className="max-w-3xl text-2xl font-montserrat font-bold leading-tight text-brand-dark sm:text-3xl lg:text-[2.5rem] lg:leading-[1.05]">
+                    {TVE_VIDEO_FEATURE.title}
+                  </h2>
+                  <p className="max-w-2xl text-base leading-relaxed text-brand-dark/65">
+                    {TVE_VIDEO_FEATURE.summary}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-4 border-t border-brand-dark/10 pt-6">
+                <span className="inline-flex items-center gap-2 text-sm font-montserrat font-bold uppercase tracking-wider text-brand-green">
+                  <Play className="h-4 w-4 fill-brand-green" />
+                  Assistir reportagem
+                </span>
+                <span className="text-xs font-semibold text-brand-dark/45">
+                  Arquivo hospedado no site
+                </span>
+              </div>
+            </div>
+          </article>
+
           {/* MATÉRIA EM DESTAQUE (MAIS RECENTE) */}
           <a
             href={FEATURED_ARTICLE.link}

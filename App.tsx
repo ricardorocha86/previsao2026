@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import HomeOverview from './components/HomeOverview';
 import HexaCallout from './components/HexaCallout';
 import MediaHighlight from './components/MediaHighlight';
+import SponsorBar from './components/SponsorBar';
 import LegalModal, { LegalTab } from './components/LegalModal';
 import InstitutionLogos from './components/InstitutionLogos';
 import { Analytics } from '@vercel/analytics/react';
@@ -534,6 +535,8 @@ export default function App() {
         initialTab={legalModal.tab}
         onClose={() => setLegalModal((prev) => ({ ...prev, open: false }))}
       />
+
+      <SponsorBar />
 
       <Analytics />
     </div>
