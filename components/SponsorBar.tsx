@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, X } from 'lucide-react';
 
 type Sponsor = {
   id: string;
@@ -40,6 +40,7 @@ const SPONSORS: Sponsor[] = [
 
 const SponsorBar: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const rotation = window.setInterval(() => {
@@ -51,47 +52,62 @@ const SponsorBar: React.FC = () => {
 
   const sponsor = SPONSORS[activeIndex];
 
+  if (!isVisible) {
+    return null;
+  }
+
   return (
     <aside
       className="fixed inset-x-0 bottom-0 z-[60] px-2 pb-2 sm:px-4 sm:pb-3 print:hidden"
       aria-label="Patrocinio"
     >
       <div className="mx-auto w-full max-w-[760px] md:w-[50vw]">
-        <a
-          href={sponsor.href}
-          target="_blank"
-          rel="noopener noreferrer sponsored"
-          className="group flex min-h-[46px] items-center gap-1 rounded-xl border border-brand-dark/20 bg-white px-1.5 py-1.5 text-brand-dark shadow-[0_14px_42px_rgba(0,0,0,0.20)] transition hover:-translate-y-0.5 hover:border-brand-green/35 hover:shadow-[0_18px_52px_rgba(0,0,0,0.24)] sm:min-h-[54px] sm:gap-3 sm:px-3 sm:py-2"
-        >
-          <span
-            className={`flex h-7 w-[4.25rem] flex-shrink-0 items-center justify-center overflow-hidden rounded-lg border border-brand-dark/10 ${sponsor.tone} shadow-sm sm:h-9 sm:w-28`}
-            aria-hidden="true"
+        <div className="relative">
+          <a
+            href={sponsor.href}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            className="group flex min-h-[46px] items-center gap-1 rounded-xl border border-brand-dark/20 bg-white px-1.5 py-1.5 text-brand-dark shadow-[0_14px_42px_rgba(0,0,0,0.20)] transition hover:-translate-y-0.5 hover:border-brand-green/35 hover:shadow-[0_18px_52px_rgba(0,0,0,0.24)] sm:min-h-[54px] sm:gap-3 sm:px-3 sm:py-2"
           >
-            <img
-              src={sponsor.logo}
-              alt=""
-              className={sponsor.logoClassName}
-              loading="lazy"
-              decoding="async"
-            />
-          </span>
+            <span
+              className={`flex h-7 w-[4.25rem] flex-shrink-0 items-center justify-center overflow-hidden rounded-lg border border-brand-dark/10 ${sponsor.tone} shadow-sm sm:h-9 sm:w-28`}
+              aria-hidden="true"
+            >
+              <img
+                src={sponsor.logo}
+                alt=""
+                className={sponsor.logoClassName}
+                loading="lazy"
+                decoding="async"
+              />
+            </span>
 
-          <span className="min-w-0 flex-1">
-            <span className="block truncate font-montserrat text-[10.5px] font-black uppercase leading-tight text-brand-dark sm:text-sm">
-              {sponsor.title}
+            <span className="min-w-0 flex-1">
+              <span className="block truncate font-montserrat text-[10.5px] font-black uppercase leading-tight text-brand-dark sm:text-sm">
+                {sponsor.title}
+              </span>
+              <span className="mt-0.5 block truncate text-[9.5px] leading-snug text-brand-dark/62 sm:text-xs">
+                {sponsor.detail}
+              </span>
             </span>
-            <span className="mt-0.5 block truncate text-[9.5px] leading-snug text-brand-dark/62 sm:text-xs">
-              {sponsor.detail}
-            </span>
-          </span>
 
-          <span className="inline-flex w-16 flex-shrink-0 items-center justify-center gap-0.5 rounded-lg bg-brand-green px-1 py-1.5 font-montserrat text-[7px] font-black uppercase leading-[0.95] tracking-normal text-white transition group-hover:bg-brand-grad2 sm:w-auto sm:gap-1 sm:px-3 sm:text-[10px] sm:leading-normal sm:tracking-wider">
-            <span className="max-w-full whitespace-normal text-center">
-              {sponsor.cta}
+            <span className="inline-flex w-16 flex-shrink-0 items-center justify-center gap-0.5 rounded-lg bg-brand-green px-1 py-1.5 font-montserrat text-[7px] font-black uppercase leading-[0.95] tracking-normal text-white transition group-hover:bg-brand-grad2 sm:w-auto sm:gap-1 sm:px-3 sm:text-[10px] sm:leading-normal sm:tracking-wider">
+              <span className="max-w-full whitespace-normal text-center">
+                {sponsor.cta}
+              </span>
+              <ArrowUpRight className="hidden h-3.5 w-3.5 sm:block" />
             </span>
-            <ArrowUpRight className="hidden h-3.5 w-3.5 sm:block" />
-          </span>
-        </a>
+          </a>
+          <button
+            type="button"
+            aria-label="Fechar anúncio"
+            title="Fechar anúncio"
+            onClick={() => setIsVisible(false)}
+            className="absolute right-1 top-1 z-10 inline-flex h-2.5 w-2.5 items-center justify-center rounded-full border border-brand-dark/10 bg-white/25 text-brand-dark/25 transition hover:border-brand-dark/20 hover:bg-white/60 hover:text-brand-dark/55 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-green/35 sm:h-3 sm:w-3"
+          >
+            <X className="h-2 w-2 stroke-[1.25] sm:h-2.5 sm:w-2.5" />
+          </button>
+        </div>
       </div>
     </aside>
   );
