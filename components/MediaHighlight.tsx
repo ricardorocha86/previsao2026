@@ -79,7 +79,7 @@ const MediaHighlight: React.FC<MediaHighlightProps> = ({ onNavigate }) => {
           </div>
         </article>
 
-        <div className="grid gap-5 md:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {HOME_MEDIA_ARTICLES.map((article) => (
             <a
               key={article.link}
@@ -103,6 +103,12 @@ const MediaHighlight: React.FC<MediaHighlightProps> = ({ onNavigate }) => {
                     {article.badge}
                   </div>
 
+                  {'isNew' in article && article.isNew ? (
+                    <div className="absolute right-5 top-5 inline-flex items-center gap-1.5 rounded-full bg-brand-neon px-3 py-1.5 font-montserrat text-xs font-black uppercase tracking-widest text-brand-dark shadow-lg">
+                      <Sparkles className="h-3.5 w-3.5" />
+                      Novo
+                    </div>
+                  ) : null}
                 </div>
 
                 <div className="flex flex-1 flex-col justify-between gap-5 p-6">

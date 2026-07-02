@@ -25,7 +25,22 @@ export const FEATURED_ARTICLE = {
   image: '/assets/previsao-g1-hexa.jpg',
 } as const;
 
+export const EXAME_ARTICLE = {
+  outlet: 'Exame',
+  badge: 'Exame',
+  date: '29 de junho de 2026',
+  title: 'França é favorita ao título e Brasil aparece na 8ª posição, aponta simulador da USP para a Copa',
+  summary:
+    'Reportagem da Exame destaca o simulador do Previsão Esportiva após a primeira fase, com França no topo e Brasil em 8º nas probabilidades de título.',
+  link: 'https://exame.com/esferabrasil/franca-e-favorita-ao-titulo-e-brasil-aparece-na-8a-posicao-aponta-simulador-da-usp-para-a-copa/',
+  image: 'https://classic.exame.com/wp-content/uploads/2026/06/AFP__20260616__B7BU7V4__v1__HighRes__FblWc2026Match17FraSen-1.jpg',
+} as const;
+
 export const HOME_MEDIA_ARTICLES = [
+  {
+    ...EXAME_ARTICLE,
+    isNew: true,
+  },
   {
     outlet: FEATURED_ARTICLE.outlet,
     badge: 'G1',
@@ -58,6 +73,15 @@ export const HOME_MEDIA_ARTICLES = [
 ] as const;
 
 export const MEDIA_MENTIONS: MediaMention[] = [
+  {
+    id: '33',
+    outlet: 'Exame',
+    logo: 'EXAME',
+    edition: '2026',
+    title: EXAME_ARTICLE.title,
+    link: EXAME_ARTICLE.link,
+    imageUrl: EXAME_ARTICLE.image,
+  },
   {
     id: '32',
     outlet: 'G1 · São Carlos e Região',
