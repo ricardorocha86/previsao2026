@@ -97,7 +97,7 @@ const box = (round: number, idx: number) => {
 
 // champion + final + 3rd geometry
 const champW = 206, champH = 138, champCy = 418;
-const FW = 96, FH = flagH(FW), FSCORE = 46, FGAP = 14, FPAD = 7, FBORD = 2.2;
+const FW = 96, FH = flagH(FW), FSCORE = 72, FGAP = 14, FPAD = 7, FBORD = 2.2;
 const finalContentW = FW + FGAP + FSCORE + FGAP + FW;
 const finalContainerW = finalContentW + 2 * FPAD + 2 * FBORD;
 const finalContainerH = FH + 2 * FPAD + 2 * FBORD;
@@ -105,6 +105,10 @@ const finalCy = 688;
 const finalLeft = 540 - finalContainerW / 2, finalRight = 540 + finalContainerW / 2;
 const finalContainerTop = finalCy - finalContainerH / 2;
 const thirdCy = 982;
+const SEMI_SAFE_GAP = 14;
+const leftSemiInnerLimit = box(3, 0).right + SEMI_SAFE_GAP;
+const rightSemiInnerLimit = box(3, 1).left - SEMI_SAFE_GAP;
+const centralSafeW = rightSemiInnerLimit - leftSemiInnerLimit;
 
 // ---------- helpers de render ----------
 const tile = (iso: string, state: 'win' | 'lose', w: number, h: number) => {
@@ -150,7 +154,7 @@ export function buildShareCardInnerHTML(d: ShareCardData): string {
   els += `<div style="position:absolute;left:540px;top:${champCy - champH / 2 - 20}px;transform:translateX(-50%);z-index:3;font:800 12px ${FONT};letter-spacing:3px;color:#C8960A;white-space:nowrap;">★ CAMPEÃO</div>`;
   els += `<div style="position:absolute;left:540px;top:${champCy}px;transform:translate(-50%,-50%);z-index:3;">` + rectFlag(d.championIso, 'win', champW, champH, 20, true) + `</div>`;
   const champNameTop = champCy + champH / 2 + 12;
-  els += `<div style="position:absolute;left:540px;top:${champNameTop}px;transform:translateX(-50%);z-index:3;background:#fff;border:1.5px solid rgba(0,0,0,.1);border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.1);padding:7px 18px;font:800 24px ${FONT};color:#2E2E2E;letter-spacing:.5px;white-space:nowrap;">${d.champion.toUpperCase()}</div>`;
+  els += `<div style="position:absolute;left:540px;top:${champNameTop}px;transform:translateX(-50%);z-index:3;max-width:${centralSafeW}px;overflow:hidden;text-overflow:ellipsis;background:#fff;border:1.5px solid rgba(0,0,0,.1);border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.1);padding:7px 18px;font:800 24px ${FONT};color:#2E2E2E;letter-spacing:.5px;white-space:nowrap;box-sizing:border-box;">${d.champion.toUpperCase()}</div>`;
   const champNameBottom = champNameTop + 46;
 
   // easter egg do jogador comemorando junto à bandeira do campeão
@@ -158,7 +162,8 @@ export function buildShareCardInnerHTML(d: ShareCardData): string {
   if (egg) {
     const eh = 221, ew = 196; // +40% sobre 158×140
     const cfL = 540 - champW / 2, cfR = 540 + champW / 2;
-    const eleft = egg.pl === 'left' ? (cfL - ew + 44) : (cfR - 44);
+    const rawLeft = egg.pl === 'left' ? (cfL - ew + 44) : (cfR - 44);
+    const eleft = Math.min(Math.max(rawLeft, leftSemiInnerLimit), rightSemiInnerLimit - ew);
     const etop = champCy - eh / 2;
     const opos = egg.pl === 'left' ? 'right' : 'left';
     els += `<img src="/assets/easter-eggs/${egg.file}" alt="" style="position:absolute;left:${eleft}px;top:${etop}px;width:${ew}px;height:${eh}px;object-fit:contain;object-position:${opos} center;z-index:5;filter:drop-shadow(0 10px 12px rgba(0,0,0,.35));">`;
@@ -180,9 +185,9 @@ export function buildShareCardInnerHTML(d: ShareCardData): string {
     ? 540 - finalContentW / 2 + FW / 2
     : 540 + finalContentW / 2 - FW / 2;
   els += `<div style="position:absolute;left:540px;top:${finalContainerTop - 18}px;transform:translateX(-50%);z-index:3;font:800 10px ${FONT};letter-spacing:2.5px;color:rgba(46,46,46,.5);white-space:nowrap;">GRANDE FINAL</div>`;
-  els += `<div style="position:absolute;left:540px;top:${finalCy}px;transform:translate(-50%,-50%);z-index:3;background:#fff;border:${FBORD}px solid ${GREEN};border-radius:14px;box-shadow:0 1px 4px rgba(0,0,0,.09);padding:${FPAD}px;display:flex;align-items:center;gap:${FGAP}px;">`
+  els += `<div style="position:absolute;left:540px;top:${finalCy}px;transform:translate(-50%,-50%);z-index:3;width:${finalContentW}px;box-sizing:content-box;background:#fff;border:${FBORD}px solid ${GREEN};border-radius:14px;box-shadow:0 1px 4px rgba(0,0,0,.09);padding:${FPAD}px;display:flex;align-items:center;gap:${FGAP}px;">`
     + rectFlag(leftFinalIso, leftFinalState, FW, FH, 9, false)
-    + `<div style="font:800 32px ${FONT};color:#2E2E2E;min-width:${FSCORE}px;text-align:center;">${leftScore}<span style="color:rgba(46,46,46,.35);font-size:21px;margin:0 4px;">×</span>${rightScore}</div>`
+    + `<div style="font:800 32px ${FONT};color:#2E2E2E;flex:0 0 ${FSCORE}px;width:${FSCORE}px;text-align:center;white-space:nowrap;">${leftScore}<span style="color:rgba(46,46,46,.35);font-size:21px;margin:0 4px;">×</span>${rightScore}</div>`
     + rectFlag(rightFinalIso, rightFinalState, FW, FH, 9, false) + `</div>`;
 
   // 3º lugar — duas bandeiras 3:2 de tamanho igual (largura = semi, 60), em container justo.
