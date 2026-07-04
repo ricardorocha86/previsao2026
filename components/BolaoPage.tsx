@@ -984,6 +984,7 @@ const USAR_DIXON_COLES = forcaSelecoes.dixonColes ?? true;
 const RHO_DIXON_COLES = forcaSelecoes.rhoDixonColes ?? -0.13;
 
 const forcaSelecao = (team: string): number => FORCAS_SELECOES[team] ?? FORCA_PADRAO;
+const penaltyWinProbabilityFromShare = (share: number): number => 0.4 + 0.2 * Math.min(1, Math.max(0, share));
 
 // Amostra uma Poisson(lambda) pelo algoritmo de Knuth (sem dependências externas).
 const samplePoisson = (lambda: number): number => {
@@ -1118,8 +1119,10 @@ const knockoutProbabilities = (match: CupMatch): KnockoutProbabilities => {
     });
   });
 
-  const advanceHome = base.winHome + base.draw * (extraWinHome + extraDraw * base.shareHome);
-  const advanceAway = base.winAway + base.draw * (extraWinAway + extraDraw * base.shareAway);
+  const penaltyHome = penaltyWinProbabilityFromShare(base.shareHome);
+  const penaltyAway = penaltyWinProbabilityFromShare(base.shareAway);
+  const advanceHome = base.winHome + base.draw * (extraWinHome + extraDraw * penaltyHome);
+  const advanceAway = base.winAway + base.draw * (extraWinAway + extraDraw * penaltyAway);
 
   return {
     ...base,
@@ -1146,7 +1149,7 @@ const sampleScoreFromMatrix = (matrix: number[][]): { homeGoals: number; awayGoa
 const formatProbability = (value: number) =>
   new Intl.NumberFormat('pt-BR', {
     style: 'percent',
-    maximumFractionDigits: 0,
+    maximumFractionDigits: 1,
   }).format(value);
 
 const randomScoreByStrength = (match: CupMatch): { homeGoals: number; awayGoals: number } => {
@@ -1162,7 +1165,7 @@ const randomGroupScore = (match: CupMatch): MatchPrediction => ({
 
 // Mata-mata: mesmo fluxo do app Streamlit. Sorteia o tempo normal pela matriz
 // Poisson+Dixon-Coles; empate vai para prorrogacao com lambda * 0.3; se persistir,
-// os penaltis seguem o share de forca do confronto.
+// os penaltis seguem 40% fixo + 20% pelo share de forca, como no motor oficial.
 const randomKnockoutScore = (match: CupMatch): MatchPrediction => {
   const probabilities = matchProbabilities(match);
   let { homeGoals, awayGoals } = sampleScoreFromMatrix(probabilities.matrix);
@@ -1172,7 +1175,7 @@ const randomKnockoutScore = (match: CupMatch): MatchPrediction => {
     homeGoals += samplePoisson(probabilities.lambdaHome * 0.3);
     awayGoals += samplePoisson(probabilities.lambdaAway * 0.3);
     if (homeGoals === awayGoals) {
-      penaltyWinner = Math.random() < probabilities.shareHome ? match.homeTeam : match.awayTeam;
+      penaltyWinner = Math.random() < penaltyWinProbabilityFromShare(probabilities.shareHome) ? match.homeTeam : match.awayTeam;
     }
   }
 
