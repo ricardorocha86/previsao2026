@@ -5,6 +5,26 @@ import ReportEditionSelector from './ReportEditionSelector';
 const fmt = (value: number) => value.toFixed(1).replace('.', ',');
 const signed = (value: number) => `${value > 0 ? '+' : value < 0 ? '−' : ''}${fmt(Math.abs(value))}`;
 
+const ENG_FLAG = '🏴\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}';
+const FLAG: Record<string, string> = {
+  França: '🇫🇷',
+  Argentina: '🇦🇷',
+  Espanha: '🇪🇸',
+  Inglaterra: ENG_FLAG,
+  Brasil: '🇧🇷',
+  Portugal: '🇵🇹',
+  México: '🇲🇽',
+  Colômbia: '🇨🇴',
+  'Estados Unidos': '🇺🇸',
+  Marrocos: '🇲🇦',
+  Noruega: '🇳🇴',
+  Bélgica: '🇧🇪',
+  Suíça: '🇨🇭',
+  Egito: '🇪🇬',
+  Canadá: '🇨🇦',
+  Paraguai: '🇵🇾',
+};
+
 const TITLE_RACE = [
   ['França', 32.8, 10.6],
   ['Argentina', 16.5, -3.4],
@@ -141,8 +161,11 @@ const RoundOf16Page: React.FC = () => (
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="rounded-lg border border-brand-dark/10 bg-white p-5">
           {TITLE_RACE.map(([team, value, delta]) => (
-            <div key={team} className="grid grid-cols-[120px_1fr_72px_64px] items-center gap-3 border-b border-brand-dark/8 py-2 last:border-0">
-              <span className="font-montserrat text-sm font-black text-brand-dark">{team}</span>
+            <div key={team} className="grid grid-cols-[150px_1fr_72px_64px] items-center gap-3 border-b border-brand-dark/8 py-2 last:border-0">
+              <span className="flex min-w-0 items-center gap-2 font-montserrat text-sm font-black text-brand-dark">
+                <span className="text-lg leading-none" aria-hidden="true">{FLAG[team] ?? '⚽'}</span>
+                <span className="truncate">{team}</span>
+              </span>
               <div className="h-2 rounded-full bg-brand-dark/8"><div className="h-full rounded-full bg-brand-green" style={{ width: `${value * 2.4}%` }} /></div>
               <span className="text-right font-montserrat text-sm font-black text-brand-green">{fmt(value)}%</span>
               <span className={`text-right text-xs font-bold ${delta >= 0 ? 'text-brand-green' : 'text-red-600'}`}>{signed(delta)} pp</span>
