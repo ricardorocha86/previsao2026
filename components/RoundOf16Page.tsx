@@ -1,4 +1,4 @@
-import { ArrowRight, BarChart3, Newspaper, ShieldCheck, Swords, Trophy } from 'lucide-react';
+import { ArrowRight, BarChart3, Newspaper, ShieldCheck, Swords } from 'lucide-react';
 import PageHeader from './PageHeader';
 import ReportEditionSelector from './ReportEditionSelector';
 
@@ -43,10 +43,10 @@ const MOVERS_DOWN = [
 
 const SIXTEENTH_RESULTS = [
   ['Alemanha 1 x 1 Paraguai', 'Paraguai', 18.5, 'maior zebra da fase'],
-  ['Holanda 1 x 1 Marrocos', 'Marrocos', 38.5, 'derrubou uma favorita média'],
+  ['Holanda 1 x 1 Marrocos', 'Marrocos', 38.5, 'derrubou uma favorita relevante'],
   ['Austrália 1 x 1 Egito', 'Egito', 50.9, 'duelo praticamente equilibrado'],
   ['Argentina 3 x 2 Cabo Verde', 'Argentina', 89.2, 'maior confirmação'],
-  ['França 3 x 0 Suécia', 'França', 86.7, 'favorita cumpriu tabela'],
+  ['França 3 x 0 Suécia', 'França', 86.7, 'confirmou favoritismo'],
   ['Espanha 3 x 0 Áustria', 'Espanha', 81.6, 'vitória limpa'],
 ] as const;
 
@@ -108,7 +108,7 @@ const RoundOf16Page: React.FC = () => (
       eyebrow="Reportagem 05 · Início das oitavas · 1.000.000 de simulações"
       title="França dispara"
       accent="e o Brasil respira."
-      description="Os 16-avos cortaram Alemanha e Holanda, empurraram a França para 32,8% de chance de título e deixaram o Brasil com 61,5% de probabilidade de passar pela Noruega."
+      description="Os 16-avos eliminaram Alemanha e Holanda, empurraram a França para 32,8% de chance de título e deixaram o Brasil com 61,5% de probabilidade de passar pela Noruega."
     />
     <ReportEditionSelector current="inicio-oitavas" />
 
@@ -188,7 +188,7 @@ const RoundOf16Page: React.FC = () => (
 
     <section className="mx-auto grid max-w-[1080px] gap-10 px-4 py-16 lg:grid-cols-[0.9fr_1.1fr]">
       <div>
-        <SectionTitle eyebrow="Brasil" title="Noruega é o próximo corte">
+        <SectionTitle eyebrow="Brasil" title="Noruega é o próximo teste">
           O Brasil já passou pelo Japão. Agora a simulação dá 61,5% de avanço contra a Noruega.
           Se chegar às quartas, a chance de título brasileira sobe para 10,7%; se chegar à semifinal, vai a 21,3%.
         </SectionTitle>
