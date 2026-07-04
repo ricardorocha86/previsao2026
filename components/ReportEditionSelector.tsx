@@ -55,28 +55,33 @@ const EDITIONS: Array<{
 
 const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) => (
   <section className="border-b border-brand-dark/10 bg-[#F3F1EC]">
-    <div className="mx-auto grid max-w-[1080px] gap-4 px-4 py-8 lg:grid-cols-[220px_minmax(0,1fr)]">
-      <div className="relative overflow-hidden rounded-3xl bg-brand-dark p-6 text-white shadow-xl">
-        <div className="pointer-events-none absolute -right-3 -top-10 font-montserrat text-[8rem] font-black leading-none text-white/[0.045]">
+    <div className="mx-auto max-w-[1080px] px-4 py-8">
+      <div className="relative overflow-hidden rounded-2xl bg-brand-dark p-6 text-white shadow-xl md:flex md:items-center md:justify-between md:gap-8">
+        <div className="pointer-events-none absolute -right-3 -top-12 font-montserrat text-[8rem] font-black leading-none text-white/[0.045] md:right-8">
           05
         </div>
-        <div className="relative">
+        <div className="relative flex min-w-0 items-center gap-5">
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-brand-neon/25 bg-brand-neon/10">
             <Newspaper className="h-7 w-7 text-brand-neon" />
           </div>
-          <p className="mt-5 font-montserrat text-[9px] font-black uppercase tracking-[0.24em] text-brand-neon">
-            Especial Copa 2026
-          </p>
-          <h2 className="mt-2 font-montserrat text-xl font-black uppercase leading-none">
-            Arquivo de reportagens
-          </h2>
-          <p className="mt-3 text-xs leading-relaxed text-white/50">
-            Cinco retratos do torneio, atualizados conforme a bola muda as probabilidades.
-          </p>
+          <div>
+            <p className="font-montserrat text-[9px] font-black uppercase tracking-[0.24em] text-brand-neon">
+              Especial Copa 2026
+            </p>
+            <h2 className="mt-2 font-montserrat text-xl font-black uppercase leading-none">
+              Arquivo de reportagens
+            </h2>
+            <p className="mt-2 max-w-xl text-xs leading-relaxed text-white/50">
+              Cinco retratos do torneio, atualizados conforme a bola muda as probabilidades.
+            </p>
+          </div>
         </div>
+        <span className="relative mt-5 inline-flex font-montserrat text-[9px] font-bold uppercase tracking-widest text-white/35 md:mt-0">
+          5 edições publicadas
+        </span>
       </div>
 
-      <div className="flex min-w-0 flex-col">
+      <div className="mt-5 flex min-w-0 flex-col">
         <div className="mb-3 flex items-end justify-between gap-4 px-1">
           <div>
             <p className="font-montserrat text-[9px] font-black uppercase tracking-[0.22em] text-brand-green">
@@ -86,12 +91,9 @@ const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) =>
               Escolha uma edição
             </p>
           </div>
-          <span className="hidden font-montserrat text-[9px] font-bold uppercase tracking-widest text-brand-dark/35 sm:block">
-            5 edições publicadas
-          </span>
         </div>
 
-        <div className="grid flex-1 gap-3 md:grid-cols-5">
+        <div className="grid flex-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {EDITIONS.map((edition) => {
             const selected = edition.id === current;
             return (
@@ -99,7 +101,7 @@ const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) =>
                 key={edition.id}
                 href={edition.href}
                 aria-current={selected ? 'page' : undefined}
-                className={`group relative flex min-h-[168px] flex-col overflow-hidden rounded-2xl border bg-white p-5 transition duration-300 hover:-translate-y-0.5 hover:shadow-lg ${
+                className={`group relative flex min-h-[142px] flex-col overflow-hidden rounded-lg border bg-white p-4 transition duration-300 hover:-translate-y-0.5 hover:shadow-lg ${
                   selected
                     ? 'border-brand-green shadow-lg shadow-brand-green/10 ring-1 ring-brand-green/15'
                     : 'border-brand-dark/10 hover:border-brand-green/35'
@@ -119,17 +121,17 @@ const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) =>
                   </div>
 
                   {selected ? (
-                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-brand-green text-white shadow-sm">
+                    <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-brand-green text-white shadow-sm">
                       <Check className="h-4 w-4" />
                     </span>
                   ) : (
-                    <span className="font-montserrat text-4xl font-black leading-none text-brand-dark/[0.07] transition-colors group-hover:text-brand-green/15">
+                    <span className="font-montserrat text-3xl font-black leading-none text-brand-dark/[0.07] transition-colors group-hover:text-brand-green/15">
                       {edition.number}
                     </span>
                   )}
                 </div>
 
-                <p className={`mt-4 font-montserrat text-[15px] font-black uppercase leading-tight ${selected ? 'text-brand-green' : 'text-brand-dark group-hover:text-brand-green'}`}>
+                <p className={`mt-3 font-montserrat text-[13px] font-black uppercase leading-tight ${selected ? 'text-brand-green' : 'text-brand-dark group-hover:text-brand-green'}`}>
                   {edition.title}
                 </p>
                 <p className="mt-2 text-xs leading-relaxed text-brand-dark/45">{edition.description}</p>

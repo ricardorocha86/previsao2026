@@ -23,6 +23,42 @@ const FLAG: Record<string, string> = {
   Egito: '🇪🇬',
   Canadá: '🇨🇦',
   Paraguai: '🇵🇾',
+  Holanda: '🇳🇱',
+  Alemanha: '🇩🇪',
+  Japão: '🇯🇵',
+  Austrália: '🇦🇺',
+  'Cabo Verde': '🇨🇻',
+  Suécia: '🇸🇪',
+  Áustria: '🇦🇹',
+};
+
+const TeamLabel = ({ team, className = '' }: { team: string; className?: string }) => (
+  <span className={`inline-flex min-w-0 items-center gap-2 ${className}`}>
+    <span className="text-lg leading-none" aria-hidden="true">{FLAG[team] ?? '⚽'}</span>
+    <span className="truncate">{team}</span>
+  </span>
+);
+
+const MatchLabel = ({ match }: { match: string }) => {
+  const scoreMatch = match.match(/^(.+?)\s+(\d+)\s+x\s+(\d+)\s+(.+)$/);
+  if (scoreMatch) {
+    const [, left, leftScore, rightScore, right] = scoreMatch;
+    return (
+      <span className="inline-flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+        <TeamLabel team={left} />
+        <span>{leftScore} x {rightScore}</span>
+        <TeamLabel team={right} />
+      </span>
+    );
+  }
+  const [left, right] = match.split(' x ');
+  return (
+    <span className="inline-flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+      <TeamLabel team={left} />
+      <span>x</span>
+      <TeamLabel team={right} />
+    </span>
+  );
 };
 
 const TITLE_RACE = [
@@ -162,10 +198,7 @@ const RoundOf16Page: React.FC = () => (
         <div className="rounded-lg border border-brand-dark/10 bg-white p-5">
           {TITLE_RACE.map(([team, value, delta]) => (
             <div key={team} className="grid grid-cols-[150px_1fr_72px_64px] items-center gap-3 border-b border-brand-dark/8 py-2 last:border-0">
-              <span className="flex min-w-0 items-center gap-2 font-montserrat text-sm font-black text-brand-dark">
-                <span className="text-lg leading-none" aria-hidden="true">{FLAG[team] ?? '⚽'}</span>
-                <span className="truncate">{team}</span>
-              </span>
+              <TeamLabel team={team} className="font-montserrat text-sm font-black text-brand-dark" />
               <div className="h-2 rounded-full bg-brand-dark/8"><div className="h-full rounded-full bg-brand-green" style={{ width: `${value * 2.4}%` }} /></div>
               <span className="text-right font-montserrat text-sm font-black text-brand-green">{fmt(value)}%</span>
               <span className={`text-right text-xs font-bold ${delta >= 0 ? 'text-brand-green' : 'text-red-600'}`}>{signed(delta)} pp</span>
@@ -176,13 +209,19 @@ const RoundOf16Page: React.FC = () => (
           <div className="rounded-lg border border-brand-dark/10 bg-white p-5">
             <h3 className="font-montserrat text-sm font-black uppercase text-brand-dark">Maiores altas</h3>
             {MOVERS_UP.map(([team, value, delta]) => (
-              <p key={team} className="mt-3 flex justify-between text-sm"><span>{team}</span><strong className="text-brand-green">{fmt(value)}% · {signed(delta)} pp</strong></p>
+              <p key={team} className="mt-3 flex items-center justify-between gap-3 text-sm">
+                <TeamLabel team={team} />
+                <strong className="whitespace-nowrap text-brand-green">{fmt(value)}% · {signed(delta)} pp</strong>
+              </p>
             ))}
           </div>
           <div className="rounded-lg border border-brand-dark/10 bg-white p-5">
             <h3 className="font-montserrat text-sm font-black uppercase text-brand-dark">Maiores quedas</h3>
             {MOVERS_DOWN.map(([team, value, delta]) => (
-              <p key={team} className="mt-3 flex justify-between text-sm"><span>{team}</span><strong className="text-red-600">{fmt(value)}% · {signed(delta)} pp</strong></p>
+              <p key={team} className="mt-3 flex items-center justify-between gap-3 text-sm">
+                <TeamLabel team={team} />
+                <strong className="whitespace-nowrap text-red-600">{fmt(value)}% · {signed(delta)} pp</strong>
+              </p>
             ))}
           </div>
         </div>
@@ -200,8 +239,8 @@ const RoundOf16Page: React.FC = () => (
           {SIXTEENTH_RESULTS.map(([match, winner, chance, note]) => (
             <div key={match} className="rounded-lg border border-brand-dark/10 bg-brand-light p-5">
               <Swords className="mb-4 h-5 w-5 text-brand-green" />
-              <p className="font-montserrat text-sm font-black text-brand-dark">{match}</p>
-              <p className="mt-2 text-sm text-brand-dark/65">{winner} avançou; probabilidade pré-jogo: <strong>{fmt(chance)}%</strong>.</p>
+              <p className="font-montserrat text-sm font-black text-brand-dark"><MatchLabel match={match} /></p>
+              <p className="mt-2 text-sm text-brand-dark/65"><TeamLabel team={winner} /> avançou; probabilidade pré-jogo: <strong>{fmt(chance)}%</strong>.</p>
               <p className="mt-2 text-xs font-bold uppercase text-brand-dark/35">{note}</p>
             </div>
           ))}
@@ -245,13 +284,13 @@ const RoundOf16Page: React.FC = () => (
             return (
               <div key={`${a}-${b}`} className="rounded-lg border border-brand-dark/10 bg-brand-light p-5">
                 <div className="flex items-center justify-between gap-3">
-                  <p className="font-montserrat text-sm font-black text-brand-dark">{a} x {b}</p>
+                  <p className="font-montserrat text-sm font-black text-brand-dark"><TeamLabel team={a} /> <span className="mx-1">x</span> <TeamLabel team={b} /></p>
                   <ShieldCheck className="h-5 w-5 text-brand-green" />
                 </div>
-                <p className="mt-3 text-sm text-brand-dark/65">Favorito: <strong>{fav}</strong>, com {fmt(favProb)}% de avanço.</p>
+                <p className="mt-3 text-sm text-brand-dark/65">Favorito: <strong><TeamLabel team={fav} /></strong>, com {fmt(favProb)}% de avanço.</p>
                 <div className="mt-4 grid grid-cols-2 gap-2 text-center text-xs font-bold">
-                  <span className="rounded bg-white py-2">{a}: {fmt(advA)}%</span>
-                  <span className="rounded bg-white py-2">{b}: {fmt(advB)}%</span>
+                  <span className="rounded bg-white px-2 py-2"><TeamLabel team={a} className="justify-center" />: {fmt(advA)}%</span>
+                  <span className="rounded bg-white px-2 py-2"><TeamLabel team={b} className="justify-center" />: {fmt(advB)}%</span>
                 </div>
               </div>
             );
@@ -266,7 +305,7 @@ const RoundOf16Page: React.FC = () => (
         <div className="rounded-lg border border-brand-dark/10 bg-white p-5">
           {FINALS.map(([match, prob]) => (
             <p key={match} className="flex justify-between border-b border-brand-dark/8 py-3 text-sm last:border-0">
-              <span>{match}</span><strong>{fmt(prob)}%</strong>
+              <MatchLabel match={match} /><strong>{fmt(prob)}%</strong>
             </p>
           ))}
         </div>
