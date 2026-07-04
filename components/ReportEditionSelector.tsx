@@ -24,7 +24,7 @@ const EDITIONS: Array<{
     title: 'Agora É Mata-Mata',
     date: '28/06/2026',
     description: 'O retrato no início da segunda fase',
-    href: '/caminho-do-hexa',
+    href: '/caminho-do-hexa/inicio-do-mata-mata',
     number: '04',
   },
   {

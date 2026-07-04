@@ -12,7 +12,7 @@ import { Analytics } from '@vercel/analytics/react';
 import resultadosJogos from './assets/resultados_jogos.json';
 import { PARTNER_INSTITUTIONS, RESEARCH_CENTERS } from './data/institutions';
 
-type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa' | 'hexa-oitavas' | 'hexa-rodada2' | 'hexa-inicio' | 'pos-rodada';
+type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa' | 'hexa-oitavas' | 'hexa-mata-mata' | 'hexa-rodada2' | 'hexa-inicio' | 'pos-rodada';
 
 const WorldCupHub = lazy(() => import('./components/WorldCupHub'));
 const MapPage = lazy(() => import('./components/MapPage'));
@@ -40,6 +40,7 @@ const ROUTES: Record<ViewState, string> = {
   team: '/equipe',
   hexa: '/caminho-do-hexa',
   'hexa-oitavas': '/caminho-do-hexa/inicio-das-oitavas',
+  'hexa-mata-mata': '/caminho-do-hexa/inicio-do-mata-mata',
   'hexa-rodada2': '/caminho-do-hexa/fim-da-segunda-rodada',
   'hexa-inicio': '/caminho-do-hexa/inicio-da-copa',
   'pos-rodada': '/a-copa-mudou-de-rosto',
@@ -130,12 +131,16 @@ const PAGE_META: Record<ViewState, { title: string; description: string }> = {
     description: 'Conheça os pesquisadores e as instituições por trás do projeto Previsão Esportiva.',
   },
   hexa: {
-    title: 'Agora É Mata-Mata | Previsão Esportiva',
-    description: 'Com os 32 classificados definidos, o Brasil enfrenta o Japão nos 16-avos; França e Argentina abrem distância na nova simulação do mata-mata.',
+    title: 'França Dispara e o Brasil Respira | Previsão Esportiva',
+    description: 'Após os 16-avos, a França chega a 32,8% de chance de título e o Brasil encara a Noruega com 61,5% de probabilidade de avanço.',
   },
   'hexa-oitavas': {
     title: 'França Dispara e o Brasil Respira | Previsão Esportiva',
     description: 'Após os 16-avos, a França chega a 32,8% de chance de título e o Brasil encara a Noruega com 61,5% de probabilidade de avanço.',
+  },
+  'hexa-mata-mata': {
+    title: 'Agora É Mata-Mata | Previsão Esportiva',
+    description: 'Com os 32 classificados definidos, o Brasil enfrenta o Japão nos 16-avos; França e Argentina abrem distância na nova simulação do mata-mata.',
   },
   'hexa-rodada2': {
     title: 'O Hexa Ficou Mais Difícil | Previsão Esportiva',
@@ -421,8 +426,9 @@ export default function App() {
             {currentView === 'science' && <SciencePage />}
             {currentView === 'media' && <MediaPage />}
             {currentView === 'methodology' && <MethodologyPage />}
-            {currentView === 'hexa' && <KnockoutPage />}
+            {currentView === 'hexa' && <RoundOf16Page />}
             {currentView === 'hexa-oitavas' && <RoundOf16Page />}
+            {currentView === 'hexa-mata-mata' && <KnockoutPage />}
             {currentView === 'hexa-rodada2' && <SecondRoundPage />}
             {currentView === 'pos-rodada' && <PostRoundPage />}
             {currentView === 'hexa-inicio' && <HexaPage />}
