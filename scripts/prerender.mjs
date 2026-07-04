@@ -161,6 +161,20 @@ const routes = [
     ],
   },
   {
+    path: '/caminho-do-hexa/inicio-das-oitavas',
+    changefreq: 'weekly',
+    priority: '0.8',
+    linkLabel: 'Hexa — início das oitavas',
+    title: 'França Dispara e o Brasil Respira | Previsão Esportiva',
+    description:
+      'Após os 16-avos, a França chega a 32,8% de chance de título e o Brasil encara a Noruega com 61,5% de probabilidade de avanço.',
+    h1: 'França dispara e o Brasil respira',
+    body: [
+      'Depois dos 16-avos, a França abriu distância na corrida pelo título. Alemanha e Holanda foram eliminadas, e o Brasil passou pelo Japão.',
+      'O novo retrato tem 1.000.000 de simulações com 88 jogos travados. O Brasil tem 6,6% de chance de título e 61,5% de avançar contra a Noruega nas oitavas.',
+    ],
+  },
+  {
     path: '/caminho-do-hexa/fim-da-segunda-rodada',
     changefreq: 'monthly',
     priority: '0.6',

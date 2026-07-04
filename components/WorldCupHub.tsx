@@ -6,6 +6,7 @@ import simulacaoGeralInicioCopa from '../assets/simulacao_geral_inicio_copa.json
 import simulacaoGeralPosRodada1 from '../assets/simulacao_geral_pos_rodada1.json';
 import simulacaoGeralPosRodada2 from '../assets/simulacao_geral_pos_rodada2.json';
 import simulacaoGeralPosFaseGrupos from '../assets/simulacao_geral_pos_fase_grupos.json';
+import simulacaoGeralPos16avos from '../assets/simulacao_geral_pos_16avos.json';
 import simulacaoGeralBayes from '../assets/simulacao_geral_bayes.json';
 import simulacaoGeralBayesPreTorneio from '../assets/simulacao_geral_bayes_pre_torneio.json';
 import simulacaoGeralBayesInicioMataMata from '../assets/simulacao_geral_bayes_inicio_mata_mata.json';
@@ -14,6 +15,7 @@ import previsoesJogosInicioCopa from '../assets/previsoes_jogos_inicio_copa.json
 import previsoesJogosPosRodada1 from '../assets/previsoes_jogos_pos_rodada1.json';
 import previsoesJogosPosRodada2 from '../assets/previsoes_jogos_pos_rodada2.json';
 import previsoesJogosPosFaseGrupos from '../assets/previsoes_jogos_pos_fase_grupos.json';
+import previsoesJogosPos16avos from '../assets/previsoes_jogos_pos_16avos.json';
 import previsoesJogosBayes from '../assets/previsoes_jogos_bayes.json';
 import previsoesJogosBayesPreTorneio from '../assets/previsoes_jogos_bayes_pre_torneio.json';
 import resultadosJogos from '../assets/resultados_jogos.json';
@@ -23,9 +25,10 @@ import analiseInicioCopa from '../assets/analise_inicio_copa.json';
 import analisePosRodada1 from '../assets/analise_pos_rodada1.json';
 import analisePosRodada2 from '../assets/analise_pos_rodada2.json';
 import analisePosFaseGrupos from '../assets/analise_pos_fase_grupos.json';
+import analisePos16avos from '../assets/analise_pos_16avos.json';
 import PageHeader from './PageHeader';
 
-type StageId = 'inicio-copa' | 'pre-convocacao' | 'fim-rodada1' | 'fim-rodada2' | 'inicio-mata-mata';
+type StageId = 'inicio-copa' | 'pre-convocacao' | 'fim-rodada1' | 'fim-rodada2' | 'inicio-mata-mata' | 'inicio-oitavas';
 type BayesStageId = 'bayes-pre-torneio' | 'bayes-fim-rodada1' | 'bayes-inicio-mata-mata';
 type InfoTab = 'probabilidades' | 'eliminacao' | 'brasil';
 
@@ -35,6 +38,7 @@ const STAGES: Array<{ id: StageId; label: string; date: string; data: any[]; jog
   { id: 'fim-rodada1', label: 'Fim da 1ª Rodada', date: '17/06/2026', data: simulacaoGeralPosRodada1 as any[], jogos: previsoesJogosPosRodada1 as any[] },
   { id: 'fim-rodada2', label: 'Fim da 2ª Rodada', date: '24/06/2026', data: simulacaoGeralPosRodada2 as any[], jogos: previsoesJogosPosRodada2 as any[] },
   { id: 'inicio-mata-mata', label: 'Início do Mata-Mata', date: '28/06/2026', data: simulacaoGeralPosFaseGrupos as any[], jogos: previsoesJogosPosFaseGrupos as any[] },
+  { id: 'inicio-oitavas', label: 'Início das Oitavas', date: '04/07/2026', data: simulacaoGeralPos16avos as any[], jogos: previsoesJogosPos16avos as any[] },
 ];
 
 const BAYES_STAGES: Array<{ id: BayesStageId; label: string; date: string; data: any[]; jogos: any[] }> = [
@@ -43,11 +47,10 @@ const BAYES_STAGES: Array<{ id: BayesStageId; label: string; date: string; data:
   { id: 'bayes-inicio-mata-mata', label: 'Início do Mata-Mata', date: '28/06/2026', data: simulacaoGeralBayesInicioMataMata as any[], jogos: [] },
 ];
 
-const DEFAULT_STAGE_ID: StageId = 'inicio-mata-mata';
+const DEFAULT_STAGE_ID: StageId = 'inicio-oitavas';
 const DEFAULT_BAYES_STAGE_ID: BayesStageId = 'bayes-inicio-mata-mata';
 
 const UPCOMING_STAGES: Array<{ label: string; date: string }> = [
-  { label: 'Fim dos 16-avos', date: '03/07/2026' },
   { label: 'Fim das Oitavas', date: '07/07/2026' },
   { label: 'Fim das Quartas', date: '11/07/2026' },
   { label: 'Fim das Semifinais', date: '15/07/2026' },
@@ -60,6 +63,7 @@ const ANALISE_MAP: Record<StageId, any> = {
   'fim-rodada1': analisePosRodada1,
   'fim-rodada2': analisePosRodada2,
   'inicio-mata-mata': analisePosFaseGrupos,
+  'inicio-oitavas': analisePos16avos,
 };
 
 const getFlag = (teamName: string) => {
@@ -185,14 +189,14 @@ const OFFICIAL_KNOCKOUT_RAW = [
   { match: 86, stage: '16-avos', date: '2026-07-03', timeEt: '18:00', venue: 'Miami, nos EUA', home: 'Argentina', away: 'Cabo Verde', homeSeed: '1º Grupo J', awaySeed: '2º Grupo H', winA: '74.7%', draw: '17.9%', winB: '7.4%', advA: '89.2%', advB: '10.8%' },
   { match: 87, stage: '16-avos', date: '2026-07-03', timeEt: '21:30', venue: 'Kansas City, nos EUA', home: 'Colômbia', away: 'Gana', homeSeed: '1º Grupo K', awaySeed: 'Melhor 3º colocado', winA: '56.6%', draw: '24.5%', winB: '18.9%', advA: '72.9%', advB: '27.1%' },
   { match: 88, stage: '16-avos', date: '2026-07-03', timeEt: '14:00', venue: 'Dallas, nos EUA', home: 'Austrália', away: 'Egito', homeSeed: '2º Grupo D', awaySeed: '2º Grupo G', winA: '35.7%', draw: '27.2%', winB: '37.1%', advA: '49.1%', advB: '50.9%' },
-  { match: 89, stage: 'Oitavas', date: '2026-07-04', timeEt: '17:00', venue: 'Filadélfia, nos EUA', home: 'Vencedor Jogo 74', away: 'Vencedor Jogo 77', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
-  { match: 90, stage: 'Oitavas', date: '2026-07-04', timeEt: '13:00', venue: 'Houston, nos EUA', home: 'Vencedor Jogo 73', away: 'Vencedor Jogo 75', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
-  { match: 91, stage: 'Oitavas', date: '2026-07-05', timeEt: '16:00', venue: 'Nova York/Nova Jersey, nos EUA', home: 'Vencedor Jogo 76', away: 'Vencedor Jogo 78', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
-  { match: 92, stage: 'Oitavas', date: '2026-07-05', timeEt: '20:00', venue: 'Cidade do México, no México', home: 'Vencedor Jogo 79', away: 'Vencedor Jogo 80', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
-  { match: 93, stage: 'Oitavas', date: '2026-07-06', timeEt: '15:00', venue: 'Dallas, nos EUA', home: 'Vencedor Jogo 83', away: 'Vencedor Jogo 84', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
-  { match: 94, stage: 'Oitavas', date: '2026-07-06', timeEt: '20:00', venue: 'Seattle, nos EUA', home: 'Vencedor Jogo 81', away: 'Vencedor Jogo 82', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
-  { match: 95, stage: 'Oitavas', date: '2026-07-07', timeEt: '12:00', venue: 'Atlanta, nos EUA', home: 'Vencedor Jogo 86', away: 'Vencedor Jogo 88', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
-  { match: 96, stage: 'Oitavas', date: '2026-07-07', timeEt: '16:00', venue: 'Vancouver, no Canadá', home: 'Vencedor Jogo 85', away: 'Vencedor Jogo 87', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos' },
+  { match: 89, stage: 'Oitavas', date: '2026-07-04', timeEt: '17:00', venue: 'Filadélfia, nos EUA', home: 'Paraguai', away: 'França', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos', winA: '6.6%', draw: '17.1%', winB: '76.3%', advA: '11.5%', advB: '88.5%' },
+  { match: 90, stage: 'Oitavas', date: '2026-07-04', timeEt: '13:00', venue: 'Houston, nos EUA', home: 'Canadá', away: 'Marrocos', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos', winA: '21.5%', draw: '25.3%', winB: '53.2%', advA: '31.9%', advB: '68.1%' },
+  { match: 91, stage: 'Oitavas', date: '2026-07-05', timeEt: '16:00', venue: 'Nova York/Nova Jersey, nos EUA', home: 'Brasil', away: 'Noruega', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos', winA: '46.8%', draw: '26.5%', winB: '26.7%', advA: '61.5%', advB: '38.5%' },
+  { match: 92, stage: 'Oitavas', date: '2026-07-05', timeEt: '20:00', venue: 'Cidade do México, no México', home: 'México', away: 'Inglaterra', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos', winA: '31.5%', draw: '27.0%', winB: '41.5%', advA: '44.2%', advB: '55.8%' },
+  { match: 93, stage: 'Oitavas', date: '2026-07-06', timeEt: '15:00', venue: 'Dallas, nos EUA', home: 'Portugal', away: 'Espanha', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos', winA: '30.1%', draw: '26.9%', winB: '43.1%', advA: '42.5%', advB: '57.5%' },
+  { match: 94, stage: 'Oitavas', date: '2026-07-06', timeEt: '20:00', venue: 'Seattle, nos EUA', home: 'Estados Unidos', away: 'Bélgica', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos', winA: '42.1%', draw: '27.0%', winB: '30.9%', advA: '56.4%', advB: '43.6%' },
+  { match: 95, stage: 'Oitavas', date: '2026-07-07', timeEt: '12:00', venue: 'Atlanta, nos EUA', home: 'Argentina', away: 'Egito', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos', winA: '67.8%', draw: '20.9%', winB: '11.3%', advA: '81.7%', advB: '18.3%' },
+  { match: 96, stage: 'Oitavas', date: '2026-07-07', timeEt: '16:00', venue: 'Vancouver, no Canadá', home: 'Suíça', away: 'Colômbia', homeSeed: 'Vencedor 16-avos', awaySeed: 'Vencedor 16-avos', winA: '27.7%', draw: '26.6%', winB: '45.7%', advA: '39.7%', advB: '60.3%' },
   { match: 97, stage: 'Quartas', date: '2026-07-09', timeEt: '16:00', venue: 'Boston, nos EUA', home: 'Vencedor Jogo 89', away: 'Vencedor Jogo 90', homeSeed: 'Vencedor oitavas', awaySeed: 'Vencedor oitavas' },
   { match: 98, stage: 'Quartas', date: '2026-07-10', timeEt: '15:00', venue: 'Los Angeles, nos EUA', home: 'Vencedor Jogo 93', away: 'Vencedor Jogo 94', homeSeed: 'Vencedor oitavas', awaySeed: 'Vencedor oitavas' },
   { match: 99, stage: 'Quartas', date: '2026-07-11', timeEt: '17:00', venue: 'Miami, nos EUA', home: 'Vencedor Jogo 91', away: 'Vencedor Jogo 92', homeSeed: 'Vencedor oitavas', awaySeed: 'Vencedor oitavas' },

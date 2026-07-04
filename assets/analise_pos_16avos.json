@@ -1,0 +1,1090 @@
+{
+  "eliminacao": [
+    {
+      "Rank": 1,
+      "Seleção": "França",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.114884,
+      "Quartas": 0.163599,
+      "Semifinal": 0.240726,
+      "Vice (Final)": 0.152848,
+      "Campeã": 0.327943
+    },
+    {
+      "Rank": 2,
+      "Seleção": "Argentina",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.182998,
+      "Quartas": 0.24374,
+      "Semifinal": 0.232457,
+      "Vice (Final)": 0.175558,
+      "Campeã": 0.165247
+    },
+    {
+      "Rank": 3,
+      "Seleção": "Espanha",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.425044,
+      "Quartas": 0.170895,
+      "Semifinal": 0.198847,
+      "Vice (Final)": 0.081544,
+      "Campeã": 0.12367
+    },
+    {
+      "Rank": 4,
+      "Seleção": "Inglaterra",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.442158,
+      "Quartas": 0.242252,
+      "Semifinal": 0.14521,
+      "Vice (Final)": 0.0963,
+      "Campeã": 0.07408
+    },
+    {
+      "Rank": 5,
+      "Seleção": "Brasil",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.384066,
+      "Quartas": 0.306339,
+      "Semifinal": 0.1495,
+      "Vice (Final)": 0.094,
+      "Campeã": 0.066095
+    },
+    {
+      "Rank": 6,
+      "Seleção": "Portugal",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.574956,
+      "Quartas": 0.154495,
+      "Semifinal": 0.151121,
+      "Vice (Final)": 0.056304,
+      "Campeã": 0.063124
+    },
+    {
+      "Rank": 7,
+      "Seleção": "México",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.557842,
+      "Quartas": 0.216314,
+      "Semifinal": 0.116385,
+      "Vice (Final)": 0.06768,
+      "Campeã": 0.041779
+    },
+    {
+      "Rank": 8,
+      "Seleção": "Colômbia",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.396697,
+      "Quartas": 0.363632,
+      "Semifinal": 0.137477,
+      "Vice (Final)": 0.068702,
+      "Campeã": 0.033492
+    },
+    {
+      "Rank": 9,
+      "Seleção": "Estados Unidos",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.435779,
+      "Quartas": 0.367085,
+      "Semifinal": 0.128318,
+      "Vice (Final)": 0.039737,
+      "Campeã": 0.029081
+    },
+    {
+      "Rank": 10,
+      "Seleção": "Marrocos",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.319382,
+      "Quartas": 0.496933,
+      "Semifinal": 0.116953,
+      "Vice (Final)": 0.041649,
+      "Campeã": 0.025083
+    },
+    {
+      "Rank": 11,
+      "Seleção": "Noruega",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.615934,
+      "Quartas": 0.235095,
+      "Semifinal": 0.087928,
+      "Vice (Final)": 0.042087,
+      "Campeã": 0.018956
+    },
+    {
+      "Rank": 12,
+      "Seleção": "Bélgica",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.564221,
+      "Quartas": 0.307525,
+      "Semifinal": 0.089751,
+      "Vice (Final)": 0.024582,
+      "Campeã": 0.013921
+    },
+    {
+      "Rank": 13,
+      "Seleção": "Suíça",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.603303,
+      "Quartas": 0.273334,
+      "Semifinal": 0.08306,
+      "Vice (Final)": 0.030199,
+      "Campeã": 0.010104
+    },
+    {
+      "Rank": 14,
+      "Seleção": "Egito",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.817002,
+      "Quartas": 0.119294,
+      "Semifinal": 0.047983,
+      "Vice (Final)": 0.012742,
+      "Campeã": 0.002979
+    },
+    {
+      "Rank": 15,
+      "Seleção": "Canadá",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.680618,
+      "Quartas": 0.267137,
+      "Semifinal": 0.040713,
+      "Vice (Final)": 0.008993,
+      "Campeã": 0.002539
+    },
+    {
+      "Rank": 16,
+      "Seleção": "Paraguai",
+      "Fase de Grupos": 0,
+      "16-avos": 0,
+      "Oitavas": 0.885116,
+      "Quartas": 0.072331,
+      "Semifinal": 0.033571,
+      "Vice (Final)": 0.007075,
+      "Campeã": 0.001907
+    },
+    {
+      "Rank": 17,
+      "Seleção": "Holanda",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 18,
+      "Seleção": "Alemanha",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 19,
+      "Seleção": "Japão",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 20,
+      "Seleção": "Croácia",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 21,
+      "Seleção": "Senegal",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 22,
+      "Seleção": "Uruguai",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 23,
+      "Seleção": "Irã",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 24,
+      "Seleção": "Turquia",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 25,
+      "Seleção": "Equador",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 26,
+      "Seleção": "Áustria",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 27,
+      "Seleção": "Coreia do Sul",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 28,
+      "Seleção": "Austrália",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 29,
+      "Seleção": "Argélia",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 30,
+      "Seleção": "Costa do Marfim",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 31,
+      "Seleção": "Panamá",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 32,
+      "Seleção": "Suécia",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 33,
+      "Seleção": "Tcheca",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 34,
+      "Seleção": "Escócia",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 35,
+      "Seleção": "Tunísia",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 36,
+      "Seleção": "RD do Congo",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 37,
+      "Seleção": "Uzbequistão",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 38,
+      "Seleção": "Catar",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 39,
+      "Seleção": "Iraque",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 40,
+      "Seleção": "África do Sul",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 41,
+      "Seleção": "Arábia Saudita",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 42,
+      "Seleção": "Jordânia",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 43,
+      "Seleção": "Bósnia e Herzegovina",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 44,
+      "Seleção": "Cabo Verde",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 45,
+      "Seleção": "Gana",
+      "Fase de Grupos": 0,
+      "16-avos": 1,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 46,
+      "Seleção": "Curaçau",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 47,
+      "Seleção": "Haiti",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    },
+    {
+      "Rank": 48,
+      "Seleção": "Nova Zelândia",
+      "Fase de Grupos": 1,
+      "16-avos": 0,
+      "Oitavas": 0.0,
+      "Quartas": 0.0,
+      "Semifinal": 0.0,
+      "Vice (Final)": 0.0,
+      "Campeã": 0.0
+    }
+  ],
+  "brasil_titulo_condicional": [
+    {
+      "Condicao": "Brasil 1o no grupo",
+      "Base": 1000000,
+      "Titulos Brasil": 66095,
+      "Prob titulo": 0.066095
+    },
+    {
+      "Condicao": "Brasil chegou a Top 32",
+      "Base": 1000000,
+      "Titulos Brasil": 66095,
+      "Prob titulo": 0.066095
+    },
+    {
+      "Condicao": "Brasil chegou a Oitavas",
+      "Base": 1000000,
+      "Titulos Brasil": 66095,
+      "Prob titulo": 0.066095
+    },
+    {
+      "Condicao": "Brasil chegou a Quartas",
+      "Base": 615934,
+      "Titulos Brasil": 66095,
+      "Prob titulo": 0.1073085753
+    },
+    {
+      "Condicao": "Brasil chegou a Semifinal",
+      "Base": 309595,
+      "Titulos Brasil": 66095,
+      "Prob titulo": 0.2134885899
+    },
+    {
+      "Condicao": "Brasil chegou a Final",
+      "Base": 160095,
+      "Titulos Brasil": 66095,
+      "Prob titulo": 0.4128486211
+    }
+  ],
+  "brasil_impacto_pos": [
+    {
+      "Selecao": "França",
+      "Prob titulo se 1o grupo": 0.327943,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Argentina",
+      "Prob titulo se 1o grupo": 0.165247,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Espanha",
+      "Prob titulo se 1o grupo": 0.12367,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Inglaterra",
+      "Prob titulo se 1o grupo": 0.07408,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Brasil",
+      "Prob titulo se 1o grupo": 0.066095,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "México",
+      "Prob titulo se 1o grupo": 0.041779,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Colômbia",
+      "Prob titulo se 1o grupo": 0.033492,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Estados Unidos",
+      "Prob titulo se 1o grupo": 0.029081,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Bélgica",
+      "Prob titulo se 1o grupo": 0.013921,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Suíça",
+      "Prob titulo se 1o grupo": 0.010104,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Portugal",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.063124,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Marrocos",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.025083,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Noruega",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.018956,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Egito",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.002979,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Canadá",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.002539,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Paraguai",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.001907
+    },
+    {
+      "Selecao": "África do Sul",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Bósnia e Herzegovina",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Austrália",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Alemanha",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Costa do Marfim",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Equador",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Holanda",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Japão",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Suécia",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Cabo Verde",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Senegal",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Áustria",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Argélia",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "RD do Congo",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Croácia",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    },
+    {
+      "Selecao": "Gana",
+      "Prob titulo se 1o grupo": 0.0,
+      "Prob titulo se 2o grupo": 0.0,
+      "Prob titulo se avancou em 3o": 0.0
+    }
+  ],
+  "brasil_adv_1o": [
+    {
+      "Adversario": "Japão",
+      "Prob dado Brasil 1o grupo": 1,
+      "Base Brasil 1o grupo": 1000000
+    }
+  ],
+  "brasil_adv_2o": [],
+  "brasil_adv_3o": [],
+  "brasil_adv_16avos": [
+    {
+      "Selecao": "Japão",
+      "Probabilidade": 1
+    }
+  ],
+  "brasil_adv_oitavas": [
+    {
+      "Selecao": "Noruega",
+      "Probabilidade": 1
+    }
+  ],
+  "brasil_adv_quartas": [
+    {
+      "Selecao": "Inglaterra",
+      "Probabilidade": 0.5580727805
+    },
+    {
+      "Selecao": "México",
+      "Probabilidade": 0.4419272195
+    }
+  ],
+  "brasil_adv_semi": [
+    {
+      "Selecao": "Argentina",
+      "Probabilidade": 0.5739272275
+    },
+    {
+      "Selecao": "Colômbia",
+      "Probabilidade": 0.239503222
+    },
+    {
+      "Selecao": "Suíça",
+      "Probabilidade": 0.1232868748
+    },
+    {
+      "Selecao": "Egito",
+      "Probabilidade": 0.0632826758
+    }
+  ],
+  "brasil_adv_final": [
+    {
+      "Selecao": "França",
+      "Probabilidade": 0.4812704956
+    },
+    {
+      "Selecao": "Espanha",
+      "Probabilidade": 0.2043036947
+    },
+    {
+      "Selecao": "Portugal",
+      "Probabilidade": 0.119666448
+    },
+    {
+      "Selecao": "Estados Unidos",
+      "Probabilidade": 0.0687904057
+    },
+    {
+      "Selecao": "Marrocos",
+      "Probabilidade": 0.0675911178
+    },
+    {
+      "Selecao": "Bélgica",
+      "Probabilidade": 0.0382335488
+    },
+    {
+      "Selecao": "Canadá",
+      "Probabilidade": 0.0111996002
+    },
+    {
+      "Selecao": "Paraguai",
+      "Probabilidade": 0.0089446891
+    }
+  ],
+  "brasil_carrascos": [
+    {
+      "Eliminador": "Noruega",
+      "Prob dado Brasil eliminado": 0.4112473967,
+      "Prob no total de copas": 0.384066
+    },
+    {
+      "Eliminador": "Inglaterra",
+      "Prob dado Brasil eliminado": 0.1921330328,
+      "Prob no total de copas": 0.179434
+    },
+    {
+      "Eliminador": "México",
+      "Prob dado Brasil eliminado": 0.1358864124,
+      "Prob no total de copas": 0.126905
+    },
+    {
+      "Eliminador": "Argentina",
+      "Prob dado Brasil eliminado": 0.1101900086,
+      "Prob no total de copas": 0.102907
+    },
+    {
+      "Eliminador": "França",
+      "Prob dado Brasil eliminado": 0.0565003935,
+      "Prob no total de copas": 0.052766
+    },
+    {
+      "Eliminador": "Colômbia",
+      "Prob dado Brasil eliminado": 0.0323191331,
+      "Prob no total de copas": 0.030183
+    },
+    {
+      "Eliminador": "Espanha",
+      "Prob dado Brasil eliminado": 0.0211060011,
+      "Prob no total de copas": 0.019711
+    },
+    {
+      "Eliminador": "Suíça",
+      "Prob dado Brasil eliminado": 0.0126447551,
+      "Prob no total de copas": 0.011809
+    },
+    {
+      "Eliminador": "Portugal",
+      "Prob dado Brasil eliminado": 0.0107505581,
+      "Prob no total de copas": 0.01004
+    },
+    {
+      "Eliminador": "Estados Unidos",
+      "Prob dado Brasil eliminado": 0.0049951548,
+      "Prob no total de copas": 0.004665
+    },
+    {
+      "Eliminador": "Egito",
+      "Prob dado Brasil eliminado": 0.0049266253,
+      "Prob no total de copas": 0.004601
+    },
+    {
+      "Eliminador": "Marrocos",
+      "Prob dado Brasil eliminado": 0.0042252692,
+      "Prob no total de copas": 0.003946
+    },
+    {
+      "Eliminador": "Bélgica",
+      "Prob dado Brasil eliminado": 0.0022807459,
+      "Prob no total de copas": 0.00213
+    },
+    {
+      "Eliminador": "Canadá",
+      "Prob dado Brasil eliminado": 0.0004411584,
+      "Prob no total de copas": 0.000412
+    },
+    {
+      "Eliminador": "Paraguai",
+      "Prob dado Brasil eliminado": 0.000353355,
+      "Prob no total de copas": 0.00033
+    }
+  ],
+  "brasil_eliminadores": [
+    {
+      "Eliminador": "Noruega",
+      "Fase": "Oitavas",
+      "Prob dado Brasil eliminado": 0.4112473967,
+      "Prob no total de copas": 0.384066
+    },
+    {
+      "Eliminador": "Inglaterra",
+      "Fase": "Quartas",
+      "Prob dado Brasil eliminado": 0.1921330328,
+      "Prob no total de copas": 0.179434
+    },
+    {
+      "Eliminador": "México",
+      "Fase": "Quartas",
+      "Prob dado Brasil eliminado": 0.1358864124,
+      "Prob no total de copas": 0.126905
+    },
+    {
+      "Eliminador": "Argentina",
+      "Fase": "Semifinal",
+      "Prob dado Brasil eliminado": 0.1101900086,
+      "Prob no total de copas": 0.102907
+    },
+    {
+      "Eliminador": "França",
+      "Fase": "Final",
+      "Prob dado Brasil eliminado": 0.0565003935,
+      "Prob no total de copas": 0.052766
+    },
+    {
+      "Eliminador": "Colômbia",
+      "Fase": "Semifinal",
+      "Prob dado Brasil eliminado": 0.0323191331,
+      "Prob no total de copas": 0.030183
+    },
+    {
+      "Eliminador": "Espanha",
+      "Fase": "Final",
+      "Prob dado Brasil eliminado": 0.0211060011,
+      "Prob no total de copas": 0.019711
+    },
+    {
+      "Eliminador": "Suíça",
+      "Fase": "Semifinal",
+      "Prob dado Brasil eliminado": 0.0126447551,
+      "Prob no total de copas": 0.011809
+    },
+    {
+      "Eliminador": "Portugal",
+      "Fase": "Final",
+      "Prob dado Brasil eliminado": 0.0107505581,
+      "Prob no total de copas": 0.01004
+    },
+    {
+      "Eliminador": "Estados Unidos",
+      "Fase": "Final",
+      "Prob dado Brasil eliminado": 0.0049951548,
+      "Prob no total de copas": 0.004665
+    },
+    {
+      "Eliminador": "Egito",
+      "Fase": "Semifinal",
+      "Prob dado Brasil eliminado": 0.0049266253,
+      "Prob no total de copas": 0.004601
+    },
+    {
+      "Eliminador": "Marrocos",
+      "Fase": "Final",
+      "Prob dado Brasil eliminado": 0.0042252692,
+      "Prob no total de copas": 0.003946
+    },
+    {
+      "Eliminador": "Bélgica",
+      "Fase": "Final",
+      "Prob dado Brasil eliminado": 0.0022807459,
+      "Prob no total de copas": 0.00213
+    },
+    {
+      "Eliminador": "Canadá",
+      "Fase": "Final",
+      "Prob dado Brasil eliminado": 0.0004411584,
+      "Prob no total de copas": 0.000412
+    },
+    {
+      "Eliminador": "Paraguai",
+      "Fase": "Final",
+      "Prob dado Brasil eliminado": 0.000353355,
+      "Prob no total de copas": 0.00033
+    }
+  ],
+  "brasil_encontros": [
+    {
+      "Selecao": "Noruega",
+      "Probabilidade": 1.0
+    },
+    {
+      "Selecao": "Japão",
+      "Probabilidade": 1.0
+    },
+    {
+      "Selecao": "Haiti",
+      "Probabilidade": 1.0
+    },
+    {
+      "Selecao": "Marrocos",
+      "Probabilidade": 1.0
+    },
+    {
+      "Selecao": "Escócia",
+      "Probabilidade": 1.0
+    },
+    {
+      "Selecao": "Inglaterra",
+      "Probabilidade": 0.343736
+    },
+    {
+      "Selecao": "México",
+      "Probabilidade": 0.272198
+    },
+    {
+      "Selecao": "Argentina",
+      "Probabilidade": 0.177685
+    },
+    {
+      "Selecao": "França",
+      "Probabilidade": 0.077049
+    },
+    {
+      "Selecao": "Colômbia",
+      "Probabilidade": 0.074149
+    },
+    {
+      "Selecao": "Suíça",
+      "Probabilidade": 0.038169
+    },
+    {
+      "Selecao": "Espanha",
+      "Probabilidade": 0.032708
+    },
+    {
+      "Selecao": "Egito",
+      "Probabilidade": 0.019592
+    },
+    {
+      "Selecao": "Portugal",
+      "Probabilidade": 0.019158
+    },
+    {
+      "Selecao": "Estados Unidos",
+      "Probabilidade": 0.011013
+    },
+    {
+      "Selecao": "Bélgica",
+      "Probabilidade": 0.006121
+    },
+    {
+      "Selecao": "Canadá",
+      "Probabilidade": 0.001793
+    },
+    {
+      "Selecao": "Paraguai",
+      "Probabilidade": 0.001432
+    }
+  ]
+}
