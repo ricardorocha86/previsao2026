@@ -104,7 +104,7 @@ const CopaProgressBadge: React.FC = () => {
 const DEFAULT_DESCRIPTION =
   'Previsões probabilísticas para a Copa do Mundo 2026 com metodologia científica. Projeto acadêmico de pesquisa e divulgação científica em modelagem estatística do futebol.';
 
-const PAGE_META: Record<ViewState, { title: string; description: string }> = {
+const PAGE_META: Record<ViewState, { title: string; description: string; ogImage?: string }> = {
   home: { title: 'Previsão Esportiva - Copa do Mundo 2026 🏆', description: DEFAULT_DESCRIPTION },
   copa: {
     title: 'Previsões Copa do Mundo 2026 | Previsão Esportiva',
@@ -169,6 +169,7 @@ const PAGE_META: Record<ViewState, { title: string; description: string }> = {
   'cronica-eliminacao-brasil': {
     title: 'O verdadeiro culpado pela eliminação do Brasil na Copa do Mundo | Previsão Esportiva',
     description: 'Opinião sobre a eliminação do Brasil, a busca por culpados, decisões orientadas a resultado e a aleatoriedade do futebol.',
+    ogImage: '/assets/cronica_eliminacao_brasil_share.webp',
   },
 };
 
@@ -234,6 +235,10 @@ export default function App() {
     setMeta('meta[property="og:url"]', url);
     setMeta('meta[name="twitter:title"]', meta.title);
     setMeta('meta[name="twitter:description"]', meta.description);
+
+    const ogImg = meta.ogImage ? `${SITE_ORIGIN}${meta.ogImage}` : `${SITE_ORIGIN}/assets/copa_previsoes_hero.webp`;
+    setMeta('meta[property="og:image"]', ogImg);
+    setMeta('meta[name="twitter:image"]', ogImg);
 
     const canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) canonical.setAttribute('href', url);

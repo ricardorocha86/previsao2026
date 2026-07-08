@@ -251,10 +251,11 @@ const routes = [
     title: 'O verdadeiro culpado pela eliminação do Brasil na Copa do Mundo | Previsão Esportiva',
     description: 'Opinião sobre a eliminação do Brasil, a busca por culpados, decisões orientadas a resultado e a aleatoriedade do futebol.',
     h1: 'O verdadeiro culpado pela eliminação do Brasil na Copa do Mundo',
+    ogImage: '/assets/cronica_eliminacao_brasil_share.webp',
     body: [
       'Depois de uma eliminação do Brasil em Copa do Mundo, o país costuma procurar um culpado para demonizar. É quase um ritual: alguém precisa sair carregando sozinho uma derrota que, na verdade, foi construída por dezenas de eventos pequenos, alguns controláveis, outros nem tanto.',
       'Na Previsão Esportiva, trabalhamos desde 2010 tentando quantificar eventos relacionados à Copa do Mundo. E sabemos bem que probabilidade, quando contraria paixão, vira alvo fácil.',
-      'Avaliar uma decisão depois que o placar já contou o fim da história é uma forma muito pobre de entender futebol. O futebol sendo futebol. A matemática, em expectativa, até pode ter favorecido o Brasil em vários momentos. Mas as realizações concretas dos eventos aleatórios não favoreceram.'
+      'Avaliar uma decisão depois que o placar já contou o fim da história é uma forma muito pobre de entender futebol. O futebol sendo futebol. A matemática, em expectation, até pode ter favorecido o Brasil em vários momentos. Mas as realizações concretas dos eventos aleatórios não favoreceram.'
     ],
   },
   {
@@ -265,6 +266,7 @@ const routes = [
     title: 'O verdadeiro culpado pela eliminação do Brasil na Copa do Mundo | Previsão Esportiva',
     description: 'Opinião sobre a eliminação do Brasil, a busca por culpados, decisões orientadas a resultado e a aleatoriedade do futebol.',
     h1: 'O verdadeiro culpado pela eliminação do Brasil na Copa do Mundo',
+    ogImage: '/assets/cronica_eliminacao_brasil_share.webp',
     body: [
       'Redirecionando para a opinião oficial de Ricardo Rocha...'
     ],
@@ -331,9 +333,14 @@ const buildHtml = (r) => {
     /<meta\s+property="og:description"[\s\S]*?\/>/,
     `<meta property="og:description" content="${descAttr}" />`,
   );
+  const ogImg = r.ogImage ? `${ORIGIN}${r.ogImage}` : OG_IMAGE;
   html = html.replace(
     /<meta property="og:image"[^>]*>/,
-    `<meta property="og:image" content="${escapeAttr(OG_IMAGE)}" />`,
+    `<meta property="og:image" content="${escapeAttr(ogImg)}" />`,
+  );
+  html = html.replace(
+    /<meta name="twitter:image"[^>]*>/,
+    `<meta name="twitter:image" content="${escapeAttr(ogImg)}" />`,
   );
   html = html.replace(
     /<meta name="twitter:title"[^>]*>/,
