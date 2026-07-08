@@ -976,6 +976,8 @@ const suggestedScore = (match: CupMatch): MatchPrediction => {
 // (compute_match_probabilities em forca_core.py): distribuímos a média de gols entre
 // os dois times proporcionalmente à força de cada um (share).
 const FORCAS_SELECOES = forcaSelecoes.forcas as Record<string, number>;
+const FORCAS_SELECOES_FASE_GRUPOS = (forcaSelecoes as any).forcas_fase_grupos as Record<string, number>;
+const FORCAS_SELECOES_16AVOS = (forcaSelecoes as any).forcas_16avos as Record<string, number>;
 const MEDIA_GOLS_COPA = forcaSelecoes.mediaGols ?? 3.0;
 const FORCA_PADRAO = 0.5; // seleção sem dado de Elo (ex.: vaga de repescagem ainda indefinida)
 const MAX_GOLS_POISSON = 10;
@@ -1043,29 +1045,36 @@ const teamToKey = (team: string): string => {
   return replacements[normalized] ?? normalized;
 };
 
-const forcaSelecao = (team: string): number => {
+const forcaSelecao = (team: string, stage?: string): number => {
   if (!team) return FORCA_PADRAO;
+
+  let forcaMap = FORCAS_SELECOES;
+  if (stage === 'roundOf32') {
+    forcaMap = FORCAS_SELECOES_FASE_GRUPOS || FORCAS_SELECOES;
+  } else if (stage === 'roundOf16') {
+    forcaMap = FORCAS_SELECOES_16AVOS || FORCAS_SELECOES;
+  }
   
-  if (FORCAS_SELECOES[team] !== undefined) return FORCAS_SELECOES[team];
+  if (forcaMap[team] !== undefined) return forcaMap[team];
   
   const lower = team.toLowerCase().trim();
-  if (FORCAS_SELECOES[lower] !== undefined) return FORCAS_SELECOES[lower];
+  if (forcaMap[lower] !== undefined) return forcaMap[lower];
   
   const noAccents = team
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .trim();
-  if (FORCAS_SELECOES[noAccents] !== undefined) return FORCAS_SELECOES[noAccents];
+  if (forcaMap[noAccents] !== undefined) return forcaMap[noAccents];
   
   const noAccentsLower = noAccents.toLowerCase();
-  if (FORCAS_SELECOES[noAccentsLower] !== undefined) return FORCAS_SELECOES[noAccentsLower];
+  if (forcaMap[noAccentsLower] !== undefined) return forcaMap[noAccentsLower];
 
   const canonicalKey = teamToKey(team);
-  if (FORCAS_SELECOES[canonicalKey] !== undefined) return FORCAS_SELECOES[canonicalKey];
+  if (forcaMap[canonicalKey] !== undefined) return forcaMap[canonicalKey];
 
-  const keys = Object.keys(FORCAS_SELECOES);
+  const keys = Object.keys(forcaMap);
   const foundKey = keys.find(k => teamToKey(k) === canonicalKey);
-  if (foundKey) return FORCAS_SELECOES[foundKey];
+  if (foundKey) return forcaMap[foundKey];
 
   return FORCA_PADRAO;
 };
@@ -1150,8 +1159,8 @@ interface KnockoutProbabilities extends MatchProbabilities {
 }
 
 const matchProbabilities = (match: CupMatch): MatchProbabilities => {
-  const forcaHome = forcaSelecao(match.homeTeam);
-  const forcaAway = forcaSelecao(match.awayTeam);
+  const forcaHome = forcaSelecao(match.homeTeam, match.stage);
+  const forcaAway = forcaSelecao(match.awayTeam, match.stage);
 
   const total = forcaHome + forcaAway;
   const shareHome = total > 0 ? forcaHome / total : 0.5;
