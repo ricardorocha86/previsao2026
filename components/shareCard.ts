@@ -33,6 +33,7 @@ const PLAYER_EGGS: Record<string, { file: string; pl: 'left' | 'right' }> = {
   Espanha: { file: 'yamal.webp', pl: 'right' },
   França: { file: 'mbappe.webp', pl: 'left' },
   Inglaterra: { file: 'kane.webp', pl: 'left' },
+  Noruega: { file: 'haaland.webp', pl: 'right' },
   Portugal: { file: 'cr7.webp', pl: 'right' },
 };
 

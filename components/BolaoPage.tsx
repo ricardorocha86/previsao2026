@@ -306,6 +306,7 @@ const PLAYER_EASTER_EGGS: Record<string, { player: string; src: string; placemen
   Espanha: { player: 'Yamal', src: '/assets/easter-eggs/yamal.webp', placement: 'right' },
   Franca: { player: 'Mbappé', src: '/assets/easter-eggs/mbappe.webp', placement: 'left' },
   Inglaterra: { player: 'Harry Kane', src: '/assets/easter-eggs/kane.webp', placement: 'left' },
+  Noruega: { player: 'Erling Haaland', src: '/assets/easter-eggs/haaland.webp', placement: 'right' },
   Portugal: { player: 'CR7', src: '/assets/easter-eggs/cr7.webp', placement: 'right' },
 };
 
