@@ -28,6 +28,9 @@ const BrazilEliminationChroniclePage: React.FC = () => (
         <h1 className="mx-auto mt-3 max-w-4xl text-center font-montserrat text-3xl font-black uppercase leading-[1.04] tracking-tight text-brand-dark md:text-4xl lg:text-[2.9rem]">
           O verdadeiro culpado pela eliminação do Brasil na Copa do Mundo
         </h1>
+        <p className="mt-4 text-xs font-bold uppercase tracking-wider text-brand-dark/45">
+          08/07/2026 - Fim da Oitavas de Final
+        </p>
         <p className="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-brand-dark/68 md:text-lg">
           {subtitle}
         </p>
