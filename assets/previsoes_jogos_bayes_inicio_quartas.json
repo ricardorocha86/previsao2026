@@ -1,0 +1,46 @@
+[
+  {
+    "Jogo": 100,
+    "Grupo": "Quartas",
+    "Fase": "Quartas",
+    "Tipo": "mata-mata",
+    "Seleção A": "Argentina",
+    "Seleção B": "Suíça",
+    "Vitória A": "54.4%",
+    "Empate": "23.6%",
+    "Vitória B": "22.0%"
+  },
+  {
+    "Jogo": 98,
+    "Grupo": "Quartas",
+    "Fase": "Quartas",
+    "Tipo": "mata-mata",
+    "Seleção A": "Espanha",
+    "Seleção B": "Bélgica",
+    "Vitória A": "52.6%",
+    "Empate": "38.8%",
+    "Vitória B": "8.6%"
+  },
+  {
+    "Jogo": 97,
+    "Grupo": "Quartas",
+    "Fase": "Quartas",
+    "Tipo": "mata-mata",
+    "Seleção A": "França",
+    "Seleção B": "Marrocos",
+    "Vitória A": "64.8%",
+    "Empate": "24.0%",
+    "Vitória B": "11.2%"
+  },
+  {
+    "Jogo": 99,
+    "Grupo": "Quartas",
+    "Fase": "Quartas",
+    "Tipo": "mata-mata",
+    "Seleção A": "Noruega",
+    "Seleção B": "Inglaterra",
+    "Vitória A": "32.2%",
+    "Empate": "34.4%",
+    "Vitória B": "33.4%"
+  }
+]

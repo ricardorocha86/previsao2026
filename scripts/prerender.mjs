@@ -243,6 +243,32 @@ const routes = [
       'Rodamos a Copa do Mundo de 2026 um milhão de vezes antes de a bola rolar. Esta edição preserva o retrato original do caminho do Brasil rumo ao hexa.',
     ],
   },
+  {
+    path: '/opiniao/o-verdadeiro-culpado-pela-eliminacao-do-brasil-na-copa-do-mundo',
+    changefreq: 'monthly',
+    priority: '0.7',
+    linkLabel: 'Opinião: O verdadeiro culpado pela eliminação do Brasil',
+    title: 'O verdadeiro culpado pela eliminação do Brasil na Copa do Mundo | Previsão Esportiva',
+    description: 'Opinião sobre a eliminação do Brasil, a busca por culpados, decisões orientadas a resultado e a aleatoriedade do futebol.',
+    h1: 'O verdadeiro culpado pela eliminação do Brasil na Copa do Mundo',
+    body: [
+      'Depois de uma eliminação do Brasil em Copa do Mundo, o país costuma procurar um culpado para demonizar. É quase um ritual: alguém precisa sair carregando sozinho uma derrota que, na verdade, foi construída por dezenas de eventos pequenos, alguns controláveis, outros nem tanto.',
+      'Na Previsão Esportiva, trabalhamos desde 2010 tentando quantificar eventos relacionados à Copa do Mundo. E sabemos bem que probabilidade, quando contraria paixão, vira alvo fácil.',
+      'Avaliar uma decisão depois que o placar já contou o fim da história é uma forma muito pobre de entender futebol. O futebol sendo futebol. A matemática, em expectativa, até pode ter favorecido o Brasil em vários momentos. Mas as realizações concretas dos eventos aleatórios não favoreceram.'
+    ],
+  },
+  {
+    path: '/cronicas/o-verdadeiro-culpado-pela-eliminacao-do-brasil-na-copa-do-mundo',
+    changefreq: 'monthly',
+    priority: '0.5',
+    linkLabel: 'Crônica: O verdadeiro culpado pela eliminação do Brasil',
+    title: 'O verdadeiro culpado pela eliminação do Brasil na Copa do Mundo | Previsão Esportiva',
+    description: 'Opinião sobre a eliminação do Brasil, a busca por culpados, decisões orientadas a resultado e a aleatoriedade do futebol.',
+    h1: 'O verdadeiro culpado pela eliminação do Brasil na Copa do Mundo',
+    body: [
+      'Redirecionando para a opinião oficial de Ricardo Rocha...'
+    ],
+  },
 ];
 
 const escapeHtml = (s) =>

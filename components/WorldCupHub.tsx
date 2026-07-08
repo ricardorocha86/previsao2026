@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Trophy, Search, ArrowUpDown, ArrowUp, ArrowDown, Clock, CalendarDays, MapPin, TrendingUp, Network, ChevronLeft, ChevronRight, Info } from 'lucide-react';
 import simulacaoGeral from '../assets/simulacao_geral.json';
 import simulacaoGeralInicioCopa from '../assets/simulacao_geral_inicio_copa.json';
@@ -11,6 +11,8 @@ import simulacaoGeralPosOitavas from '../assets/simulacao_geral_pos_oitavas.json
 import simulacaoGeralBayes from '../assets/simulacao_geral_bayes.json';
 import simulacaoGeralBayesPreTorneio from '../assets/simulacao_geral_bayes_pre_torneio.json';
 import simulacaoGeralBayesInicioMataMata from '../assets/simulacao_geral_bayes_inicio_mata_mata.json';
+import simulacaoGeralBayesInicioOitavas from '../assets/simulacao_geral_bayes_inicio_oitavas.json';
+import simulacaoGeralBayesInicioQuartas from '../assets/simulacao_geral_bayes_inicio_quartas.json';
 import previsoesJogos from '../assets/previsoes_jogos.json';
 import previsoesJogosInicioCopa from '../assets/previsoes_jogos_inicio_copa.json';
 import previsoesJogosPosRodada1 from '../assets/previsoes_jogos_pos_rodada1.json';
@@ -20,6 +22,7 @@ import previsoesJogosPos16avos from '../assets/previsoes_jogos_pos_16avos.json';
 import previsoesJogosPosOitavas from '../assets/previsoes_jogos_pos_oitavas.json';
 import previsoesJogosBayes from '../assets/previsoes_jogos_bayes.json';
 import previsoesJogosBayesPreTorneio from '../assets/previsoes_jogos_bayes_pre_torneio.json';
+import previsoesJogosBayesInicioQuartas from '../assets/previsoes_jogos_bayes_inicio_quartas.json';
 import resultadosJogos from '../assets/resultados_jogos.json';
 import flags from '../assets/flags.json';
 import analisePreConvocacao from '../assets/analise_pre_convocacao.json';
@@ -32,7 +35,7 @@ import analisePosOitavas from '../assets/analise_pos_oitavas.json';
 import PageHeader from './PageHeader';
 
 type StageId = 'inicio-copa' | 'pre-convocacao' | 'fim-rodada1' | 'fim-rodada2' | 'inicio-mata-mata' | 'inicio-oitavas' | 'inicio-quartas';
-type BayesStageId = 'bayes-pre-torneio' | 'bayes-fim-rodada1' | 'bayes-inicio-mata-mata';
+type BayesStageId = 'bayes-pre-torneio' | 'bayes-fim-rodada1' | 'bayes-inicio-mata-mata' | 'bayes-inicio-oitavas' | 'bayes-inicio-quartas';
 type InfoTab = 'probabilidades' | 'eliminacao' | 'brasil';
 
 const STAGES: Array<{ id: StageId; label: string; date: string; data: any[]; jogos: any[] }> = [
@@ -49,10 +52,12 @@ const BAYES_STAGES: Array<{ id: BayesStageId; label: string; date: string; data:
   { id: 'bayes-pre-torneio', label: 'Pré-Torneio', date: '30/04/2026', data: simulacaoGeralBayesPreTorneio as any[], jogos: previsoesJogosBayesPreTorneio as any[] },
   { id: 'bayes-fim-rodada1', label: 'Fim da 1ª Rodada', date: '17/06/2026', data: simulacaoGeralBayes as any[], jogos: previsoesJogosBayes as any[] },
   { id: 'bayes-inicio-mata-mata', label: 'Início do Mata-Mata', date: '28/06/2026', data: simulacaoGeralBayesInicioMataMata as any[], jogos: [] },
+  { id: 'bayes-inicio-oitavas', label: 'Início das Oitavas', date: '04/07/2026', data: simulacaoGeralBayesInicioOitavas as any[], jogos: [] },
+  { id: 'bayes-inicio-quartas', label: 'Início das Quartas', date: '08/07/2026', data: simulacaoGeralBayesInicioQuartas as any[], jogos: previsoesJogosBayesInicioQuartas as any[] },
 ];
 
 const DEFAULT_STAGE_ID: StageId = 'inicio-quartas';
-const DEFAULT_BAYES_STAGE_ID: BayesStageId = 'bayes-inicio-mata-mata';
+const DEFAULT_BAYES_STAGE_ID: BayesStageId = 'bayes-inicio-quartas';
 
 const UPCOMING_STAGES: Array<{ label: string; date: string }> = [
   { label: 'Fim das Quartas', date: '11/07/2026' },
@@ -232,6 +237,11 @@ const OFFICIAL_KNOCKOUT_MATCHES = OFFICIAL_KNOCKOUT_RAW.map((match) => ({
     'Avanço B': (match as any).advB,
   } : {}),
 }));
+
+const OFFICIAL_KNOCKOUT_BY_MATCH = OFFICIAL_KNOCKOUT_MATCHES.reduce((acc: Record<string, any>, match: any) => {
+  acc[String(match['Jogo'])] = match;
+  return acc;
+}, {});
 
 const parseDataHora = (jogo: any): number => {
   const m = String(jogo['Data'] || '').match(/(\d{1,2}) de (\S+) de (\d{4})/);
@@ -808,10 +818,32 @@ const WorldCupHub: React.FC = () => {
   const currentBayesStage = BAYES_STAGES.find((s) => s.id === bayesStageId) ?? BAYES_STAGES[BAYES_STAGES.length - 1];
   const currentSimulacaoGeral = methodology === 1 ? currentStage.data : currentBayesStage.data;
   const currentPrevisoesJogos = methodology === 1 ? currentStage.jogos : currentBayesStage.jogos;
-  const currentAgendaJogos = useMemo(() => [
-    ...(currentPrevisoesJogos as any[]),
-    ...OFFICIAL_KNOCKOUT_MATCHES,
-  ], [currentPrevisoesJogos]);
+  const currentAgendaJogos = useMemo(() => {
+    const previsoes = (currentPrevisoesJogos as any[]).map((jogo: any) => {
+      if (jogo['Tipo'] !== 'mata-mata' || !jogo['Jogo']) return jogo;
+      const official = OFFICIAL_KNOCKOUT_BY_MATCH[String(jogo['Jogo'])];
+      if (!official) return jogo;
+      const hydrated = { ...official, ...jogo };
+      if (methodology === 2 && !('Avanço A' in jogo)) {
+        delete hydrated['Avanço A'];
+        delete hydrated['Avanço B'];
+      }
+      return hydrated;
+    });
+
+    if (methodology === 2) return previsoes;
+
+    const explicitKnockoutMatches = new Set(
+      previsoes
+        .filter((jogo: any) => jogo['Tipo'] === 'mata-mata' && jogo['Jogo'])
+        .map((jogo: any) => String(jogo['Jogo']))
+    );
+
+    return [
+      ...previsoes,
+      ...OFFICIAL_KNOCKOUT_MATCHES.filter((jogo: any) => !explicitKnockoutMatches.has(String(jogo['Jogo']))),
+    ];
+  }, [currentPrevisoesJogos, methodology]);
 
   // Análises detalhadas só existem para a Metodologia 1.
   const currentAnalise = methodology === 1 ? ANALISE_MAP[stageId] : null;
@@ -855,7 +887,7 @@ const WorldCupHub: React.FC = () => {
   }, [methodology]);
 
   const teamGroupByName = useMemo(() => {
-    return (currentPrevisoesJogos as any[]).reduce((acc: Record<string, string>, jogo: any) => {
+    return (previsoesJogosInicioCopa as any[]).reduce((acc: Record<string, string>, jogo: any) => {
       const group = jogo['Grupo'];
       if (!group) return acc;
       [jogo['Seleção A'], jogo['Seleção B']].forEach((teamName) => {
@@ -863,7 +895,7 @@ const WorldCupHub: React.FC = () => {
       });
       return acc;
     }, {});
-  }, [currentPrevisoesJogos]);
+  }, []);
 
   const sortedData = useMemo(() => {
     let sortableData = [...(currentSimulacaoGeral as any[])];
@@ -908,6 +940,23 @@ const WorldCupHub: React.FC = () => {
       };
     }).sort((a, b) => a.ts - b.ts);
   }, [currentAgendaJogos]);
+
+  const hasGroupGames = useMemo(() => (
+    (currentAgendaJogos as any[]).some((jogo: any) => jogo['Tipo'] !== 'mata-mata' && String(jogo['Grupo'] || '').startsWith('Grupo '))
+  ), [currentAgendaJogos]);
+
+  const hasKnockoutGames = useMemo(() => (
+    (currentAgendaJogos as any[]).some((jogo: any) => jogo['Tipo'] === 'mata-mata')
+  ), [currentAgendaJogos]);
+
+  const knockoutStageOptions = useMemo(() => {
+    const stagesWithGames = new Set(
+      jogosComMeta
+        .filter((item: any) => item.isKnockout)
+        .map((item: any) => item.jogo['Grupo'])
+    );
+    return KNOCKOUT_STAGE_OPTIONS.filter((option) => stagesWithGames.has(option.value));
+  }, [jogosComMeta]);
 
   const dateOptions = useMemo(() => {
     const datesWithGames = new Map<string, number>();
@@ -1026,11 +1075,34 @@ const WorldCupHub: React.FC = () => {
     { id: 'mataMata', label: 'Mata-mata' },
   ];
 
+  const availableViewTabs = useMemo(() => (
+    VIEW_TABS.filter((tab) => (
+      (tab.id !== 'grupos' || hasGroupGames) &&
+      (tab.id !== 'mataMata' || hasKnockoutGames)
+    ))
+  ), [hasGroupGames, hasKnockoutGames]);
+
   const INFO_TABS: Array<{ id: InfoTab; label: string; emoji: string }> = [
     { id: 'probabilidades', label: 'Probabilidade por Seleção', emoji: '🏆' },
     { id: 'eliminacao', label: 'Probabilidade de Eliminação', emoji: '❌' },
     { id: 'brasil', label: 'Caminho do Brasil', emoji: '🇧🇷' },
   ];
+
+  useEffect(() => {
+    if (availableViewTabs.length > 0 && !availableViewTabs.some((tab) => tab.id === viewMode)) {
+      setViewMode(availableViewTabs[0].id);
+    }
+  }, [availableViewTabs, viewMode]);
+
+  useEffect(() => {
+    if (
+      viewMode === 'mataMata' &&
+      knockoutStageOptions.length > 0 &&
+      !knockoutStageOptions.some((option) => option.value === selectedKnockoutStage)
+    ) {
+      setSelectedKnockoutStage(knockoutStageOptions[0].value);
+    }
+  }, [knockoutStageOptions, selectedKnockoutStage, viewMode]);
 
   return (
     <div className="min-h-screen bg-brand-light pb-24 font-opensans">
@@ -1102,7 +1174,7 @@ const WorldCupHub: React.FC = () => {
           </div>
           <div className="mt-5">
             <span className="block text-[10px] font-montserrat font-black uppercase tracking-[0.25em] text-brand-dark/40 mb-2">Etapa da simulação</span>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2">
               {(methodology === 1 ? STAGES : BAYES_STAGES).map((s) => {
                 const isActive = methodology === 1 ? s.id === stageId : s.id === bayesStageId;
                 return (
@@ -1236,24 +1308,22 @@ const WorldCupHub: React.FC = () => {
             </section>
 
             {/* Games list */}
-            {methodology === 1 && (
+            {currentAgendaJogos.length > 0 && (
             <section>
               <div className="mb-10 space-y-6">
                 <h2 className="text-[length:clamp(1.5rem,5.5vw,3.2rem)] whitespace-nowrap font-montserrat font-black text-brand-dark uppercase tracking-tighter leading-none mb-4">
                   Agenda de <span className={`${theme.accentText} italic`}>Confrontos</span>
                 </h2>
 
-                {methodology === 1 && (
-                  <p
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-montserrat font-black uppercase tracking-widest border"
-                    style={{ color: theme.accent, borderColor: theme.accentBorder, backgroundColor: theme.accentSoft }}
-                  >
-                    Probabilidades da etapa {currentStage.label} · simulação de {currentStage.date}
-                  </p>
-                )}
+                <p
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-montserrat font-black uppercase tracking-widest border"
+                  style={{ color: theme.accent, borderColor: theme.accentBorder, backgroundColor: theme.accentSoft }}
+                >
+                  Probabilidades da etapa {methodology === 1 ? currentStage.label : currentBayesStage.label} · simulação de {methodology === 1 ? currentStage.date : currentBayesStage.date}
+                </p>
 
                 <div className="flex flex-wrap gap-2">
-                  {VIEW_TABS.map((tab) => (
+                  {availableViewTabs.map((tab) => (
                     <button
                       key={tab.id}
                       onClick={() => {
@@ -1325,7 +1395,7 @@ const WorldCupHub: React.FC = () => {
                     </div>
                   ) : (
                     <div className="flex flex-wrap justify-center md:justify-start gap-2">
-                      {KNOCKOUT_STAGE_OPTIONS.map(({ value, label }) => {
+                      {knockoutStageOptions.map(({ value, label }) => {
                         const isActive = selectedKnockoutStage === value;
                         return (
                           <button

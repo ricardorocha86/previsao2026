@@ -4,6 +4,7 @@ import { Logo } from './components/Logo';
 import Hero from './components/Hero';
 import HomeOverview from './components/HomeOverview';
 import HexaCallout from './components/HexaCallout';
+import OpinionCallout from './components/OpinionCallout';
 import MediaHighlight from './components/MediaHighlight';
 import SponsorBar from './components/SponsorBar';
 import LegalModal, { LegalTab } from './components/LegalModal';
@@ -12,7 +13,7 @@ import { Analytics } from '@vercel/analytics/react';
 import resultadosJogos from './assets/resultados_jogos.json';
 import { PARTNER_INSTITUTIONS, RESEARCH_CENTERS } from './data/institutions';
 
-type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa' | 'hexa-quartas' | 'hexa-oitavas' | 'hexa-mata-mata' | 'hexa-rodada2' | 'hexa-inicio' | 'pos-rodada';
+type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa' | 'hexa-quartas' | 'hexa-oitavas' | 'hexa-mata-mata' | 'hexa-rodada2' | 'hexa-inicio' | 'pos-rodada' | 'cronica-eliminacao-brasil';
 
 const WorldCupHub = lazy(() => import('./components/WorldCupHub'));
 const MapPage = lazy(() => import('./components/MapPage'));
@@ -28,6 +29,10 @@ const SecondRoundPage = lazy(() => import('./components/SecondRoundPage'));
 const KnockoutPage = lazy(() => import('./components/KnockoutPage'));
 const RoundOf16Page = lazy(() => import('./components/RoundOf16Page'));
 const QuarterfinalsPage = lazy(() => import('./components/QuarterfinalsPage'));
+const BrazilEliminationChroniclePage = lazy(() => import('./components/BrazilEliminationChroniclePage'));
+
+const BRAZIL_ELIMINATION_OPINION_PATH = '/opiniao/o-verdadeiro-culpado-pela-eliminacao-do-brasil-na-copa-do-mundo';
+const BRAZIL_ELIMINATION_LEGACY_PATH = '/cronicas/o-verdadeiro-culpado-pela-eliminacao-do-brasil-na-copa-do-mundo';
 
 const ROUTES: Record<ViewState, string> = {
   home: '/',
@@ -46,6 +51,7 @@ const ROUTES: Record<ViewState, string> = {
   'hexa-rodada2': '/caminho-do-hexa/fim-da-segunda-rodada',
   'hexa-inicio': '/caminho-do-hexa/inicio-da-copa',
   'pos-rodada': '/a-copa-mudou-de-rosto',
+  'cronica-eliminacao-brasil': BRAZIL_ELIMINATION_OPINION_PATH,
 };
 
 const SITE_ORIGIN = 'https://www.previsaoesportiva.com.br';
@@ -160,6 +166,10 @@ const PAGE_META: Record<ViewState, { title: string; description: string }> = {
     title: 'A Copa Mudou de Rosto | Previsão Esportiva',
     description: 'O que a primeira rodada da Copa do Mundo de 2026 mudou nas probabilidades: França assume a ponta, Brasil recua e novas forças entram no mapa.',
   },
+  'cronica-eliminacao-brasil': {
+    title: 'O verdadeiro culpado pela eliminação do Brasil na Copa do Mundo | Previsão Esportiva',
+    description: 'Opinião sobre a eliminação do Brasil, a busca por culpados, decisões orientadas a resultado e a aleatoriedade do futebol.',
+  },
 };
 
 // Reordered as requested: Copa 2026, Bolão, Mapa, Simulador (Metodologia moved to dropdown)
@@ -181,6 +191,7 @@ const getViewFromLocation = (): ViewState => {
   const hashPath = window.location.hash.startsWith('#/') ? window.location.hash.slice(1) : '';
   const currentPath = hashPath || window.location.pathname;
   if (currentPath === '/a-copa-mudou-de-rosto') return 'pos-rodada';
+  if (currentPath === BRAZIL_ELIMINATION_LEGACY_PATH) return 'cronica-eliminacao-brasil';
   return (Object.entries(ROUTES).find(([, path]) => path === currentPath)?.[0] as ViewState) || 'home';
 };
 
@@ -194,6 +205,9 @@ export default function App() {
   const openLegal = (tab: LegalTab) => setLegalModal({ open: true, tab });
 
   useEffect(() => {
+    if (window.location.pathname === BRAZIL_ELIMINATION_LEGACY_PATH) {
+      window.history.replaceState(null, '', BRAZIL_ELIMINATION_OPINION_PATH);
+    }
     const syncView = () => setCurrentView(getViewFromLocation());
     window.addEventListener('popstate', syncView);
     window.addEventListener('hashchange', syncView);
@@ -416,6 +430,7 @@ export default function App() {
         {currentView === 'home' && (
           <>
             <Hero onNavigate={(view) => navigateTo(view)} />
+            <OpinionCallout onNavigate={() => navigateTo('cronica-eliminacao-brasil')} />
             <HexaCallout onNavigate={() => navigateTo('hexa')} />
             <MediaHighlight onNavigate={() => navigateTo('media')} />
             <HomeOverview onNavigate={(view) => navigateTo(view)} />
@@ -432,13 +447,14 @@ export default function App() {
             {currentView === 'science' && <SciencePage />}
             {currentView === 'media' && <MediaPage />}
             {currentView === 'methodology' && <MethodologyPage />}
-            {currentView === 'hexa' && <QuarterfinalsPage />}
-            {currentView === 'hexa-quartas' && <QuarterfinalsPage />}
+            {currentView === 'hexa' && <QuarterfinalsPage onNavigate={navigateTo} />}
+            {currentView === 'hexa-quartas' && <QuarterfinalsPage onNavigate={navigateTo} />}
             {currentView === 'hexa-oitavas' && <RoundOf16Page />}
             {currentView === 'hexa-mata-mata' && <KnockoutPage />}
             {currentView === 'hexa-rodada2' && <SecondRoundPage />}
             {currentView === 'pos-rodada' && <PostRoundPage />}
             {currentView === 'hexa-inicio' && <HexaPage />}
+            {currentView === 'cronica-eliminacao-brasil' && <BrazilEliminationChroniclePage />}
           </Suspense>
         )}
       </main>
