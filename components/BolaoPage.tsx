@@ -983,7 +983,92 @@ const MAX_GOLS_PRORROGACAO = 15;
 const USAR_DIXON_COLES = forcaSelecoes.dixonColes ?? true;
 const RHO_DIXON_COLES = forcaSelecoes.rhoDixonColes ?? -0.13;
 
-const forcaSelecao = (team: string): number => FORCAS_SELECOES[team] ?? FORCA_PADRAO;
+const teamToKey = (team: string): string => {
+  if (!team) return '';
+  const normalized = team
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+
+  const replacements: Record<string, string> = {
+    'estados unidos': 'usa',
+    'united states': 'usa',
+    'south korea': 'korea republic',
+    'coreia do sul': 'korea republic',
+    'czechia': 'czech republic',
+    'republica tcheca': 'czech republic',
+    'tcheca': 'czech republic',
+    'ivory coast': "cote d'ivoire",
+    'cote d ivoire': "cote d'ivoire",
+    'costa do marfim': "cote d'ivoire",
+    'africa do sul': 'south africa',
+    'catar': 'qatar',
+    'suica': 'switzerland',
+    'brasil': 'brazil',
+    'escocia': 'scotland',
+    'marrocos': 'morocco',
+    'paraguai': 'paraguay',
+    'alemanha': 'germany',
+    'curacau': 'curacao',
+    'equador': 'ecuador',
+    'holanda': 'netherlands',
+    'japao': 'japan',
+    'belgica': 'belgium',
+    'egito': 'egypt',
+    'ira': 'iran',
+    'nova zelandia': 'new zealand',
+    'arabia saudita': 'saudi arabia',
+    'cabo verde': 'cape verde',
+    'espanha': 'spain',
+    'uruguai': 'uruguay',
+    'franca': 'france',
+    'noruega': 'norway',
+    'argelia': 'algeria',
+    'austria': 'austria',
+    'jordania': 'jordan',
+    'colombia': 'colombia',
+    'uzbequistao': 'uzbekistan',
+    'croacia': 'croatia',
+    'gana': 'ghana',
+    'inglaterra': 'england',
+    'iraque': 'iraq',
+    'rd do congo': 'dr congo',
+    'rd congo': 'dr congo',
+    'bosnia e herzegovina': 'bosnia and herzegovina',
+    'turquia': 'turkey',
+    'suecia': 'sweden',
+  };
+
+  return replacements[normalized] ?? normalized;
+};
+
+const forcaSelecao = (team: string): number => {
+  if (!team) return FORCA_PADRAO;
+  
+  if (FORCAS_SELECOES[team] !== undefined) return FORCAS_SELECOES[team];
+  
+  const lower = team.toLowerCase().trim();
+  if (FORCAS_SELECOES[lower] !== undefined) return FORCAS_SELECOES[lower];
+  
+  const noAccents = team
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+  if (FORCAS_SELECOES[noAccents] !== undefined) return FORCAS_SELECOES[noAccents];
+  
+  const noAccentsLower = noAccents.toLowerCase();
+  if (FORCAS_SELECOES[noAccentsLower] !== undefined) return FORCAS_SELECOES[noAccentsLower];
+
+  const canonicalKey = teamToKey(team);
+  if (FORCAS_SELECOES[canonicalKey] !== undefined) return FORCAS_SELECOES[canonicalKey];
+
+  const keys = Object.keys(FORCAS_SELECOES);
+  const foundKey = keys.find(k => teamToKey(k) === canonicalKey);
+  if (foundKey) return FORCAS_SELECOES[foundKey];
+
+  return FORCA_PADRAO;
+};
 const penaltyWinProbabilityFromShare = (share: number): number => 0.4 + 0.2 * Math.min(1, Math.max(0, share));
 
 // Amostra uma Poisson(lambda) pelo algoritmo de Knuth (sem dependências externas).
