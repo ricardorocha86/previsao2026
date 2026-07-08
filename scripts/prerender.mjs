@@ -151,13 +151,27 @@ const routes = [
     changefreq: 'weekly',
     priority: '0.8',
     linkLabel: 'Hexa — análise atual',
-    title: 'França Dispara e o Brasil Respira | Previsão Esportiva',
+    title: 'O Hexa Acabou; França Segue Líder | Previsão Esportiva',
     description:
-      'Após os 16-avos, a França chega a 32,8% de chance de título e o Brasil encara a Noruega com 61,5% de probabilidade de avanço.',
-    h1: 'França dispara e o Brasil respira',
+      'Após Brasil 1 x 2 Noruega, o sonho do hexa acabou. França lidera com 33,5% de chance de título e oito seleções seguem vivas nas quartas.',
+    h1: 'O hexa acabou; França segue líder',
     body: [
-      'Depois dos 16-avos, a França abriu distância na corrida pelo título. Alemanha e Holanda foram eliminadas, e o Brasil passou pelo Japão.',
-      'O novo retrato tem 1.000.000 de simulações com 88 jogos travados. O Brasil tem 6,6% de chance de título e 61,5% de avançar contra a Noruega nas oitavas.',
+      'O Brasil perdeu por 2 a 1 para a Noruega nas oitavas e saiu da Copa do Mundo de 2026. A derrota encerrou a campanha brasileira e tirou o país da corrida pelo título.',
+      'Restam oito seleções. A França segue líder, com 33,5%, seguida por Espanha, Argentina e Inglaterra. No início da Copa, as oito sobreviventes concentravam 56,4% da chance de título; agora concentram 100%.',
+    ],
+  },
+  {
+    path: '/caminho-do-hexa/inicio-das-quartas',
+    changefreq: 'weekly',
+    priority: '0.8',
+    linkLabel: 'Hexa — início das quartas',
+    title: 'O Hexa Acabou; França Segue Líder | Previsão Esportiva',
+    description:
+      'Após Brasil 1 x 2 Noruega, o sonho do hexa acabou. França lidera com 33,5% de chance de título e oito seleções seguem vivas nas quartas.',
+    h1: 'O hexa acabou; França segue líder',
+    body: [
+      'O Brasil perdeu por 2 a 1 para a Noruega nas oitavas e saiu da Copa do Mundo de 2026. A derrota encerrou a campanha brasileira e tirou o país da corrida pelo título.',
+      'Restam oito seleções. A França segue líder, com 33,5%, seguida por Espanha, Argentina e Inglaterra. No início da Copa, as oito sobreviventes concentravam 56,4% da chance de título; agora concentram 100%.',
     ],
   },
   {
@@ -185,7 +199,7 @@ const routes = [
     h1: 'França dispara e o Brasil respira',
     body: [
       'Depois dos 16-avos, a França abriu distância na corrida pelo título. Alemanha e Holanda foram eliminadas, e o Brasil passou pelo Japão.',
-      'O novo retrato tem 1.000.000 de simulações com 88 jogos travados. O Brasil tem 6,6% de chance de título e 61,5% de avançar contra a Noruega nas oitavas.',
+      'O novo retrato tem 1.000.000 de simulações com 88 jogos já encerrados. O Brasil tem 6,6% de chance de título e 61,5% de avançar contra a Noruega nas oitavas.',
     ],
   },
   {

@@ -12,7 +12,7 @@ import { Analytics } from '@vercel/analytics/react';
 import resultadosJogos from './assets/resultados_jogos.json';
 import { PARTNER_INSTITUTIONS, RESEARCH_CENTERS } from './data/institutions';
 
-type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa' | 'hexa-oitavas' | 'hexa-mata-mata' | 'hexa-rodada2' | 'hexa-inicio' | 'pos-rodada';
+type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa' | 'hexa-quartas' | 'hexa-oitavas' | 'hexa-mata-mata' | 'hexa-rodada2' | 'hexa-inicio' | 'pos-rodada';
 
 const WorldCupHub = lazy(() => import('./components/WorldCupHub'));
 const MapPage = lazy(() => import('./components/MapPage'));
@@ -27,6 +27,7 @@ const PostRoundPage = lazy(() => import('./components/PostRoundPage'));
 const SecondRoundPage = lazy(() => import('./components/SecondRoundPage'));
 const KnockoutPage = lazy(() => import('./components/KnockoutPage'));
 const RoundOf16Page = lazy(() => import('./components/RoundOf16Page'));
+const QuarterfinalsPage = lazy(() => import('./components/QuarterfinalsPage'));
 
 const ROUTES: Record<ViewState, string> = {
   home: '/',
@@ -39,6 +40,7 @@ const ROUTES: Record<ViewState, string> = {
   media: '/midia',
   team: '/equipe',
   hexa: '/caminho-do-hexa',
+  'hexa-quartas': '/caminho-do-hexa/inicio-das-quartas',
   'hexa-oitavas': '/caminho-do-hexa/inicio-das-oitavas',
   'hexa-mata-mata': '/caminho-do-hexa/inicio-do-mata-mata',
   'hexa-rodada2': '/caminho-do-hexa/fim-da-segunda-rodada',
@@ -131,8 +133,12 @@ const PAGE_META: Record<ViewState, { title: string; description: string }> = {
     description: 'Conheça os pesquisadores e as instituições por trás do projeto Previsão Esportiva.',
   },
   hexa: {
-    title: 'França Dispara e o Brasil Respira | Previsão Esportiva',
-    description: 'Após os 16-avos, a França chega a 32,8% de chance de título e o Brasil encara a Noruega com 61,5% de probabilidade de avanço.',
+    title: 'O Hexa Acabou; França Segue Líder | Previsão Esportiva',
+    description: 'Após Brasil 1 x 2 Noruega, o sonho do hexa acabou. França lidera com 33,5% de chance de título e oito seleções seguem vivas nas quartas.',
+  },
+  'hexa-quartas': {
+    title: 'O Hexa Acabou; França Segue Líder | Previsão Esportiva',
+    description: 'Após Brasil 1 x 2 Noruega, o sonho do hexa acabou. França lidera com 33,5% de chance de título e oito seleções seguem vivas nas quartas.',
   },
   'hexa-oitavas': {
     title: 'França Dispara e o Brasil Respira | Previsão Esportiva',
@@ -426,7 +432,8 @@ export default function App() {
             {currentView === 'science' && <SciencePage />}
             {currentView === 'media' && <MediaPage />}
             {currentView === 'methodology' && <MethodologyPage />}
-            {currentView === 'hexa' && <RoundOf16Page />}
+            {currentView === 'hexa' && <QuarterfinalsPage />}
+            {currentView === 'hexa-quartas' && <QuarterfinalsPage />}
             {currentView === 'hexa-oitavas' && <RoundOf16Page />}
             {currentView === 'hexa-mata-mata' && <KnockoutPage />}
             {currentView === 'hexa-rodada2' && <SecondRoundPage />}
@@ -498,7 +505,7 @@ export default function App() {
             <h4 className="text-brand-dark font-montserrat font-bold uppercase tracking-wider mb-5 text-sm">Navegação</h4>
             <div className="grid grid-cols-2 gap-3 text-sm text-brand-dark/68">
               <button type="button" onClick={() => navigateTo('copa')} className="text-left hover:text-brand-green transition">Resultados</button>
-              <button type="button" onClick={() => navigateTo('hexa')} className="text-left hover:text-brand-green transition">Rumo ao Hexa</button>
+              <button type="button" onClick={() => navigateTo('hexa')} className="text-left hover:text-brand-green transition">O hexa acabou</button>
               <button type="button" onClick={() => navigateTo('mapa')} className="text-left hover:text-brand-green transition">Mapa</button>
               <button type="button" onClick={() => navigateTo('simulador')} className="text-left hover:text-brand-green transition">Simulador</button>
               <button type="button" onClick={() => navigateTo('bolao')} className="text-left hover:text-brand-green transition">Bolão</button>

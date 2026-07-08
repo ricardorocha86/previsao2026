@@ -42,10 +42,10 @@ const HexaArt: React.FC<{ className?: string }> = ({ className }) => (
     role="img"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <title>O Caminho Rumo ao Hexa</title>
+    <title>Copa do Mundo 2026 nas quartas de final</title>
     <desc>
       Troféu dourado coroado por seis estrelas, com raios de luz e confete nas cores do Brasil,
-      simbolizando a busca pelo hexacampeonato.
+      usado como imagem da série especial de probabilidades da Copa.
     </desc>
     <defs>
       <linearGradient id="hexBgFill" x1="0" y1="0" x2="0" y2="1">
