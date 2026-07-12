@@ -533,7 +533,7 @@ export default function App() {
             <h4 className="text-brand-dark font-montserrat font-bold uppercase tracking-wider mb-5 text-sm">Navegação</h4>
             <div className="grid grid-cols-2 gap-3 text-sm text-brand-dark/68">
               <button type="button" onClick={() => navigateTo('copa')} className="text-left hover:text-brand-green transition">Resultados</button>
-              <button type="button" onClick={() => navigateTo('hexa')} className="text-left hover:text-brand-green transition">O hexa acabou</button>
+              <button type="button" onClick={() => navigateTo('hexa')} className="text-left hover:text-brand-green transition">Quatro na corrida</button>
               <button type="button" onClick={() => navigateTo('mapa')} className="text-left hover:text-brand-green transition">Mapa</button>
               <button type="button" onClick={() => navigateTo('simulador')} className="text-left hover:text-brand-green transition">Simulador</button>
               <button type="button" onClick={() => navigateTo('bolao')} className="text-left hover:text-brand-green transition">Bolão</button>

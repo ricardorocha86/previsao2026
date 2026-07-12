@@ -151,13 +151,13 @@ const routes = [
     changefreq: 'weekly',
     priority: '0.8',
     linkLabel: 'Hexa — análise atual',
-    title: 'O Hexa Acabou; França Segue Líder | Previsão Esportiva',
+    title: 'Quatro na corrida pelo título | Previsão Esportiva',
     description:
-      'Após Brasil 1 x 2 Noruega, o sonho do hexa acabou. França lidera com 33,5% de chance de título e oito seleções seguem vivas nas quartas.',
-    h1: 'O hexa acabou; França segue líder',
+      'Após as quartas, França, Espanha, Inglaterra e Argentina avançam às semifinais; a França lidera com 38,3% de chance de título.',
+    h1: 'Quatro na corrida pelo título',
     body: [
-      'O Brasil perdeu por 2 a 1 para a Noruega nas oitavas e saiu da Copa do Mundo de 2026. A derrota encerrou a campanha brasileira e tirou o país da corrida pelo título.',
-      'Restam oito seleções. A França segue líder, com 33,5%, seguida por Espanha, Argentina e Inglaterra. No início da Copa, as oito sobreviventes concentravam 56,4% da chance de título; agora concentram 100%.',
+      'As quartas de final confirmaram os quatro favoritos: França, Espanha, Inglaterra e Argentina avançaram às semifinais. Marrocos, Bélgica, Noruega e Suíça foram eliminadas.',
+      'A França lidera a nova simulação com 38,3% de chance de título — o valor mais alto da série. A Inglaterra saltou para 21,2% e assumiu a vice-liderança, com Espanha (20,8%) e Argentina (19,8%) logo atrás.',
     ],
   },
   {
@@ -184,8 +184,8 @@ const routes = [
       'Após as quartas, França, Espanha, Inglaterra e Argentina avançam às semifinais; a França lidera com 38,3% de chance de título.',
     h1: 'Quatro na corrida pelo título',
     body: [
-      'As quartas terminaram com França, Espanha, Inglaterra e Argentina classificadas para as semifinais. Marrocos, Bélgica, Noruega e Suíça foram eliminadas.',
-      'A França lidera a nova simulação com 38,3% de chance de título. Inglaterra, Espanha e Argentina aparecem logo atrás, em uma disputa concentrada entre quatro seleções.',
+      'As quartas terminaram sem zebras: França, Espanha, Inglaterra e Argentina confirmaram o favoritismo e estão nas semifinais. Marrocos, Bélgica, Noruega e Suíça foram eliminadas.',
+      'A França lidera a nova simulação com 38,3% de chance de título — o valor mais alto da série. A Inglaterra saltou para 21,2% e assumiu a vice-liderança, com Espanha (20,8%) e Argentina (19,8%) logo atrás.',
     ],
   },
   {

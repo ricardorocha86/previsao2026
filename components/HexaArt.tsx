@@ -42,7 +42,7 @@ const HexaArt: React.FC<{ className?: string }> = ({ className }) => (
     role="img"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <title>Copa do Mundo 2026 nas quartas de final</title>
+    <title>Copa do Mundo 2026 nas semifinais</title>
     <desc>
       Troféu dourado coroado por seis estrelas, com raios de luz e confete nas cores do Brasil,
       usado como imagem da série especial de probabilidades da Copa.
