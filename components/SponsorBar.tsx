@@ -18,9 +18,9 @@ const SPONSORS: Sponsor[] = [
     id: 'pgecd',
     label: 'PGECD/UFBA',
     title: 'Pós-graduação em Estatística e Ciência de Dados',
-    detail: 'Aluno(a) especial 2026.2: inscrições até 10/07',
+    detail: 'Conheça a Pós-graduação em Estatística e Ciência de Dados da UFBA',
     href: 'https://pgecd.ufba.br/',
-    cta: 'Ver edital',
+    cta: 'Conheça a pós',
     tone: 'bg-white',
     logo: '/assets/ads/logo-pgecd.jpeg',
     logoClassName: 'max-h-5 max-w-[3.8rem] object-contain sm:max-h-8 sm:max-w-[6.5rem]',
@@ -41,6 +41,7 @@ const SPONSORS: Sponsor[] = [
 const SponsorBar: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
     const rotation = window.setInterval(() => {
@@ -49,6 +50,22 @@ const SponsorBar: React.FC = () => {
 
     return () => window.clearInterval(rotation);
   }, []);
+
+  useEffect(() => {
+    const autoClose = window.setTimeout(() => setIsClosing(true), 30000);
+
+    return () => window.clearTimeout(autoClose);
+  }, []);
+
+  useEffect(() => {
+    if (!isClosing) {
+      return;
+    }
+
+    const removeAfterFade = window.setTimeout(() => setIsVisible(false), 500);
+
+    return () => window.clearTimeout(removeAfterFade);
+  }, [isClosing]);
 
   const sponsor = SPONSORS[activeIndex];
 
@@ -62,7 +79,11 @@ const SponsorBar: React.FC = () => {
       aria-label="Patrocinio"
     >
       <div className="mx-auto w-full max-w-[760px] md:w-[50vw]">
-        <div className="relative">
+        <div
+          className={`relative transition-all duration-500 ease-out ${
+            isClosing ? 'translate-y-2 opacity-0' : 'translate-y-0 opacity-100'
+          }`}
+        >
           <a
             href={sponsor.href}
             target="_blank"
@@ -102,10 +123,10 @@ const SponsorBar: React.FC = () => {
             type="button"
             aria-label="Fechar anúncio"
             title="Fechar anúncio"
-            onClick={() => setIsVisible(false)}
-            className="absolute right-1 top-1 z-10 inline-flex h-2.5 w-2.5 items-center justify-center rounded-full border border-brand-dark/10 bg-white/25 text-brand-dark/25 transition hover:border-brand-dark/20 hover:bg-white/60 hover:text-brand-dark/55 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-green/35 sm:h-3 sm:w-3"
+            onClick={() => setIsClosing(true)}
+            className="absolute right-1 top-1 z-10 inline-flex h-3 w-3 items-center justify-center rounded-full border border-brand-dark/20 bg-white/45 text-brand-dark/45 shadow-sm transition hover:border-brand-dark/30 hover:bg-white/75 hover:text-brand-dark/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-green/35 sm:h-3.5 sm:w-3.5"
           >
-            <X className="h-2 w-2 stroke-[1.25] sm:h-2.5 sm:w-2.5" />
+            <X className="h-2.5 w-2.5 stroke-[1.5] sm:h-3 sm:w-3" />
           </button>
         </div>
       </div>
