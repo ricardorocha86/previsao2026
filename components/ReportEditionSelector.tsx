@@ -1,7 +1,7 @@
 ﻿import React from 'react';
-import { ArrowUpRight, CalendarDays, Check, Newspaper } from 'lucide-react';
+import { ArrowUpRight, CalendarDays, Check, MessageSquareText, Newspaper } from 'lucide-react';
 
-type EditionId = 'inicio-semifinais' | 'inicio-quartas' | 'inicio-oitavas' | 'pos-fase-grupos' | 'pos-rodada2' | 'pos-rodada1' | 'inicio-copa';
+type EditionId = 'inicio-semifinais' | 'opiniao-eliminacao' | 'inicio-quartas' | 'inicio-oitavas' | 'pos-fase-grupos' | 'pos-rodada2' | 'pos-rodada1' | 'inicio-copa';
 
 const EDITIONS: Array<{
   id: EditionId;
@@ -9,7 +9,8 @@ const EDITIONS: Array<{
   date: string;
   description: string;
   href: string;
-  number: string;
+  number?: string;
+  kind?: 'opinion';
 }> = [
   {
     id: 'inicio-semifinais',
@@ -18,6 +19,14 @@ const EDITIONS: Array<{
     description: 'França, Espanha, Inglaterra e Argentina nas semis',
     href: '/caminho-do-hexa/inicio-das-semifinais',
     number: '07',
+  },
+  {
+    id: 'opiniao-eliminacao',
+    title: 'O Verdadeiro Culpado',
+    date: '08/07/2026',
+    description: 'Opinião de Ricardo Rocha sobre a eliminação do Brasil',
+    href: '/opiniao/o-verdadeiro-culpado-pela-eliminacao-do-brasil-na-copa-do-mundo',
+    kind: 'opinion',
   },
   {
     id: 'inicio-quartas',
@@ -88,12 +97,12 @@ const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) =>
               Arquivo de reportagens
             </h2>
             <p className="mt-2 max-w-xl text-xs leading-relaxed text-white/50">
-              Sete retratos do torneio, atualizados conforme a bola muda as probabilidades.
+              Sete retratos do torneio e uma opinião, atualizados conforme a bola muda as probabilidades.
             </p>
           </div>
         </div>
         <span className="relative mt-5 inline-flex font-montserrat text-[9px] font-bold uppercase tracking-widest text-white/35 md:mt-0">
-          7 edições publicadas
+          8 publicações
         </span>
       </div>
 
@@ -109,9 +118,10 @@ const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) =>
           </div>
         </div>
 
-        <div className="grid flex-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <div className="grid flex-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
           {EDITIONS.map((edition) => {
             const selected = edition.id === current;
+            const isOpinion = edition.kind === 'opinion';
             return (
               <a
                 key={edition.id}
@@ -128,7 +138,7 @@ const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) =>
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className={`font-montserrat text-[9px] font-black uppercase tracking-[0.2em] ${selected ? 'text-brand-green' : 'text-brand-dark/30'}`}>
-                      Edição {edition.number}
+                      {isOpinion ? 'Opinião' : `Edição ${edition.number}`}
                     </p>
                     <div className="mt-2 flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-brand-dark/40">
                       <CalendarDays className="h-3 w-3" />
@@ -140,6 +150,8 @@ const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) =>
                     <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-brand-green text-white shadow-sm">
                       <Check className="h-4 w-4" />
                     </span>
+                  ) : isOpinion ? (
+                    <MessageSquareText className="h-7 w-7 flex-shrink-0 text-brand-dark/[0.12] transition-colors group-hover:text-brand-green/25" />
                   ) : (
                     <span className="font-montserrat text-3xl font-black leading-none text-brand-dark/[0.07] transition-colors group-hover:text-brand-green/15">
                       {edition.number}
@@ -154,7 +166,7 @@ const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) =>
 
                 <div className="mt-auto flex items-center justify-between border-t border-brand-dark/8 pt-3">
                   <span className={`font-montserrat text-[9px] font-black uppercase tracking-widest ${selected ? 'text-brand-green' : 'text-brand-dark/35 group-hover:text-brand-green'}`}>
-                    {selected ? 'Edição atual' : 'Ler reportagem'}
+                    {selected ? 'Edição atual' : isOpinion ? 'Ler opinião' : 'Ler reportagem'}
                   </span>
                   <ArrowUpRight className={`h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${selected ? 'text-brand-green' : 'text-brand-dark/25 group-hover:text-brand-green'}`} />
                 </div>

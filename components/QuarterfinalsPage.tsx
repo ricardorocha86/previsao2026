@@ -1,7 +1,6 @@
 import React from 'react';
 import { ArrowRight, BarChart3, Globe2, Newspaper, Swords, Trophy, XCircle } from 'lucide-react';
 import PageHeader from './PageHeader';
-import OpinionCallout from './OpinionCallout';
 import ReportEditionSelector from './ReportEditionSelector';
 
 const fmt = (value: number) => value.toFixed(1).replace('.', ',');
@@ -374,11 +373,7 @@ const QuarterfinalCard: React.FC<{
   );
 };
 
-interface QuarterfinalsPageProps {
-  onNavigate?: (view: any) => void;
-}
-
-const QuarterfinalsPage: React.FC<QuarterfinalsPageProps> = ({ onNavigate }) => (
+const QuarterfinalsPage: React.FC = () => (
   <div className="bg-brand-light font-opensans">
     <PageHeader
       icon={Newspaper}
@@ -430,13 +425,6 @@ const QuarterfinalsPage: React.FC<QuarterfinalsPageProps> = ({ onNavigate }) => 
         </div>
       </div>
     </section>
-
-    <OpinionCallout
-      eyebrow="Opinião de Ricardo Rocha"
-      href="/opiniao/o-verdadeiro-culpado-pela-eliminacao-do-brasil-na-copa-do-mundo"
-      onNavigate={onNavigate ? () => onNavigate('cronica-eliminacao-brasil') : undefined}
-      variant="report"
-    />
 
     <section className="mx-auto max-w-[1080px] px-4 py-16">
       <SectionTitle eyebrow="Corrida do título" title="Quatro seleções concentram 86,1% da taça">

@@ -460,7 +460,7 @@ export default function App() {
             {currentView === 'methodology' && <MethodologyPage />}
             {currentView === 'hexa' && <SemifinalsPage />}
             {currentView === 'hexa-semifinais' && <SemifinalsPage />}
-            {currentView === 'hexa-quartas' && <QuarterfinalsPage onNavigate={navigateTo} />}
+            {currentView === 'hexa-quartas' && <QuarterfinalsPage />}
             {currentView === 'hexa-oitavas' && <RoundOf16Page />}
             {currentView === 'hexa-mata-mata' && <KnockoutPage />}
             {currentView === 'hexa-rodada2' && <SecondRoundPage />}
