@@ -13,7 +13,7 @@ import { Analytics } from '@vercel/analytics/react';
 import resultadosJogos from './assets/resultados_jogos.json';
 import { PARTNER_INSTITUTIONS, RESEARCH_CENTERS } from './data/institutions';
 
-type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa' | 'hexa-quartas' | 'hexa-oitavas' | 'hexa-mata-mata' | 'hexa-rodada2' | 'hexa-inicio' | 'pos-rodada' | 'cronica-eliminacao-brasil';
+type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa' | 'hexa-semifinais' | 'hexa-quartas' | 'hexa-oitavas' | 'hexa-mata-mata' | 'hexa-rodada2' | 'hexa-inicio' | 'pos-rodada' | 'cronica-eliminacao-brasil';
 
 const WorldCupHub = lazy(() => import('./components/WorldCupHub'));
 const MapPage = lazy(() => import('./components/MapPage'));
@@ -29,6 +29,7 @@ const SecondRoundPage = lazy(() => import('./components/SecondRoundPage'));
 const KnockoutPage = lazy(() => import('./components/KnockoutPage'));
 const RoundOf16Page = lazy(() => import('./components/RoundOf16Page'));
 const QuarterfinalsPage = lazy(() => import('./components/QuarterfinalsPage'));
+const SemifinalsPage = lazy(() => import('./components/SemifinalsPage'));
 const BrazilEliminationChroniclePage = lazy(() => import('./components/BrazilEliminationChroniclePage'));
 
 const BRAZIL_ELIMINATION_OPINION_PATH = '/opiniao/o-verdadeiro-culpado-pela-eliminacao-do-brasil-na-copa-do-mundo';
@@ -45,6 +46,7 @@ const ROUTES: Record<ViewState, string> = {
   media: '/midia',
   team: '/equipe',
   hexa: '/caminho-do-hexa',
+  'hexa-semifinais': '/caminho-do-hexa/inicio-das-semifinais',
   'hexa-quartas': '/caminho-do-hexa/inicio-das-quartas',
   'hexa-oitavas': '/caminho-do-hexa/inicio-das-oitavas',
   'hexa-mata-mata': '/caminho-do-hexa/inicio-do-mata-mata',
@@ -139,8 +141,12 @@ const PAGE_META: Record<ViewState, { title: string; description: string; ogImage
     description: 'Conheça os pesquisadores e as instituições por trás do projeto Previsão Esportiva.',
   },
   hexa: {
-    title: 'O Hexa Acabou; França Segue Líder | Previsão Esportiva',
-    description: 'Após Brasil 1 x 2 Noruega, o sonho do hexa acabou. França lidera com 33,5% de chance de título e oito seleções seguem vivas nas quartas.',
+    title: 'Quatro na corrida pelo título | Previsão Esportiva',
+    description: 'Após as quartas, França, Espanha, Inglaterra e Argentina avançam às semifinais; a França lidera com 38,3% de chance de título.',
+  },
+  'hexa-semifinais': {
+    title: 'Quatro na corrida pelo título | Previsão Esportiva',
+    description: 'Após as quartas, França, Espanha, Inglaterra e Argentina avançam às semifinais; a França lidera com 38,3% de chance de título.',
   },
   'hexa-quartas': {
     title: 'O Hexa Acabou; França Segue Líder | Previsão Esportiva',
@@ -452,7 +458,8 @@ export default function App() {
             {currentView === 'science' && <SciencePage />}
             {currentView === 'media' && <MediaPage />}
             {currentView === 'methodology' && <MethodologyPage />}
-            {currentView === 'hexa' && <QuarterfinalsPage onNavigate={navigateTo} />}
+            {currentView === 'hexa' && <SemifinalsPage />}
+            {currentView === 'hexa-semifinais' && <SemifinalsPage />}
             {currentView === 'hexa-quartas' && <QuarterfinalsPage onNavigate={navigateTo} />}
             {currentView === 'hexa-oitavas' && <RoundOf16Page />}
             {currentView === 'hexa-mata-mata' && <KnockoutPage />}

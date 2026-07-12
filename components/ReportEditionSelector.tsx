@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import { ArrowUpRight, CalendarDays, Check, Newspaper } from 'lucide-react';
 
-type EditionId = 'inicio-quartas' | 'inicio-oitavas' | 'pos-fase-grupos' | 'pos-rodada2' | 'pos-rodada1' | 'inicio-copa';
+type EditionId = 'inicio-semifinais' | 'inicio-quartas' | 'inicio-oitavas' | 'pos-fase-grupos' | 'pos-rodada2' | 'pos-rodada1' | 'inicio-copa';
 
 const EDITIONS: Array<{
   id: EditionId;
@@ -11,6 +11,14 @@ const EDITIONS: Array<{
   href: string;
   number: string;
 }> = [
+  {
+    id: 'inicio-semifinais',
+    title: 'Quatro na corrida',
+    date: '12/07/2026',
+    description: 'França, Espanha, Inglaterra e Argentina nas semis',
+    href: '/caminho-do-hexa/inicio-das-semifinais',
+    number: '07',
+  },
   {
     id: 'inicio-quartas',
     title: 'O Hexa Acabou',
@@ -66,7 +74,7 @@ const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) =>
     <div className="mx-auto max-w-[1080px] px-4 py-8">
       <div className="relative overflow-hidden rounded-2xl bg-brand-dark p-6 text-white shadow-xl md:flex md:items-center md:justify-between md:gap-8">
         <div className="pointer-events-none absolute -right-3 -top-12 font-montserrat text-[8rem] font-black leading-none text-white/[0.045] md:right-8">
-          06
+          07
         </div>
         <div className="relative flex min-w-0 items-center gap-5">
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-brand-neon/25 bg-brand-neon/10">
@@ -80,12 +88,12 @@ const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) =>
               Arquivo de reportagens
             </h2>
             <p className="mt-2 max-w-xl text-xs leading-relaxed text-white/50">
-              Seis retratos do torneio, atualizados conforme a bola muda as probabilidades.
+              Sete retratos do torneio, atualizados conforme a bola muda as probabilidades.
             </p>
           </div>
         </div>
         <span className="relative mt-5 inline-flex font-montserrat text-[9px] font-bold uppercase tracking-widest text-white/35 md:mt-0">
-          6 edições publicadas
+          7 edições publicadas
         </span>
       </div>
 

@@ -175,6 +175,20 @@ const routes = [
     ],
   },
   {
+    path: '/caminho-do-hexa/inicio-das-semifinais',
+    changefreq: 'weekly',
+    priority: '0.9',
+    linkLabel: 'Hexa — início das semifinais',
+    title: 'Quatro na corrida pelo título | Previsão Esportiva',
+    description:
+      'Após as quartas, França, Espanha, Inglaterra e Argentina avançam às semifinais; a França lidera com 38,3% de chance de título.',
+    h1: 'Quatro na corrida pelo título',
+    body: [
+      'As quartas terminaram com França, Espanha, Inglaterra e Argentina classificadas para as semifinais. Marrocos, Bélgica, Noruega e Suíça foram eliminadas.',
+      'A França lidera a nova simulação com 38,3% de chance de título. Inglaterra, Espanha e Argentina aparecem logo atrás, em uma disputa concentrada entre quatro seleções.',
+    ],
+  },
+  {
     path: '/caminho-do-hexa/inicio-do-mata-mata',
     changefreq: 'weekly',
     priority: '0.8',

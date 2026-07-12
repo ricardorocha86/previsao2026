@@ -8,6 +8,7 @@ import simulacaoGeralPosRodada2 from '../assets/simulacao_geral_pos_rodada2.json
 import simulacaoGeralPosFaseGrupos from '../assets/simulacao_geral_pos_fase_grupos.json';
 import simulacaoGeralPos16avos from '../assets/simulacao_geral_pos_16avos.json';
 import simulacaoGeralPosOitavas from '../assets/simulacao_geral_pos_oitavas.json';
+import simulacaoGeralPosQuartas from '../assets/simulacao_geral_pos_quartas.json';
 import simulacaoGeralBayes from '../assets/simulacao_geral_bayes.json';
 import simulacaoGeralBayesPreTorneio from '../assets/simulacao_geral_bayes_pre_torneio.json';
 import simulacaoGeralBayesInicioMataMata from '../assets/simulacao_geral_bayes_inicio_mata_mata.json';
@@ -20,6 +21,7 @@ import previsoesJogosPosRodada2 from '../assets/previsoes_jogos_pos_rodada2.json
 import previsoesJogosPosFaseGrupos from '../assets/previsoes_jogos_pos_fase_grupos.json';
 import previsoesJogosPos16avos from '../assets/previsoes_jogos_pos_16avos.json';
 import previsoesJogosPosOitavas from '../assets/previsoes_jogos_pos_oitavas.json';
+import previsoesJogosPosQuartas from '../assets/previsoes_jogos_pos_quartas.json';
 import previsoesJogosBayes from '../assets/previsoes_jogos_bayes.json';
 import previsoesJogosBayesPreTorneio from '../assets/previsoes_jogos_bayes_pre_torneio.json';
 import previsoesJogosBayesInicioQuartas from '../assets/previsoes_jogos_bayes_inicio_quartas.json';
@@ -32,9 +34,10 @@ import analisePosRodada2 from '../assets/analise_pos_rodada2.json';
 import analisePosFaseGrupos from '../assets/analise_pos_fase_grupos.json';
 import analisePos16avos from '../assets/analise_pos_16avos.json';
 import analisePosOitavas from '../assets/analise_pos_oitavas.json';
+import analisePosQuartas from '../assets/analise_pos_quartas.json';
 import PageHeader from './PageHeader';
 
-type StageId = 'inicio-copa' | 'pre-convocacao' | 'fim-rodada1' | 'fim-rodada2' | 'inicio-mata-mata' | 'inicio-oitavas' | 'inicio-quartas';
+type StageId = 'inicio-copa' | 'pre-convocacao' | 'fim-rodada1' | 'fim-rodada2' | 'inicio-mata-mata' | 'inicio-oitavas' | 'inicio-quartas' | 'inicio-semifinais';
 type BayesStageId = 'bayes-pre-torneio' | 'bayes-fim-rodada1' | 'bayes-inicio-mata-mata' | 'bayes-inicio-oitavas' | 'bayes-inicio-quartas';
 type InfoTab = 'probabilidades' | 'eliminacao' | 'brasil';
 
@@ -46,6 +49,7 @@ const STAGES: Array<{ id: StageId; label: string; date: string; data: any[]; jog
   { id: 'inicio-mata-mata', label: 'Início do Mata-Mata', date: '28/06/2026', data: simulacaoGeralPosFaseGrupos as any[], jogos: previsoesJogosPosFaseGrupos as any[] },
   { id: 'inicio-oitavas', label: 'Início das Oitavas', date: '04/07/2026', data: simulacaoGeralPos16avos as any[], jogos: previsoesJogosPos16avos as any[] },
   { id: 'inicio-quartas', label: 'Início das Quartas', date: '08/07/2026', data: simulacaoGeralPosOitavas as any[], jogos: previsoesJogosPosOitavas as any[] },
+  { id: 'inicio-semifinais', label: 'Início das Semifinais', date: '12/07/2026', data: simulacaoGeralPosQuartas as any[], jogos: previsoesJogosPosQuartas as any[] },
 ];
 
 const BAYES_STAGES: Array<{ id: BayesStageId; label: string; date: string; data: any[]; jogos: any[] }> = [
@@ -56,11 +60,10 @@ const BAYES_STAGES: Array<{ id: BayesStageId; label: string; date: string; data:
   { id: 'bayes-inicio-quartas', label: 'Início das Quartas', date: '08/07/2026', data: simulacaoGeralBayesInicioQuartas as any[], jogos: previsoesJogosBayesInicioQuartas as any[] },
 ];
 
-const DEFAULT_STAGE_ID: StageId = 'inicio-quartas';
+const DEFAULT_STAGE_ID: StageId = 'inicio-semifinais';
 const DEFAULT_BAYES_STAGE_ID: BayesStageId = 'bayes-inicio-quartas';
 
 const UPCOMING_STAGES: Array<{ label: string; date: string }> = [
-  { label: 'Fim das Quartas', date: '11/07/2026' },
   { label: 'Fim das Semifinais', date: '15/07/2026' },
 ];
 
@@ -73,6 +76,7 @@ const ANALISE_MAP: Record<StageId, any> = {
   'inicio-mata-mata': analisePosFaseGrupos,
   'inicio-oitavas': analisePos16avos,
   'inicio-quartas': analisePosOitavas,
+  'inicio-semifinais': analisePosQuartas,
 };
 
 const getFlag = (teamName: string) => {
@@ -210,8 +214,8 @@ const OFFICIAL_KNOCKOUT_RAW = [
   { match: 98, stage: 'Quartas', date: '2026-07-10', timeEt: '15:00', venue: 'Los Angeles, nos EUA', home: 'Espanha', away: 'Bélgica', homeSeed: 'Vencedor Jogo 93', awaySeed: 'Vencedor Jogo 94', winA: '57.3%', draw: '24.3%', winB: '18.4%', advA: '72.1%', advB: '27.9%' },
   { match: 99, stage: 'Quartas', date: '2026-07-11', timeEt: '17:00', venue: 'Miami, nos EUA', home: 'Noruega', away: 'Inglaterra', homeSeed: 'Vencedor Jogo 91', awaySeed: 'Vencedor Jogo 92', winA: '27.0%', draw: '26.5%', winB: '46.5%', advA: '38.8%', advB: '61.2%' },
   { match: 100, stage: 'Quartas', date: '2026-07-11', timeEt: '21:00', venue: 'Kansas City, nos EUA', home: 'Argentina', away: 'Suíça', homeSeed: 'Vencedor Jogo 95', awaySeed: 'Vencedor Jogo 96', winA: '57.5%', draw: '24.3%', winB: '18.2%', advA: '72.3%', advB: '27.7%' },
-  { match: 101, stage: 'Semifinais', date: '2026-07-14', timeEt: '15:00', venue: 'Dallas, nos EUA', home: 'Vencedor Jogo 97', away: 'Vencedor Jogo 98', homeSeed: 'Vencedor quartas', awaySeed: 'Vencedor quartas' },
-  { match: 102, stage: 'Semifinais', date: '2026-07-15', timeEt: '15:00', venue: 'Atlanta, nos EUA', home: 'Vencedor Jogo 99', away: 'Vencedor Jogo 100', homeSeed: 'Vencedor quartas', awaySeed: 'Vencedor quartas' },
+  { match: 101, stage: 'Semifinais', date: '2026-07-14', timeEt: '15:00', venue: 'Dallas, nos EUA', home: 'França', away: 'Espanha', homeSeed: 'Vencedor Jogo 97', awaySeed: 'Vencedor Jogo 98', winA: '46.0%', draw: '26.6%', winB: '27.4%', advA: '60.6%', advB: '39.4%' },
+  { match: 102, stage: 'Semifinais', date: '2026-07-15', timeEt: '15:00', venue: 'Atlanta, nos EUA', home: 'Inglaterra', away: 'Argentina', homeSeed: 'Vencedor Jogo 99', awaySeed: 'Vencedor Jogo 100', winA: '37.4%', draw: '27.2%', winB: '35.4%', advA: '51.2%', advB: '48.8%' },
   { match: 103, stage: 'Disputa de 3º lugar', date: '2026-07-18', timeEt: '17:00', venue: 'Miami, nos EUA', home: 'Perdedor Jogo 101', away: 'Perdedor Jogo 102', homeSeed: 'Semifinalista', awaySeed: 'Semifinalista' },
   { match: 104, stage: 'Final', date: '2026-07-19', timeEt: '15:00', venue: 'Nova York/Nova Jersey, nos EUA', home: 'Vencedor Jogo 101', away: 'Vencedor Jogo 102', homeSeed: 'Finalista', awaySeed: 'Finalista' },
 ];
