@@ -1,0 +1,24 @@
+[
+  {
+    "Jogo": 101,
+    "Grupo": "Semifinais",
+    "Fase": "Semifinais",
+    "Tipo": "mata-mata",
+    "Seleção A": "França",
+    "Seleção B": "Espanha",
+    "Vitória A": "51.3%",
+    "Empate": "24.9%",
+    "Vitória B": "23.8%"
+  },
+  {
+    "Jogo": 102,
+    "Grupo": "Semifinais",
+    "Fase": "Semifinais",
+    "Tipo": "mata-mata",
+    "Seleção A": "Inglaterra",
+    "Seleção B": "Argentina",
+    "Vitória A": "18.0%",
+    "Empate": "25.8%",
+    "Vitória B": "56.2%"
+  }
+]

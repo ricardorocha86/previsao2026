@@ -14,6 +14,7 @@ import simulacaoGeralBayesPreTorneio from '../assets/simulacao_geral_bayes_pre_t
 import simulacaoGeralBayesInicioMataMata from '../assets/simulacao_geral_bayes_inicio_mata_mata.json';
 import simulacaoGeralBayesInicioOitavas from '../assets/simulacao_geral_bayes_inicio_oitavas.json';
 import simulacaoGeralBayesInicioQuartas from '../assets/simulacao_geral_bayes_inicio_quartas.json';
+import simulacaoGeralBayesInicioSemifinais from '../assets/simulacao_geral_bayes_inicio_semifinais.json';
 import previsoesJogos from '../assets/previsoes_jogos.json';
 import previsoesJogosInicioCopa from '../assets/previsoes_jogos_inicio_copa.json';
 import previsoesJogosPosRodada1 from '../assets/previsoes_jogos_pos_rodada1.json';
@@ -25,6 +26,7 @@ import previsoesJogosPosQuartas from '../assets/previsoes_jogos_pos_quartas.json
 import previsoesJogosBayes from '../assets/previsoes_jogos_bayes.json';
 import previsoesJogosBayesPreTorneio from '../assets/previsoes_jogos_bayes_pre_torneio.json';
 import previsoesJogosBayesInicioQuartas from '../assets/previsoes_jogos_bayes_inicio_quartas.json';
+import previsoesJogosBayesInicioSemifinais from '../assets/previsoes_jogos_bayes_inicio_semifinais.json';
 import resultadosJogos from '../assets/resultados_jogos.json';
 import flags from '../assets/flags.json';
 import analisePreConvocacao from '../assets/analise_pre_convocacao.json';
@@ -38,7 +40,7 @@ import analisePosQuartas from '../assets/analise_pos_quartas.json';
 import PageHeader from './PageHeader';
 
 type StageId = 'inicio-copa' | 'pre-convocacao' | 'fim-rodada1' | 'fim-rodada2' | 'inicio-mata-mata' | 'inicio-oitavas' | 'inicio-quartas' | 'inicio-semifinais';
-type BayesStageId = 'bayes-pre-torneio' | 'bayes-fim-rodada1' | 'bayes-inicio-mata-mata' | 'bayes-inicio-oitavas' | 'bayes-inicio-quartas';
+type BayesStageId = 'bayes-pre-torneio' | 'bayes-fim-rodada1' | 'bayes-inicio-mata-mata' | 'bayes-inicio-oitavas' | 'bayes-inicio-quartas' | 'bayes-inicio-semifinais';
 type InfoTab = 'probabilidades' | 'eliminacao' | 'brasil';
 
 const STAGES: Array<{ id: StageId; label: string; date: string; data: any[]; jogos: any[] }> = [
@@ -58,10 +60,11 @@ const BAYES_STAGES: Array<{ id: BayesStageId; label: string; date: string; data:
   { id: 'bayes-inicio-mata-mata', label: 'Início do Mata-Mata', date: '28/06/2026', data: simulacaoGeralBayesInicioMataMata as any[], jogos: [] },
   { id: 'bayes-inicio-oitavas', label: 'Início das Oitavas', date: '04/07/2026', data: simulacaoGeralBayesInicioOitavas as any[], jogos: [] },
   { id: 'bayes-inicio-quartas', label: 'Início das Quartas', date: '08/07/2026', data: simulacaoGeralBayesInicioQuartas as any[], jogos: previsoesJogosBayesInicioQuartas as any[] },
+  { id: 'bayes-inicio-semifinais', label: 'Início das Semifinais', date: '13/07/2026', data: simulacaoGeralBayesInicioSemifinais as any[], jogos: previsoesJogosBayesInicioSemifinais as any[] },
 ];
 
 const DEFAULT_STAGE_ID: StageId = 'inicio-semifinais';
-const DEFAULT_BAYES_STAGE_ID: BayesStageId = 'bayes-inicio-quartas';
+const DEFAULT_BAYES_STAGE_ID: BayesStageId = 'bayes-inicio-semifinais';
 
 const UPCOMING_STAGES: Array<{ label: string; date: string }> = [
   { label: 'Fim das Semifinais', date: '15/07/2026' },
