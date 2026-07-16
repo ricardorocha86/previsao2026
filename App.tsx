@@ -13,7 +13,7 @@ import { Analytics } from '@vercel/analytics/react';
 import resultadosJogos from './assets/resultados_jogos.json';
 import { PARTNER_INSTITUTIONS, RESEARCH_CENTERS } from './data/institutions';
 
-type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa' | 'hexa-semifinais' | 'hexa-quartas' | 'hexa-oitavas' | 'hexa-mata-mata' | 'hexa-rodada2' | 'hexa-inicio' | 'pos-rodada' | 'cronica-eliminacao-brasil';
+type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa' | 'hexa-finais' | 'hexa-semifinais' | 'hexa-quartas' | 'hexa-oitavas' | 'hexa-mata-mata' | 'hexa-rodada2' | 'hexa-inicio' | 'pos-rodada' | 'cronica-eliminacao-brasil';
 
 const WorldCupHub = lazy(() => import('./components/WorldCupHub'));
 const MapPage = lazy(() => import('./components/MapPage'));
@@ -30,6 +30,7 @@ const KnockoutPage = lazy(() => import('./components/KnockoutPage'));
 const RoundOf16Page = lazy(() => import('./components/RoundOf16Page'));
 const QuarterfinalsPage = lazy(() => import('./components/QuarterfinalsPage'));
 const SemifinalsPage = lazy(() => import('./components/SemifinalsPage'));
+const FinalsPage = lazy(() => import('./components/FinalsPage'));
 const BrazilEliminationChroniclePage = lazy(() => import('./components/BrazilEliminationChroniclePage'));
 
 const BRAZIL_ELIMINATION_OPINION_PATH = '/opiniao/o-verdadeiro-culpado-pela-eliminacao-do-brasil-na-copa-do-mundo';
@@ -46,6 +47,7 @@ const ROUTES: Record<ViewState, string> = {
   media: '/midia',
   team: '/equipe',
   hexa: '/caminho-do-hexa',
+  'hexa-finais': '/caminho-do-hexa/inicio-das-finais',
   'hexa-semifinais': '/caminho-do-hexa/inicio-das-semifinais',
   'hexa-quartas': '/caminho-do-hexa/inicio-das-quartas',
   'hexa-oitavas': '/caminho-do-hexa/inicio-das-oitavas',
@@ -141,8 +143,12 @@ const PAGE_META: Record<ViewState, { title: string; description: string; ogImage
     description: 'Conheça os pesquisadores e as instituições por trás do projeto Previsão Esportiva.',
   },
   hexa: {
-    title: 'Quatro na corrida pelo título | Previsão Esportiva',
-    description: 'Após as quartas, França, Espanha, Inglaterra e Argentina avançam às semifinais; a França lidera com 38,3% de chance de título.',
+    title: 'A Copa Cabe em um Jogo | Previsão Esportiva',
+    description: 'Espanha e Argentina decidem a Copa do Mundo de 2026. A vantagem espanhola existe, mas a projeção mantém a final aberta.',
+  },
+  'hexa-finais': {
+    title: 'A Copa Cabe em um Jogo | Previsão Esportiva',
+    description: 'Espanha e Argentina decidem a Copa do Mundo de 2026. A vantagem espanhola existe, mas a projeção mantém a final aberta.',
   },
   'hexa-semifinais': {
     title: 'Quatro na corrida pelo título | Previsão Esportiva',
@@ -458,7 +464,8 @@ export default function App() {
             {currentView === 'science' && <SciencePage />}
             {currentView === 'media' && <MediaPage />}
             {currentView === 'methodology' && <MethodologyPage />}
-            {currentView === 'hexa' && <SemifinalsPage />}
+            {currentView === 'hexa' && <FinalsPage />}
+            {currentView === 'hexa-finais' && <FinalsPage />}
             {currentView === 'hexa-semifinais' && <SemifinalsPage />}
             {currentView === 'hexa-quartas' && <QuarterfinalsPage />}
             {currentView === 'hexa-oitavas' && <RoundOf16Page />}
@@ -533,7 +540,7 @@ export default function App() {
             <h4 className="text-brand-dark font-montserrat font-bold uppercase tracking-wider mb-5 text-sm">Navegação</h4>
             <div className="grid grid-cols-2 gap-3 text-sm text-brand-dark/68">
               <button type="button" onClick={() => navigateTo('copa')} className="text-left hover:text-brand-green transition">Resultados</button>
-              <button type="button" onClick={() => navigateTo('hexa')} className="text-left hover:text-brand-green transition">Quatro na corrida</button>
+              <button type="button" onClick={() => navigateTo('hexa')} className="text-left hover:text-brand-green transition">A Copa cabe em um jogo</button>
               <button type="button" onClick={() => navigateTo('mapa')} className="text-left hover:text-brand-green transition">Mapa</button>
               <button type="button" onClick={() => navigateTo('simulador')} className="text-left hover:text-brand-green transition">Simulador</button>
               <button type="button" onClick={() => navigateTo('bolao')} className="text-left hover:text-brand-green transition">Bolão</button>

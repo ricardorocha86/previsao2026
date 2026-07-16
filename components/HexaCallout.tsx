@@ -19,21 +19,21 @@ const HexaCallout: React.FC<HexaCalloutProps> = ({ onNavigate }) => {
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-brand-neon/30 bg-brand-neon/10 px-4 py-1.5">
             <Trophy className="h-4 w-4 text-brand-neon" />
             <span className="font-montserrat text-[10px] font-black uppercase tracking-[0.25em] text-brand-neon">
-              Reportagem 07 · Início das semifinais
+              Reportagem 08 · Início das finais
             </span>
           </div>
 
           <h2 className="font-montserrat text-4xl font-black uppercase leading-[0.92] tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Quatro na corrida
+            A Copa cabe
             <span className="block text-brand-neon">
-              pelo título.
+              em um jogo.
             </span>
           </h2>
 
           <p className="mt-5 max-w-xl text-base leading-relaxed text-white/65 md:text-lg">
-            As quartas confirmaram os quatro favoritos. A França lidera com{' '}
-            <strong className="font-semibold text-white">38,3%</strong> de chance de título, a Inglaterra
-            disparou para a vice-liderança, e Espanha e Argentina seguem a menos de 1,5 ponto dela.
+            Depois de 102 partidas, a final está definida: Espanha e Argentina disputam o título.
+            A Espanha chega à decisão com{' '}
+            <strong className="font-semibold text-white">58,3%</strong> de chance de ser campeã; a Argentina, com 41,7%.
           </p>
 
           <button
@@ -50,7 +50,7 @@ const HexaCallout: React.FC<HexaCalloutProps> = ({ onNavigate }) => {
         <button
           type="button"
           onClick={onNavigate}
-          aria-label="Abrir a matéria Quatro na corrida pelo título"
+          aria-label="Abrir a matéria A Copa cabe em um jogo"
           className="group order-1 block w-full overflow-hidden rounded-3xl border border-brand-neon/20 shadow-2xl transition-transform duration-500 hover:scale-[1.02] lg:order-2"
         >
           <HexaArt className="block w-full" />

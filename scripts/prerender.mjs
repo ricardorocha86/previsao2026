@@ -151,13 +151,27 @@ const routes = [
     changefreq: 'weekly',
     priority: '0.8',
     linkLabel: 'Hexa — análise atual',
-    title: 'Quatro na corrida pelo título | Previsão Esportiva',
+    title: 'A Copa Cabe em um Jogo | Previsão Esportiva',
     description:
-      'Após as quartas, França, Espanha, Inglaterra e Argentina avançam às semifinais; a França lidera com 38,3% de chance de título.',
-    h1: 'Quatro na corrida pelo título',
+      'Espanha e Argentina decidem a Copa do Mundo de 2026. A vantagem espanhola existe, mas a projeção mantém a final aberta.',
+    h1: 'A Copa cabe em um jogo',
     body: [
-      'As quartas de final confirmaram os quatro favoritos: França, Espanha, Inglaterra e Argentina avançaram às semifinais. Marrocos, Bélgica, Noruega e Suíça foram eliminadas.',
-      'A França lidera a nova simulação com 38,3% de chance de título — o valor mais alto da série. A Inglaterra saltou para 21,2% e assumiu a vice-liderança, com Espanha (20,8%) e Argentina (19,8%) logo atrás.',
+      'Depois de 102 partidas, Espanha e Argentina concentram toda a probabilidade de título. A Espanha chega como favorita, mas a diferença não transforma a decisão em resultado antecipado.',
+      'Na final, a Espanha tem 58,3% de chance de título e a Argentina, 41,7%. Em 90 minutos, a projeção aponta 43,8% para vitória espanhola, 26,8% para empate e 29,3% para vitória argentina.',
+    ],
+  },
+  {
+    path: '/caminho-do-hexa/inicio-das-finais',
+    changefreq: 'weekly',
+    priority: '0.9',
+    linkLabel: 'Hexa — início das finais',
+    title: 'A Copa Cabe em um Jogo | Previsão Esportiva',
+    description:
+      'Espanha e Argentina decidem a Copa do Mundo de 2026. A vantagem espanhola existe, mas a projeção mantém a final aberta.',
+    h1: 'A Copa cabe em um jogo',
+    body: [
+      'Depois de 102 partidas, Espanha e Argentina concentram toda a probabilidade de título. A Espanha chega como favorita, mas a diferença não transforma a decisão em resultado antecipado.',
+      'Na final, a Espanha tem 58,3% de chance de título e a Argentina, 41,7%. Em 90 minutos, a projeção aponta 43,8% para vitória espanhola, 26,8% para empate e 29,3% para vitória argentina.',
     ],
   },
   {
