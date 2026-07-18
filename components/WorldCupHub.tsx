@@ -43,7 +43,7 @@ import analisePosSemifinais from '../assets/analise_pos_semifinais.json';
 import PageHeader from './PageHeader';
 
 type StageId = 'inicio-copa' | 'pre-convocacao' | 'fim-rodada1' | 'fim-rodada2' | 'inicio-mata-mata' | 'inicio-oitavas' | 'inicio-quartas' | 'inicio-semifinais' | 'inicio-finais';
-type BayesStageId = 'bayes-pre-torneio' | 'bayes-fim-rodada1' | 'bayes-inicio-mata-mata' | 'bayes-inicio-oitavas' | 'bayes-inicio-quartas' | 'bayes-inicio-semifinais';
+type BayesStageId = 'bayes-pre-torneio' | 'bayes-fim-rodada1' | 'bayes-inicio-mata-mata' | 'bayes-inicio-oitavas' | 'bayes-inicio-quartas' | 'bayes-inicio-semifinais' | 'bayes-inicio-finais';
 type InfoTab = 'probabilidades' | 'eliminacao' | 'brasil';
 
 const STAGES: Array<{ id: StageId; label: string; date: string; data: any[]; jogos: any[] }> = [
@@ -65,10 +65,52 @@ const BAYES_STAGES: Array<{ id: BayesStageId; label: string; date: string; data:
   { id: 'bayes-inicio-oitavas', label: 'Início das Oitavas', date: '04/07/2026', data: simulacaoGeralBayesInicioOitavas as any[], jogos: [] },
   { id: 'bayes-inicio-quartas', label: 'Início das Quartas', date: '08/07/2026', data: simulacaoGeralBayesInicioQuartas as any[], jogos: previsoesJogosBayesInicioQuartas as any[] },
   { id: 'bayes-inicio-semifinais', label: 'Início das Semifinais', date: '13/07/2026', data: simulacaoGeralBayesInicioSemifinais as any[], jogos: previsoesJogosBayesInicioSemifinais as any[] },
+  {
+    id: 'bayes-inicio-finais',
+    label: 'Início das Finais',
+    date: '18/07/2026',
+    // Resultados consolidados das planilhas Resultado7_Simulacao_Bayesiana_Copa.xlsx
+    // e Prob_Final_Terceiro_Lugar.xlsx, recebidas em 18/07/2026.
+    data: (simulacaoGeralBayesInicioSemifinais as any[]).map((team) => {
+      const name = team['Seleção'];
+      const current = { ...team, '3º Lugar': '0,0%' };
+
+      if (name === 'Argentina') return { ...current, Final: '100,0%', Campeão: '64,8%' };
+      if (name === 'Espanha') return { ...current, Final: '100,0%', Campeão: '35,2%' };
+      if (name === 'França') return { ...current, Final: '0,0%', Campeão: '0,0%', '3º Lugar': '72,5%' };
+      if (name === 'Inglaterra') return { ...current, Final: '0,0%', Campeão: '0,0%', '3º Lugar': '27,5%' };
+
+      return { ...current, Final: '0,0%', Campeão: '0,0%' };
+    }),
+    jogos: [
+      {
+        Jogo: 103,
+        Grupo: 'Disputa de 3º lugar',
+        Fase: 'Disputa de 3º lugar',
+        Tipo: 'mata-mata',
+        'Seleção A': 'França',
+        'Seleção B': 'Inglaterra',
+        'Vitória A': '57,5%',
+        Empate: '24,8%',
+        'Vitória B': '17,7%',
+      },
+      {
+        Jogo: 104,
+        Grupo: 'Final',
+        Fase: 'Final',
+        Tipo: 'mata-mata',
+        'Seleção A': 'Espanha',
+        'Seleção B': 'Argentina',
+        'Vitória A': '24,2%',
+        Empate: '25,5%',
+        'Vitória B': '50,3%',
+      },
+    ],
+  },
 ];
 
 const DEFAULT_STAGE_ID: StageId = 'inicio-finais';
-const DEFAULT_BAYES_STAGE_ID: BayesStageId = 'bayes-inicio-semifinais';
+const DEFAULT_BAYES_STAGE_ID: BayesStageId = 'bayes-inicio-finais';
 
 const UPCOMING_STAGES: Array<{ label: string; date: string }> = [];
 
@@ -1283,7 +1325,7 @@ const WorldCupHub: React.FC = () => {
                       <th className="w-10 px-2 py-4 text-center bg-brand-dark cursor-pointer hover:bg-white/5 transition-colors" onClick={() => requestSort('Grupo')}>
                         <div className="flex items-center justify-center">Grupo <SortIcon col="Grupo" /></div>
                       </th>
-                      {['1º Grupo', '2º Grupo', '3º Grupo', '4º Grupo', 'Top 32', 'Oitavas', 'Quartas', 'Semi', 'Final', 'Campeão'].map((phase) => (
+                      {['1º Grupo', '2º Grupo', '3º Grupo', '4º Grupo', 'Top 32', 'Oitavas', 'Quartas', 'Semi', '3º Lugar', 'Final', 'Campeão'].map((phase) => (
                         <th key={phase} className="px-3 py-4 text-center cursor-pointer hover:bg-white/5 transition-colors" onClick={() => requestSort(phase)}>
                           <div className="flex items-center justify-center">{phase} <SortIcon col={phase} /></div>
                         </th>
@@ -1305,7 +1347,7 @@ const WorldCupHub: React.FC = () => {
                         <td className="px-2 py-2.5 text-center font-montserrat text-xs font-bold text-brand-dark/55">
                           {teamGroupByName[team['Seleção']] || '-'}
                         </td>
-                        {['1º Grupo', '2º Grupo', '3º Grupo', '4º Grupo', 'Top 32', 'Oitavas', 'Quartas', 'Semi', 'Final', 'Campeão'].map((phase) => (
+                        {['1º Grupo', '2º Grupo', '3º Grupo', '4º Grupo', 'Top 32', 'Oitavas', 'Quartas', 'Semi', '3º Lugar', 'Final', 'Campeão'].map((phase) => (
                           <td key={phase} className={`px-3 py-2.5 text-center text-sm font-bold tabular-nums font-opensans ${phase === 'Campeão' ? `${theme.accentText} ${theme.accentBgSoftClass} font-black text-base` : 'text-brand-dark/70'}`}>
                             {team[phase]}
                           </td>
