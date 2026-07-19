@@ -13,7 +13,7 @@ import { Analytics } from '@vercel/analytics/react';
 import resultadosJogos from './assets/resultados_jogos.json';
 import { PARTNER_INSTITUTIONS, RESEARCH_CENTERS } from './data/institutions';
 
-type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa' | 'hexa-finais' | 'hexa-semifinais' | 'hexa-quartas' | 'hexa-oitavas' | 'hexa-mata-mata' | 'hexa-rodada2' | 'hexa-inicio' | 'pos-rodada' | 'cronica-eliminacao-brasil';
+type ViewState = 'home' | 'copa' | 'mapa' | 'simulador' | 'bolao' | 'team' | 'science' | 'media' | 'methodology' | 'hexa' | 'balanco-final' | 'hexa-finais' | 'hexa-semifinais' | 'hexa-quartas' | 'hexa-oitavas' | 'hexa-mata-mata' | 'hexa-rodada2' | 'hexa-inicio' | 'pos-rodada' | 'cronica-eliminacao-brasil';
 
 const WorldCupHub = lazy(() => import('./components/WorldCupHub'));
 const MapPage = lazy(() => import('./components/MapPage'));
@@ -31,6 +31,7 @@ const RoundOf16Page = lazy(() => import('./components/RoundOf16Page'));
 const QuarterfinalsPage = lazy(() => import('./components/QuarterfinalsPage'));
 const SemifinalsPage = lazy(() => import('./components/SemifinalsPage'));
 const FinalsPage = lazy(() => import('./components/FinalsPage'));
+const ClosingReportPage = lazy(() => import('./components/ClosingReportPage'));
 const BrazilEliminationChroniclePage = lazy(() => import('./components/BrazilEliminationChroniclePage'));
 
 const BRAZIL_ELIMINATION_OPINION_PATH = '/opiniao/o-verdadeiro-culpado-pela-eliminacao-do-brasil-na-copa-do-mundo';
@@ -47,6 +48,7 @@ const ROUTES: Record<ViewState, string> = {
   media: '/midia',
   team: '/equipe',
   hexa: '/caminho-do-hexa',
+  'balanco-final': '/caminho-do-hexa/balanco-final-da-copa',
   'hexa-finais': '/caminho-do-hexa/inicio-das-finais',
   'hexa-semifinais': '/caminho-do-hexa/inicio-das-semifinais',
   'hexa-quartas': '/caminho-do-hexa/inicio-das-quartas',
@@ -68,6 +70,29 @@ const JOGOS_ENCERRADOS = (resultadosJogos as Array<{ Status?: string }>).filter(
 const PCT_COPA_CONCLUIDA = ((JOGOS_ENCERRADOS / TOTAL_JOGOS_COPA) * 100).toFixed(1);
 
 const CopaProgressBadge: React.FC = () => {
+  if (JOGOS_ENCERRADOS === TOTAL_JOGOS_COPA) {
+    return (
+      <div
+        className="hidden sm:flex items-center gap-2.5"
+        aria-label="Copa do Mundo 2026 encerrada: Espanha campeã, 104 jogos disputados"
+      >
+        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-green text-white">
+          <ShieldCheck className="h-4 w-4" />
+        </span>
+        <span className="flex flex-col leading-snug">
+          <span className="font-montserrat text-[10px] font-bold uppercase tracking-widest text-brand-dark/55">
+            Copa do Mundo 2026
+          </span>
+          <span className="font-montserrat text-[10.5px] text-brand-green">
+            <span className="font-bold">Encerrada</span>
+            {' '}
+            <span className="font-normal opacity-60">· Espanha campeã</span>
+          </span>
+        </span>
+      </div>
+    );
+  }
+
   const radius = 11;
   const circumference = 2 * Math.PI * radius;
   const dashOffset = circumference * (1 - JOGOS_ENCERRADOS / TOTAL_JOGOS_COPA);
@@ -143,8 +168,12 @@ const PAGE_META: Record<ViewState, { title: string; description: string; ogImage
     description: 'Conheça os pesquisadores e as instituições por trás do projeto Previsão Esportiva.',
   },
   hexa: {
-    title: 'A Copa Cabe em um Jogo | Previsão Esportiva',
-    description: 'Espanha e Argentina decidem a Copa do Mundo de 2026. A vantagem espanhola existe, mas a projeção mantém a final aberta.',
+    title: 'Espanha Campeã: Balanço Final | Previsão Esportiva',
+    description: 'A Espanha é campeã da Copa do Mundo de 2026. Veja o balanço final das previsões e dos modelos do Previsão Esportiva.',
+  },
+  'balanco-final': {
+    title: 'Espanha Campeã: Balanço Final | Previsão Esportiva',
+    description: 'A Espanha é campeã da Copa do Mundo de 2026. Veja o balanço final das previsões e dos modelos do Previsão Esportiva.',
   },
   'hexa-finais': {
     title: 'A Copa Cabe em um Jogo | Previsão Esportiva',
@@ -448,7 +477,7 @@ export default function App() {
           <>
             <Hero onNavigate={(view) => navigateTo(view)} />
             <OpinionCallout onNavigate={() => navigateTo('cronica-eliminacao-brasil')} />
-            <HexaCallout onNavigate={() => navigateTo('hexa')} />
+            <HexaCallout onNavigate={() => navigateTo('balanco-final')} />
             <MediaHighlight onNavigate={() => navigateTo('media')} />
             <HomeOverview onNavigate={(view) => navigateTo(view)} />
           </>
@@ -464,7 +493,8 @@ export default function App() {
             {currentView === 'science' && <SciencePage />}
             {currentView === 'media' && <MediaPage />}
             {currentView === 'methodology' && <MethodologyPage />}
-            {currentView === 'hexa' && <FinalsPage />}
+            {currentView === 'hexa' && <ClosingReportPage />}
+            {currentView === 'balanco-final' && <ClosingReportPage />}
             {currentView === 'hexa-finais' && <FinalsPage />}
             {currentView === 'hexa-semifinais' && <SemifinalsPage />}
             {currentView === 'hexa-quartas' && <QuarterfinalsPage />}

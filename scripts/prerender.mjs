@@ -148,16 +148,30 @@ const routes = [
   },
   {
     path: '/caminho-do-hexa',
-    changefreq: 'weekly',
-    priority: '0.8',
-    linkLabel: 'Hexa — análise atual',
-    title: 'A Copa Cabe em um Jogo | Previsão Esportiva',
+    changefreq: 'monthly',
+    priority: '0.9',
+    linkLabel: 'Hexa — balanço final',
+    title: 'Espanha Campeã: Balanço Final | Previsão Esportiva',
     description:
-      'Espanha e Argentina decidem a Copa do Mundo de 2026. A vantagem espanhola existe, mas a projeção mantém a final aberta.',
-    h1: 'A Copa cabe em um jogo',
+      'A Espanha é campeã da Copa do Mundo de 2026. Veja o balanço final das previsões e dos modelos do Previsão Esportiva.',
+    h1: 'A previsão encontra a taça',
     body: [
-      'Depois de 102 partidas, Espanha e Argentina concentram toda a probabilidade de título. A Espanha chega como favorita, mas a diferença não transforma a decisão em resultado antecipado.',
-      'Na final, a Espanha tem 58,3% de chance de título e a Argentina, 41,7%. Em 90 minutos, a projeção aponta 43,8% para vitória espanhola, 26,8% para empate e 29,3% para vitória argentina.',
+      'A Espanha venceu a Argentina por 1 a 0 na final e é campeã da Copa do Mundo de 2026. No início do torneio, o modelo oficial já apontava a Espanha como principal favorita, com 15,9% de chance de título.',
+      'O balanço final apresenta o que os modelos anteciparam e a avaliação probabilística comparável das previsões publicadas antes dos jogos.',
+    ],
+  },
+  {
+    path: '/caminho-do-hexa/balanco-final-da-copa',
+    changefreq: 'monthly',
+    priority: '0.9',
+    linkLabel: 'Hexa — balanço final detalhado',
+    title: 'Espanha Campeã: Balanço Final | Previsão Esportiva',
+    description:
+      'A Espanha é campeã da Copa do Mundo de 2026. Veja o balanço final das previsões e dos modelos do Previsão Esportiva.',
+    h1: 'A previsão encontra a taça',
+    body: [
+      'A Espanha venceu a Argentina por 1 a 0 na final e é campeã da Copa do Mundo de 2026. No início do torneio, o modelo oficial já apontava a Espanha como principal favorita, com 15,9% de chance de título.',
+      'O balanço final apresenta o que os modelos anteciparam e a avaliação probabilística comparável das previsões publicadas antes dos jogos.',
     ],
   },
   {

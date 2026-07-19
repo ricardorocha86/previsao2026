@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import { ArrowUpRight, CalendarDays, Check, MessageSquareText, Newspaper } from 'lucide-react';
 
-type EditionId = 'inicio-finais' | 'inicio-semifinais' | 'opiniao-eliminacao' | 'inicio-quartas' | 'inicio-oitavas' | 'pos-fase-grupos' | 'pos-rodada2' | 'pos-rodada1' | 'inicio-copa';
+type EditionId = 'balanco-final' | 'inicio-finais' | 'inicio-semifinais' | 'opiniao-eliminacao' | 'inicio-quartas' | 'inicio-oitavas' | 'pos-fase-grupos' | 'pos-rodada2' | 'pos-rodada1' | 'inicio-copa';
 
 const EDITIONS: Array<{
   id: EditionId;
@@ -12,6 +12,14 @@ const EDITIONS: Array<{
   number?: string;
   kind?: 'opinion';
 }> = [
+  {
+    id: 'balanco-final',
+    title: 'A Previsão Encontra a Taça',
+    date: '19/07/2026',
+    description: 'Espanha campeã e o balanço final dos modelos',
+    href: '/caminho-do-hexa/balanco-final-da-copa',
+    number: '09',
+  },
   {
     id: 'inicio-finais',
     title: 'A Copa Cabe em um Jogo',
@@ -105,12 +113,12 @@ const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) =>
               Arquivo de reportagens
             </h2>
             <p className="mt-2 max-w-xl text-xs leading-relaxed text-white/50">
-              Oito retratos do torneio e uma opinião, atualizados conforme a bola muda as probabilidades.
+              Nove retratos do torneio e uma opinião, do primeiro palpite ao balanço final.
             </p>
           </div>
         </div>
         <span className="relative mt-5 inline-flex font-montserrat text-[9px] font-bold uppercase tracking-widest text-white/35 md:mt-0">
-          9 publicações
+          10 publicações
         </span>
       </div>
 
