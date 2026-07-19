@@ -115,13 +115,17 @@ const OpeningRanking = ({ title, subtitle, data, tone }: { title: string; subtit
 const Metric = ({
   label,
   force,
+  forceCi,
   bayesian,
+  bayesianCi,
   detail,
   best,
 }: {
   label: string;
   force: string;
+  forceCi: string;
   bayesian: string;
+  bayesianCi: string;
   detail: string;
   best: 'force' | 'bayesian';
 }) => (
@@ -130,8 +134,14 @@ const Metric = ({
       <p className="font-montserrat text-xs font-black uppercase text-brand-dark">{label}</p>
       <p className="mt-1 text-xs leading-relaxed text-brand-dark/50">{detail}</p>
     </div>
-    <p className={`font-montserrat text-2xl font-black ${best === 'force' ? 'text-brand-green' : 'text-brand-dark/45'}`}>{force}</p>
-    <p className={`font-montserrat text-2xl font-black ${best === 'bayesian' ? 'text-brand-blue' : 'text-brand-dark/45'}`}>{bayesian}</p>
+    <div>
+      <p className={`font-montserrat text-2xl font-black ${best === 'force' ? 'text-brand-green' : 'text-brand-dark/45'}`}>{force}</p>
+      <p className="mt-1 text-[10px] font-semibold text-brand-dark/38">IC 95% {forceCi}</p>
+    </div>
+    <div>
+      <p className={`font-montserrat text-2xl font-black ${best === 'bayesian' ? 'text-brand-blue' : 'text-brand-dark/45'}`}>{bayesian}</p>
+      <p className="mt-1 text-[10px] font-semibold text-brand-dark/38">IC 95% {bayesianCi}</p>
+    </div>
   </div>
 );
 
@@ -245,31 +255,62 @@ const ClosingReportPage = () => (
     <section className="mx-auto max-w-[1080px] px-4 py-16">
       <SectionTitle eyebrow="O teste jogo a jogo" title="Na fase de grupos, houve equilíbrio estatístico entre os dois modelos.">
         <p>
-          Acertar a campeã é uma história poderosa, mas não basta para avaliar um sistema probabilístico. O teste mais rigoroso pergunta, em cada partida, se as probabilidades publicadas foram informativas e bem calibradas. A amostra diretamente comparável reúne os 72 jogos da fase de grupos, sempre usando o retrato disponível antes de cada rodada.
+          Acertar a campeã é uma história poderosa, mas não basta para avaliar um sistema probabilístico. O teste mais rigoroso pergunta, em cada partida, se as probabilidades publicadas foram informativas e bem calibradas. A amostra diretamente comparável reúne os 72 jogos da fase de grupos, sempre usando o retrato disponível antes de cada rodada. Os intervalos de confiança foram estimados com 30.000 reamostras bootstrap no nível do jogo.
         </p>
         <p>
-          O Bayesiano acertou mais vezes o resultado de maior probabilidade. O Modelo de Força foi melhor nas métricas que consideram toda a distribuição — vitória, empate e derrota — e também na calibração. Com apenas 72 jogos, porém, os intervalos de incerteza se sobrepõem: tecnicamente, não há evidência para declarar um vencedor entre os dois.
+          Nas estimativas pontuais, o Bayesiano acertou mais vezes o resultado de maior probabilidade. O Modelo de Força obteve valores menores nas métricas que consideram toda a distribuição — vitória, empate e derrota — e na calibração. Os intervalos são largos e se sobrepõem: esses números descrevem o desempenho observado, mas não sustentam a declaração de um vencedor entre os dois.
         </p>
       </SectionTitle>
 
       <div className="mt-9 overflow-hidden rounded-2xl border border-brand-dark/10 bg-white p-6 shadow-sm md:p-8">
         <div className="mb-3 grid gap-3 border-b border-brand-dark/10 pb-4 sm:grid-cols-[1.25fr_0.7fr_0.7fr]">
-          <p className="font-montserrat text-[10px] font-black uppercase tracking-widest text-brand-dark/40">Métrica · 72 jogos</p>
+          <p className="font-montserrat text-[10px] font-black uppercase tracking-widest text-brand-dark/40">Estimativa e IC 95% · 72 jogos</p>
           <p className="font-montserrat text-[10px] font-black uppercase tracking-widest text-brand-green">Modelo de Força</p>
           <p className="font-montserrat text-[10px] font-black uppercase tracking-widest text-brand-blue">Bayesiano</p>
         </div>
-        <Metric label="Acerto" force="61,1%" bayesian="63,9%" detail="Resultado de maior probabilidade comparado ao placar após 90 minutos." best="bayesian" />
-        <Metric label="Brier" force="0,531" bayesian="0,549" detail="Menor é melhor; penaliza a distância entre as três probabilidades e o resultado." best="force" />
-        <Metric label="RPS" force="0,165" bayesian="0,173" detail="Menor é melhor; outra medida da qualidade da distribuição probabilística." best="force" />
-        <Metric label="Log loss" force="0,897" bayesian="0,930" detail="Menor é melhor; pune especialmente o excesso de confiança em um resultado errado." best="force" />
-        <Metric label="Calibração (ECE)" force="0,067" bayesian="0,084" detail="Menor é melhor; compara o que foi previsto com a frequência em que ocorreu." best="force" />
+        <Metric label="Acerto" force="61,1%" forceCi="[50,0%; 72,2%]" bayesian="63,9%" bayesianCi="[52,8%; 75,0%]" detail="Resultado de maior probabilidade comparado ao placar após 90 minutos." best="bayesian" />
+        <Metric label="Brier" force="0,531" forceCi="[0,456; 0,608]" bayesian="0,549" bayesianCi="[0,458; 0,645]" detail="Menor é melhor; penaliza a distância entre as três probabilidades e o resultado." best="force" />
+        <Metric label="RPS" force="0,165" forceCi="[0,143; 0,191]" bayesian="0,173" bayesianCi="[0,145; 0,205]" detail="Menor é melhor; outra medida da qualidade da distribuição probabilística." best="force" />
+        <Metric label="Log loss" force="0,897" forceCi="[0,793; 1,001]" bayesian="0,930" bayesianCi="[0,798; 1,069]" detail="Menor é melhor; pune especialmente o excesso de confiança em um resultado errado." best="force" />
+        <Metric label="Calibração (ECE)" force="0,067" forceCi="[0,047; 0,133]" bayesian="0,084" bayesianCi="[0,050; 0,152]" detail="Menor é melhor; compara o que foi previsto com a frequência em que ocorreu." best="force" />
+        <p className="border-t border-brand-dark/10 pt-4 text-xs leading-relaxed text-brand-dark/45">
+          A cor destaca apenas o melhor valor observado em cada linha. Ela não indica superioridade estatística.
+        </p>
       </div>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <article className="mt-6 overflow-hidden rounded-xl border border-brand-dark/10 bg-brand-dark text-white">
+        <div className="grid gap-6 p-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:p-8">
+          <div>
+            <p className="font-montserrat text-xs font-black uppercase tracking-wider text-brand-neon">A comparação que decide a leitura</p>
+            <h3 className="mt-3 font-montserrat text-2xl font-black uppercase leading-none">No teste pareado, todos os intervalos atravessam o zero.</h3>
+            <p className="mt-4 text-sm leading-relaxed text-white/60">
+              O bootstrap pareado compara os dois modelos dentro das mesmas partidas. Se o intervalo da diferença inclui zero, os 72 jogos ainda são compatíveis tanto com vantagem do Modelo de Força quanto do Bayesiano.
+            </p>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {[
+              ['Acerto', '+2,8 p.p.', '[−4,2; +9,7 p.p.]'],
+              ['Brier', '+0,018', '[−0,025; +0,062]'],
+              ['RPS', '+0,007', '[−0,011; +0,026]'],
+              ['Log loss', '+0,033', '[−0,035; +0,103]'],
+            ].map(([label, difference, ci]) => (
+              <div key={label} className="rounded-lg border border-white/10 bg-white/[0.06] p-4">
+                <p className="font-montserrat text-[10px] font-black uppercase tracking-wider text-white/45">{label} · Bayes − Força</p>
+                <div className="mt-2 flex items-end justify-between gap-3">
+                  <strong className="font-montserrat text-xl text-white">{difference}</strong>
+                  <span className="text-[10px] text-white/45">IC 95% {ci}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </article>
+
+      <div className="mt-4 grid gap-4 md:grid-cols-2">
         <article className="rounded-xl border border-brand-dark/10 bg-white p-6">
           <div className="flex items-center gap-3 text-brand-green"><Scale className="h-5 w-5" /><p className="font-montserrat text-xs font-black uppercase tracking-wider">Como ler o empate</p></div>
           <p className="mt-4 text-sm leading-relaxed text-brand-dark/65">
-            A diferença de 2,8 pontos no acerto parece clara, mas cabe confortavelmente na variação esperada de uma amostra desse tamanho. Rankings pontuais ajudam a descrever o torneio; não autorizam uma conclusão universal sobre qual modelo será melhor na próxima Copa.
+            No acerto, a diferença observada foi de 2,8 pontos para o Bayesiano; o intervalo pareado vai de 4,2 pontos a favor do Modelo de Força até 9,7 a favor do Bayesiano. Rankings pontuais ajudam a descrever esta Copa, mas não autorizam uma conclusão universal sobre a próxima.
           </p>
         </article>
         <article className="rounded-xl border border-brand-dark/10 bg-white p-6">
@@ -301,7 +342,7 @@ const ClosingReportPage = () => (
           <article className="rounded-2xl border border-white/10 bg-white/[0.06] p-6">
             <BarChart3 className="h-6 w-6 text-brand-neon" />
             <h3 className="mt-4 font-montserrat text-xl font-black uppercase">O que aprendeu</h3>
-            <p className="mt-3 text-sm leading-relaxed text-white/62">O Bayesiano ganhou no acerto; o Modelo de Força, nas métricas probabilísticas. A amostra não separou estatisticamente as abordagens.</p>
+            <p className="mt-3 text-sm leading-relaxed text-white/62">O Bayesiano teve a melhor estimativa pontual de acerto; o Modelo de Força, os menores escores probabilísticos. A amostra não separou estatisticamente as abordagens.</p>
           </article>
           <article className="rounded-2xl border border-white/10 bg-white/[0.06] p-6">
             <Clock3 className="h-6 w-6 text-brand-neon" />
