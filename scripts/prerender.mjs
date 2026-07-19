@@ -153,11 +153,12 @@ const routes = [
     linkLabel: 'Hexa — balanço final',
     title: 'Espanha Campeã: Balanço Final | Previsão Esportiva',
     description:
-      'A Espanha é campeã da Copa do Mundo de 2026. Veja o balanço final das previsões e dos modelos do Previsão Esportiva.',
+      'Espanha campeã: o balanço final compara Modelo de Força e Bayesiano, revisita as probabilidades iniciais e avalia 72 previsões jogo a jogo.',
     h1: 'A previsão encontra a taça',
     body: [
       'A Espanha venceu a Argentina por 1 a 0 na final e é campeã da Copa do Mundo de 2026. No início do torneio, o modelo oficial já apontava a Espanha como principal favorita, com 15,9% de chance de título.',
-      'O balanço final apresenta o que os modelos anteciparam e a avaliação probabilística comparável das previsões publicadas antes dos jogos.',
+      'No snapshot pré-torneio, o Modelo de Força colocou a campeã em primeiro; o Bayesiano, em terceiro. As quatro semifinalistas já estavam entre as seis principais seleções nas duas leituras.',
+      'O balanço final compara acerto, Brier, RPS, log loss e calibração em 72 previsões publicadas antes dos jogos e explica por que os dois modelos terminaram tecnicamente empatados.',
     ],
   },
   {
@@ -167,11 +168,12 @@ const routes = [
     linkLabel: 'Hexa — balanço final detalhado',
     title: 'Espanha Campeã: Balanço Final | Previsão Esportiva',
     description:
-      'A Espanha é campeã da Copa do Mundo de 2026. Veja o balanço final das previsões e dos modelos do Previsão Esportiva.',
+      'Espanha campeã: o balanço final compara Modelo de Força e Bayesiano, revisita as probabilidades iniciais e avalia 72 previsões jogo a jogo.',
     h1: 'A previsão encontra a taça',
     body: [
       'A Espanha venceu a Argentina por 1 a 0 na final e é campeã da Copa do Mundo de 2026. No início do torneio, o modelo oficial já apontava a Espanha como principal favorita, com 15,9% de chance de título.',
-      'O balanço final apresenta o que os modelos anteciparam e a avaliação probabilística comparável das previsões publicadas antes dos jogos.',
+      'No snapshot pré-torneio, o Modelo de Força colocou a campeã em primeiro; o Bayesiano, em terceiro. As quatro semifinalistas já estavam entre as seis principais seleções nas duas leituras.',
+      'O balanço final compara acerto, Brier, RPS, log loss e calibração em 72 previsões publicadas antes dos jogos e explica por que os dois modelos terminaram tecnicamente empatados.',
     ],
   },
   {

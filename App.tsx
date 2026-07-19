@@ -169,11 +169,11 @@ const PAGE_META: Record<ViewState, { title: string; description: string; ogImage
   },
   hexa: {
     title: 'Espanha Campeã: Balanço Final | Previsão Esportiva',
-    description: 'A Espanha é campeã da Copa do Mundo de 2026. Veja o balanço final das previsões e dos modelos do Previsão Esportiva.',
+    description: 'Espanha campeã: o balanço final compara Modelo de Força e Bayesiano, revisita as probabilidades iniciais e avalia 72 previsões jogo a jogo.',
   },
   'balanco-final': {
     title: 'Espanha Campeã: Balanço Final | Previsão Esportiva',
-    description: 'A Espanha é campeã da Copa do Mundo de 2026. Veja o balanço final das previsões e dos modelos do Previsão Esportiva.',
+    description: 'Espanha campeã: o balanço final compara Modelo de Força e Bayesiano, revisita as probabilidades iniciais e avalia 72 previsões jogo a jogo.',
   },
   'hexa-finais': {
     title: 'A Copa Cabe em um Jogo | Previsão Esportiva',

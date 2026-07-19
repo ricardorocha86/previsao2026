@@ -97,19 +97,19 @@ const EDITIONS: Array<{
 const ReportEditionSelector: React.FC<{ current: EditionId }> = ({ current }) => (
   <section className="border-b border-brand-dark/10 bg-[#F3F1EC]">
     <div className="mx-auto max-w-[1080px] px-4 py-8">
-      <div className="relative overflow-hidden rounded-2xl bg-brand-dark p-6 text-white shadow-xl md:flex md:items-center md:justify-between md:gap-8">
+      <div className="relative overflow-hidden rounded-2xl bg-brand-dark p-5 text-white shadow-xl sm:p-6 md:flex md:items-center md:justify-between md:gap-8">
         <div className="pointer-events-none absolute -right-3 -top-12 font-montserrat text-[8rem] font-black leading-none text-white/[0.045] md:right-8">
-          08
+          09
         </div>
-        <div className="relative flex min-w-0 items-center gap-5">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-brand-neon/25 bg-brand-neon/10">
-            <Newspaper className="h-7 w-7 text-brand-neon" />
+        <div className="relative flex min-w-0 items-center gap-3 sm:gap-5">
+          <div className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl border border-brand-neon/25 bg-brand-neon/10 sm:h-14 sm:w-14">
+            <Newspaper className="h-6 w-6 text-brand-neon sm:h-7 sm:w-7" />
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="font-montserrat text-[9px] font-black uppercase tracking-[0.24em] text-brand-neon">
               Especial Copa 2026
             </p>
-            <h2 className="mt-2 font-montserrat text-xl font-black uppercase leading-none">
+            <h2 className="mt-2 break-words font-montserrat text-lg font-black uppercase leading-tight sm:text-xl sm:leading-none">
               Arquivo de reportagens
             </h2>
             <p className="mt-2 max-w-xl text-xs leading-relaxed text-white/50">
