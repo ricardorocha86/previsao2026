@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, ChevronDown, Instagram, Mail, Menu, ShieldCheck, X } from 'lucide-react';
 import { Logo } from './components/Logo';
 import Hero from './components/Hero';
@@ -243,6 +243,7 @@ export default function App() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
   const [legalModal, setLegalModal] = useState<{ open: boolean; tab: LegalTab }>({ open: false, tab: 'terms' });
+  const hasTrackedInitialPageView = useRef(false);
 
   const openLegal = (tab: LegalTab) => setLegalModal({ open: true, tab });
 
@@ -283,6 +284,19 @@ export default function App() {
 
     const canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) canonical.setAttribute('href', url);
+
+    // O gtag config registra a primeira página; as demais navegações da SPA
+    // precisam de um page_view explícito para aparecerem no GA4.
+    if (hasTrackedInitialPageView.current) {
+      const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+      gtag?.('event', 'page_view', {
+        page_title: meta.title,
+        page_location: url,
+        page_path: path,
+      });
+    } else {
+      hasTrackedInitialPageView.current = true;
+    }
   }, [currentView]);
 
   const navigateTo = (view: ViewState) => {
